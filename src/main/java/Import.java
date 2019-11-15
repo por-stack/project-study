@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class Import {
-	public static final String path = "C:\\Users\\Utente\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx";
+	public static final String path = "C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx";
 	private String matrix [][];
 	private Workbook wb;
 	private Sheet sh;
@@ -45,7 +45,7 @@ public class Import {
 			}
 			i++; 
 		}
-		System.out.println("rows: " + i + ", columns: " + j);
+//		System.out.println("rows: " + i + ", columns: " + j);
 		
 		/*
 		 * Create Matrix based on the size of the excel Table

@@ -29,11 +29,12 @@ public class Calculator {
 	public static void main(String[] args) throws InvalidFormatException, IOException {
 		// Initialize objects and start algorithm
 
-		Import old = new Import(); 
-		old.demo();
+//		Import old = new Import(); 
+//		old.demo();
 		
-		Factory factory = new Factory();
+		Factory factory = new Factory(); 
 		factory.createStructureFactory();
+		
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 	}
