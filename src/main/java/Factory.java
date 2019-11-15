@@ -38,6 +38,7 @@ public class Factory {
 //					}
 //				}
 //			}
+			
 //			
 //			if (rowAlreadyIn == false) {
 //				//aggiungila, mettendo nella stessa row in counter il numero di raster
