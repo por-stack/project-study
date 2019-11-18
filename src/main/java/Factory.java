@@ -16,9 +16,6 @@ public class Factory {
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
 		this.matrix = mport.getMatrix();
-		
-		System.out.println("oleole");
-		// TEST!!! io ho modificato questa methode 
 	}
 
 	public void createStructureFactory() {
