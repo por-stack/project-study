@@ -12,7 +12,11 @@ public class Factory {
 	private Zone zone;
 	private Raster raster;
 	private String[][] matrix;
-	private Information[] informationPerRaw; 
+	private Information[] informationPerRaw;
+	int[][] counter; // for canel0Entries
+	int maxNumberColumn = 0; // for createFactoryStrucure
+	int[][] counterShort; // for cancel0Entries, createFactoryStructure
+	Raster[][] factoryStructure; //for createFactoryStructure, rasterIntoFacotryStructure
 
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
@@ -20,8 +24,7 @@ public class Factory {
 	}
 
 	public void createStructureFactory() {
-		int[][] counter = new int[mport.getJ()][2];
-		int maxNumberColumn = 0;
+		counter = new int[mport.getJ()][2];
 
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
@@ -50,43 +53,56 @@ public class Factory {
 					if (counter[j][1] > maxNumberColumn)
 						maxNumberColumn = counter[j][1];
 				}
+			// cancel 0-entries
+			// create factory structure
+			// put Raster into factory Structure
 		}
+	}
 
-		/*
-		 * cancel 0-entries
-		 */
+	/*
+	 * cancel 0-entries
+	 * used in createStructureFactory
+	 */
+	public void cancel0Entries() {
 		int u = 0;
 		while (counter[u][0] != 0) {
 			u++;
 		}
 		int laenge = u - 1;
-		int[][] counterShort = new int[laenge + 1][2];
+		counterShort = new int[laenge + 1][2];
 		System.arraycopy(counter, 0, counterShort, 0, laenge + 1);
+	}
 
-		/*
-		 * create factory structure
-		 */
+	/*
+	 * create factory structure
+	 * used in createStructureFactory
+	 */
+	public void createFactoryStructure() {
 		int numberRows = counterShort.length;
-		Raster[][] factoryStructure = new Raster[numberRows][maxNumberColumn - 11];
+		factoryStructure = new Raster[numberRows][maxNumberColumn - 11];
+	}
 
-		/*
-		 * put Raster into factoryStructure
-		 */
+	/*
+	 * put Raster into factoryStructure
+	 * used in createStructureFactory
+	 */
+	public void rasterIntoFactoryStructure() {
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
 			int columnNumber = Integer.parseInt(fullPosition.substring(4));
 
-			int j; 
+			int j;
 			for (j = 0; j < counterShort.length; j++) {
 				if (rowNumber == counterShort[j][0]) {
 					break;
 				}
 			}
 
-			factoryStructure[j][factoryStructure[0].length -1 + 12 - columnNumber] = new Raster(rowNumber, columnNumber);
-			System.out.println(factoryStructure[j][factoryStructure[0].length -1 + 12 - columnNumber]);
+			factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber] = new Raster(rowNumber,
+					columnNumber);
+			System.out.println(factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber]);
 		}
-		
 	}
+
 }
