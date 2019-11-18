@@ -76,7 +76,7 @@ public class Factory {
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
 			int columnNumber = Integer.parseInt(fullPosition.substring(4));
 
-			int j; //non non-ignorare il commento trallalelal kajdfn
+			int j; //ignora commento
 			for (j = 0; j < counterShort.length; j++) {
 				if (rowNumber == counterShort[j][0]) {
 					break;
@@ -85,6 +85,7 @@ public class Factory {
 
 			factoryStructure[j][factoryStructure.length - 1 + 12 - columnNumber] = new Raster(rowNumber, columnNumber);//errore
 			System.out.println(factoryStructure[j][factoryStructure.length - 1 + 12 - columnNumber]);
+			System.out.println("prova di trallallero trallalla");
 		}
 	}
 }
