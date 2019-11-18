@@ -3,10 +3,10 @@
 public class Raster {
 	
 	// if it is not a column or an hydrant
-	boolean isUsable;
-	int row; 
-	int column; 
-	Zone belongTo; 
+	private boolean isUsable;
+	private int row; 
+	private int column; 
+	private Zone belongTo; 
 	
 	public Raster(int row, int column) {
 		this.row = row; 
