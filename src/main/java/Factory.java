@@ -5,9 +5,6 @@ import org.apache.poi.util.SystemOutLogger;
 
 public class Factory {
 
-	final int LENGTH_OF_ROWS_IN_RASTER = 43;
-	int numRows;
-
 	private Import mport;
 	private Zone zone;
 	private Raster raster;
@@ -16,7 +13,7 @@ public class Factory {
 	int[][] counter; // for canel0Entries
 	int maxNumberColumn = 0; // for createFactoryStrucure
 	int[][] counterShort; // for cancel0Entries, createFactoryStructure
-	Raster[][] factoryStructure; //for createFactoryStructure, rasterIntoFacotryStructure
+	Zone[][] factoryStructure; // for createFactoryStructure
 
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
@@ -54,14 +51,16 @@ public class Factory {
 						maxNumberColumn = counter[j][1];
 				}
 			// cancel 0-entries
+			cancel0Entries();
 			// create factory structure
-			// put Raster into factory Structure
+			createFactoryStructure();
+			// put Raster into Zones
+			rasterIntoZones(i);
 		}
 	}
 
 	/*
-	 * cancel 0-entries
-	 * used in createStructureFactory
+	 * cancel 0-entries used in createStructureFactory
 	 */
 	public void cancel0Entries() {
 		int u = 0;
@@ -74,19 +73,17 @@ public class Factory {
 	}
 
 	/*
-	 * create factory structure
-	 * used in createStructureFactory
+	 * create factory structure used in createStructureFactory
 	 */
 	public void createFactoryStructure() {
 		int numberRows = counterShort.length;
-		factoryStructure = new Raster[numberRows][maxNumberColumn - 11];
+		factoryStructure = new Zone[numberRows / 2][7]; // we have a maximum of 7 zones per row
 	}
 
 	/*
-	 * put Raster into factoryStructure
-	 * used in createStructureFactory
+	 * put Raster into zones used 
 	 */
-	public void rasterIntoFactoryStructure() {
+	public void rasterIntoZones(int rowInImport) {
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -99,9 +96,45 @@ public class Factory {
 				}
 			}
 
-			factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber] = new Raster(rowNumber,
-					columnNumber);
-			System.out.println(factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber]);
+			//find out in which row the zone has to go. Remember that each zones involves to rows of Rasters
+			int rowInLayout;
+			if (rowNumber % 2 == 0) {
+				rowInLayout = rowNumber;
+				rowInLayout = (rowInLayout + 2) / 2;
+			} else {
+				rowInLayout = rowNumber;
+				rowInLayout = (rowInLayout + 1) / 2;
+			}
+			
+			//get the zone for this specific raster
+			String zoneName = matrix[rowInImport][1];
+			
+			//see if this zone is already in the factoryLayout. if not, add the zone and add the raster into this zone. 
+			//if yes, get into zone and add the new raster in its interal layout. 
+			boolean alreadyIn = false;
+			int k;
+			for (k = 0; k < 7; k++) {
+				if (factoryStructure[rowInLayout][6-k] == null) {
+					break;
+				} else {
+				if (factoryStructure[rowInLayout][6-k].equals(zoneName)) {
+					alreadyIn = true; 
+					break; 
+				}
+			}
+			
+			if (k != 7) {
+				if (alreadyIn == false) {
+					factoryStructure[rowInLayout][6-k] = new Zone(zoneName);
+					factoryStructure[rowInLayout][6-k].raster = new Raster[2][43];
+					
+				}
+			}
+			
+
+//			factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber] = new Raster(rowNumber,
+//					columnNumber);
+//			System.out.println(factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber]);
 		}
 	}
 
