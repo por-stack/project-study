@@ -6,6 +6,7 @@ public class Raster {
 	boolean isUsable;
 	int row; 
 	int column; 
+	Zone belongTo; 
 	
 	public Raster(int row, int column) {
 		this.row = row; 

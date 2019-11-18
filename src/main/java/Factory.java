@@ -12,6 +12,7 @@ public class Factory {
 	private Zone zone;
 	private Raster raster;
 	private String[][] matrix;
+	private Information[] informationPerRaw; 
 
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
