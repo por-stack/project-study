@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.SystemOutLogger;
@@ -81,7 +82,7 @@ public class Factory {
 	}
 
 	/*
-	 * put Raster into zones used 
+	 * put Raster into zones used
 	 */
 	public void rasterIntoZones(int rowInImport) {
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
@@ -96,7 +97,8 @@ public class Factory {
 				}
 			}
 
-			//find out in which row the zone has to go. Remember that each zones involves to rows of Rasters
+			// find out in which row the zone has to go. Remember that each zones involves
+			// to rows of Rasters
 			int rowInLayout;
 			if (rowNumber % 2 == 0) {
 				rowInLayout = rowNumber;
@@ -105,37 +107,52 @@ public class Factory {
 				rowInLayout = rowNumber;
 				rowInLayout = (rowInLayout + 1) / 2;
 			}
-			
-			//get the zone for this specific raster
+
+			// get the zone for this specific raster
 			String zoneName = matrix[rowInImport][1];
-			
-			//see if this zone is already in the factoryLayout. if not, add the zone and add the raster into this zone. 
-			//if yes, get into zone and add the new raster in its interal layout. 
+
+			// see if this zone is already in the factoryLayout. if not, add the zone and
+			// add the raster into this zone.
+			// if yes, get into zone and add the new raster in its interal layout.
 			boolean alreadyIn = false;
 			int k;
 			for (k = 0; k < 7; k++) {
-				if (factoryStructure[rowInLayout][6-k] == null) {
+				if (factoryStructure[rowInLayout][6 - k] == null) {
 					break;
 				} else {
-				if (factoryStructure[rowInLayout][6-k].equals(zoneName)) {
-					alreadyIn = true; 
-					break; 
+					if (factoryStructure[rowInLayout][6 - k].equals(zoneName)) {
+						alreadyIn = true;
+						break;
+					}
 				}
-			}
-			
-			if (k != 7) {
-				if (alreadyIn == false) {
-					factoryStructure[rowInLayout][6-k] = new Zone(zoneName);
-					factoryStructure[rowInLayout][6-k].raster = new Raster[2][43];
-					
+
+				if (k != 7) {
+					if (alreadyIn == false) {
+						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
+						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
+
+					}
 				}
-			}
-			
 
 //			factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber] = new Raster(rowNumber,
 //					columnNumber);
 //			System.out.println(factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber]);
+			}
 		}
+
 	}
 
+	public ArrayList<Zone> createStartingArray(Zone[][] factory) {
+		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
+		for (int i = 0; i < factory.length; i++) {
+			for (int j = 0; j < factory[0].length; j++) {
+				if (factory[i][j].isEmpty) {
+					emptyZones.add(factory[i][j]);
+				}
+			}
+		}
+		return emptyZones;
+	}
+	
+	
 }
