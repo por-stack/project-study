@@ -16,7 +16,7 @@ public class Factory {
 	int[][] counter; // for canel0Entries
 	int maxNumberColumn = 0; // for createFactoryStrucure
 	int[][] counterShort; // for cancel0Entries, createFactoryStructure
-	Raster[][] factoryStructure; //for createFactoryStructure, rasterIntoFacotryStructure
+	Raster[][] factoryStructure; // for createFactoryStructure, rasterIntoFacotryStructure
 
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
@@ -53,15 +53,18 @@ public class Factory {
 					if (counter[j][1] > maxNumberColumn)
 						maxNumberColumn = counter[j][1];
 				}
-			// cancel 0-entries
-			// create factory structure
-			// put Raster into factory Structure
 		}
+
+		// cancel 0-entries
+		// create factory structure
+		// put Raster into factory Structure
+		this.cancel0Entries();
+		this.createFactoryStructure();
+		this.rasterIntoFactoryStructure();
 	}
 
 	/*
-	 * cancel 0-entries
-	 * used in createStructureFactory
+	 * cancel 0-entries used in createStructureFactory
 	 */
 	public void cancel0Entries() {
 		int u = 0;
@@ -74,8 +77,7 @@ public class Factory {
 	}
 
 	/*
-	 * create factory structure
-	 * used in createStructureFactory
+	 * create factory structure used in createStructureFactory
 	 */
 	public void createFactoryStructure() {
 		int numberRows = counterShort.length;
@@ -83,9 +85,9 @@ public class Factory {
 	}
 
 	/*
-	 * put Raster into factoryStructure
-	 * used in createStructureFactory
+	 * put Raster into factoryStructure used in createStructureFactory
 	 */
+
 	public void rasterIntoFactoryStructure() {
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
