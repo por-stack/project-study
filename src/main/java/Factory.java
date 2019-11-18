@@ -145,6 +145,10 @@ public class Factory {
 						factoryStructure[rowInLayout][6 - k].raster[firstOrSecondRow][42
 								- factoryStructure[rowInLayout][6 - k].amountRasterRow1] = new Raster(rowNumber,
 										columnNumber);
+<<<<<<< HEAD
+=======
+
+>>>>>>> fd6035876a61cf12db00018063ad7faa08217bc3
 					}
 				}
 
