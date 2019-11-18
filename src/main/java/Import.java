@@ -6,11 +6,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class Import {
-<<<<<<< HEAD
-	public static final String path = "C:\\Users\\Utente\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx";
-=======
 	public static final String path = "C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx";
->>>>>>> 2158f1206d8e77c39d10bb8a363a9e0d72e4bb14
 
 	private String matrix [][];
 	private Workbook wb;
