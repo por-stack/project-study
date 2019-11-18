@@ -17,7 +17,9 @@ public class Zone {
 	Raster[] raster;
 
 	
-	
+	public static void main() {
+		int ciao = 4321;
+	}
 	
 
 	Zone neighbRight;
