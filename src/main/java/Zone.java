@@ -2,7 +2,9 @@
 public class Zone {
 	String name;
 	
-	int amountRastRow1;
+	int lastOccupiedRaster; //for calculation 
+	
+	int amountRasterRow1;
 	int amountRasterRow2;
 	int[] rows = new int[2];
 	
@@ -17,6 +19,8 @@ public class Zone {
 	
 	public Zone (String name) {
 		this.name = name;
+		amountRasterRow1 = 0;
+		amountRasterRow2 = 0; 
 	}
 
 	

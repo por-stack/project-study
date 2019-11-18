@@ -100,7 +100,9 @@ public class Factory {
 			// find out in which row the zone has to go. Remember that each zones involves
 			// to rows of Rasters
 			int rowInLayout;
+			boolean rowEven = false;
 			if (rowNumber % 2 == 0) {
+				rowEven = true;
 				rowInLayout = rowNumber;
 				rowInLayout = (rowInLayout + 2) / 2;
 			} else {
@@ -129,7 +131,23 @@ public class Factory {
 				if (k != 7) {
 					if (alreadyIn == false) {
 						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
+<<<<<<< HEAD
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
+=======
+						int sizeRaster = Integer.parseInt(matrix[rowInImport][17]);
+						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
+						int firstOrSecondRow;
+						if (rowEven == true) {
+							firstOrSecondRow = 0;
+							factoryStructure[rowInLayout][6 - k].amountRasterRow1 += sizeRaster;
+						} else {
+							firstOrSecondRow = 1;
+							factoryStructure[rowInLayout][6 - k].amountRasterRow2 += sizeRaster;
+						}
+						factoryStructure[rowInLayout][6 - k].raster[firstOrSecondRow][42
+								- factoryStructure[rowInLayout][6 - k].amountRasterRow1] = new Raster(rowNumber,
+										columnNumber);
+>>>>>>> 52379b087363136dac282659b4b01eb357452eff
 
 					}
 				}
