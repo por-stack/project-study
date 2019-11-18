@@ -29,7 +29,7 @@ public class Import {
 	 *  Workbook, Sheet, Dataformatter
 	 */
 	public void init() throws IOException, InvalidFormatException{
-		wb = WorkbookFactory.create(new File(path));
+		wb = WorkbookFactory.create(new File("C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"));
 		sh = wb.getSheetAt(0);
 		dtfrm = new DataFormatter();
 	}
