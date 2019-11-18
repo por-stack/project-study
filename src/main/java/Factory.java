@@ -131,9 +131,7 @@ public class Factory {
 				if (k != 7) {
 					if (alreadyIn == false) {
 						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
-<<<<<<< HEAD
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
-=======
 						int sizeRaster = Integer.parseInt(matrix[rowInImport][17]);
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
 						int firstOrSecondRow;
@@ -147,8 +145,6 @@ public class Factory {
 						factoryStructure[rowInLayout][6 - k].raster[firstOrSecondRow][42
 								- factoryStructure[rowInLayout][6 - k].amountRasterRow1] = new Raster(rowNumber,
 										columnNumber);
->>>>>>> 52379b087363136dac282659b4b01eb357452eff
-
 					}
 				}
 
