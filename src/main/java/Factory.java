@@ -103,10 +103,10 @@ public class Factory {
 			boolean rowEven = false;
 			if (rowNumber % 2 == 0) {
 				rowEven = true;
-				rowInLayout = rowNumber;
+				rowInLayout = j;
 				rowInLayout = (rowInLayout + 2) / 2;
 			} else {
-				rowInLayout = rowNumber;
+				rowInLayout = j;
 				rowInLayout = (rowInLayout + 1) / 2;
 			}
 
