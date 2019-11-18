@@ -76,7 +76,7 @@ public class Factory {
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
 			int columnNumber = Integer.parseInt(fullPosition.substring(4));
 
-			int j; //non non-ignorare il commento 
+			int j; //papparappappà
 			for (j = 0; j < counterShort.length; j++) {
 				if (rowNumber == counterShort[j][0]) {
 					break;
