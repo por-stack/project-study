@@ -56,10 +56,16 @@ public class Calculator {
 
 //		Import old = new Import(); 
 //		old.demo();
+<<<<<<< HEAD
 
 		Factory factory = new Factory();
 		factory.createStructureFactory();
 
+=======
+		
+		Factory factory = new Factory(); 
+		
+>>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 	}
