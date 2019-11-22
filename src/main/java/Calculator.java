@@ -1,29 +1,54 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 public class Calculator {
 
+	/*
+	 * input factory to work and list of zones to allocate
+	 */
+	private Factory initial;
+	private ArrayList<Zone> emptyZones;
+	private ArrayList<Zone> zonesToAllocate;
 
 	/*
-	 * As parameter we insert the assignment factory. We find a way to extract the
-	 * data directly from the excel sheet. 
-	 * We then perform the algorithm on the factory. 
+	 * The initial factory is created with the input data. The factory is analyzed
+	 * and a list of the empty zones is created.
 	 */
-	public Import performAlgorithm(Import old) throws InvalidFormatException, IOException {
-		/*
-		 * For Each row, for each zone inside the column, find the empty zone, etc. etc. etc.
-		 */
-		
-		// our result at the end of the day
-		return new Import();
+	public Calculator() throws InvalidFormatException, IOException {
+		initial = new Factory();
+		initial.createStructureFactory();
+		emptyZones = createEmptyZones(initial.getFactoryStructure());
 	}
-	
+
+	public Zone[][] performAlgorithm() {
+		/*	
+		 */	
+		if (zonesToAllocate.isEmpty())
+			return initial.getFactoryStructure();
+
+		return initial.getFactoryStructure();
+	}
+
+	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
+		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
+		for (int i = 0; i < factory.length; i++) {
+			for (int j = 0; j < factory[0].length; j++) {
+				if (factory[i][j].isEmpty) {
+					emptyZones.add(factory[i][j]);
+				}
+			}
+		}
+		return emptyZones;
+	}
+
 	/*
-	 * After having computed the new factory layout, we reconvert the factory to excel
+	 * After having computed the new factory layout, we reconvert the factory to
+	 * excel
 	 */
 	public void convertToExcel(Factory factory) {
-		
+
 	}
 
 	public static void main(String[] args) throws InvalidFormatException, IOException {
@@ -31,9 +56,16 @@ public class Calculator {
 
 //		Import old = new Import(); 
 //		old.demo();
+<<<<<<< HEAD
+
+		Factory factory = new Factory();
+		factory.createStructureFactory();
+
+=======
 		
 		Factory factory = new Factory(); 
 		
+>>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 	}

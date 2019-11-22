@@ -7,13 +7,18 @@ import org.apache.poi.util.SystemOutLogger;
 public class Factory {
 
 	private Import mport;
-	private Zone zone;
-	private Raster raster;
 	private String[][] matrix;
 	private Information[] informationPerRaw;
+<<<<<<< HEAD
+	private int[][] counter; // for canel0Entries
+	private int maxNumberColumn = 0; // for createFactoryStrucure
+	private int[][] counterShort; // for cancel0Entries, createFactoryStructure
+	private Zone[][] factoryStructure; // for createFactoryStructure
+=======
 	int[][] counter; // constructed in: countRowsColumns
 	int maxNumberColumn = 0; // for createFactoryStrucure
 	Zone[][] factoryStructure; // for createFactoryStructure
+>>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
 
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
@@ -66,11 +71,19 @@ public class Factory {
 					if (counter[j][1] > maxNumberColumn)
 						maxNumberColumn = counter[j][1];
 				}
+<<<<<<< HEAD
+		}
+		cancel0Entries();
+		createFactoryStructure();
+		rasterIntoZones();
+
+=======
 
 		}
 
 		// make the matrix shorter, cancelling the superfluos 0-entries
 		cancel0Entries();
+>>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
 	}
 
 	/*
@@ -101,8 +114,12 @@ public class Factory {
 	/*
 	 * put Raster into zones used
 	 */
+<<<<<<< HEAD
+	public void rasterIntoZones() { // int rowInImport
+=======
 	public void rasterIntoZones() {
 		// take every single entry in the column "Materialfläche"
+>>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -129,7 +146,11 @@ public class Factory {
 				rowInFactoryStructure = (rowInFactoryStructure + 1) / 2 - 1;
 			}
 
+<<<<<<< HEAD
+			// get the zone for this specific raster
+=======
 			// get the zone(name) for this specific raster
+>>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
 			String zoneName = matrix[i][1]; // matrix rowinimport 1
 
 			/*
@@ -148,11 +169,33 @@ public class Factory {
 						break;
 					}
 				}
+<<<<<<< HEAD
+
+				if (k != 7) {
+					if (alreadyIn == false) {
+						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
+						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
+						int sizeRaster = Integer.parseInt(matrix[i][17]); // rowInImport
+//						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
+						int firstOrSecondRow;
+						if (rowEven == true) {
+							firstOrSecondRow = 0;
+							factoryStructure[rowInLayout][6 - k].amountRasterRow1 += sizeRaster;
+						} else {
+							firstOrSecondRow = 1;
+							factoryStructure[rowInLayout][6 - k].amountRasterRow2 += sizeRaster;
+						}
+						factoryStructure[rowInLayout][6 - k].raster[firstOrSecondRow][42
+								- factoryStructure[rowInLayout][6 - k].amountRasterRow1] = new Raster(rowNumber,
+										columnNumber);
+					}
+=======
 			}
 			if (k != 7) { //avoiding out of bounce
 				if (alreadyIn == false) {
 					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
 					factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
+>>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
 				}
 				int firstOrSecondRow;
 				if (rowEven == true) {
@@ -183,4 +226,15 @@ public class Factory {
 			}
 		}
 	}
+<<<<<<< HEAD
+=======
+
+	public String[][] getMatrix() {
+		return matrix;
+	}
+
+	public Zone[][] getFactoryStructure() {
+		return factoryStructure;
+	}
+>>>>>>> 6a3b663287725d9a44546caed0af2c1469129600
 }
