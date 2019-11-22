@@ -33,7 +33,6 @@ public class Calculator {
 //		old.demo();
 		
 		Factory factory = new Factory(); 
-		factory.createStructureFactory();
 		
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());

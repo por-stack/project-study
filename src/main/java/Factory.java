@@ -11,19 +11,34 @@ public class Factory {
 	private Raster raster;
 	private String[][] matrix;
 	private Information[] informationPerRaw;
-	int[][] counter; // for canel0Entries
+	int[][] counter; // constructed in: countRowsColumns
 	int maxNumberColumn = 0; // for createFactoryStrucure
-	int[][] counterShort; // for cancel0Entries, createFactoryStructure
 	Zone[][] factoryStructure; // for createFactoryStructure
 
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
 		this.matrix = mport.getMatrix();
+		initializeFactory();
 	}
 
-	public void createStructureFactory() {
-		counter = new int[mport.getJ()][2];
+	public void initializeFactory() {
+		// count how many rows and how many columns each zone has
+		countRowsColumns();
+		// create factory structure
+		createFactoryStructure();
+		// put raster into zones
+		rasterIntoZones();
+		System.out.println(factoryStructure);
+	}
 
+	/*
+	 * from the matrix that contains the same information as the excel: take each
+	 * single entry in the column "Materialfläche". this will we our first step do
+	 * count how many rows and columns per row there are. Additonally we will aldo
+	 * save the "name" of each row for future purposes example of how
+	 */
+	public void countRowsColumns() {
+		counter = new int[mport.getJ()][2];
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int row = Integer.parseInt(fullPosition.substring(0, 3));
@@ -51,47 +66,34 @@ public class Factory {
 					if (counter[j][1] > maxNumberColumn)
 						maxNumberColumn = counter[j][1];
 				}
-			
-//			// create factory structure
-//			createFactoryStructure();
-//			// put Raster into Zones
-//			rasterIntoZones(i);
+
 		}
-		//test Esle 
-		for (int k = 0; k < counter.length; k++) {
-			System.out.println("" + counter[k][0] + "-" + counter[k][1]);
-		}
-		
+
+		// make the matrix shorter, cancelling the superfluos 0-entries
 		cancel0Entries();
-		
-		//test Esle 
-		for (int k = 0; k < counterShort.length; k++) {
-			System.out.println("" + counterShort[k][0] + "-" + counterShort[k][1]);
-		}
-		
-		createFactoryStructure();
-		rasterIntoZones();
-		
 	}
 
 	/*
-	 * cancel 0-entries used in createStructureFactory
+	 * cancel 0-entries used in createStructureFactory used in: countRowsColumns to
+	 * remove all the 0-entries
 	 */
 	public void cancel0Entries() {
+		int[][] counterShort; // for cancel0Entries, createFactoryStructure
 		int u = 0;
 		while (counter[u][0] != 0) {
 			u++;
 		}
 		int laenge = u - 1;
-		counterShort = new int[laenge + 1][2]; 
+		counterShort = new int[laenge + 1][2];
 		System.arraycopy(counter, 0, counterShort, 0, laenge + 1);
+		counter = counterShort;
 	}
 
 	/*
 	 * create factory structure used in createStructureFactory
 	 */
 	public void createFactoryStructure() {
-		int numberRows = counterShort.length;
+		int numberRows = counter.length;
 		factoryStructure = new Zone[numberRows / 2][7]; // we have a maximum of 7 zones per row
 
 	}
@@ -99,77 +101,87 @@ public class Factory {
 	/*
 	 * put Raster into zones used
 	 */
-	public void rasterIntoZones() { //int rowInImport 
+	public void rasterIntoZones() {
+		// take every single entry in the column "Materialfläche"
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
 			int columnNumber = Integer.parseInt(fullPosition.substring(4));
 
+			/*
+			 * next part: taking in consideration the information in counter, we can
+			 * determine in wihich row the zone has to go
+			 */
 			int j;
-			for (j = 0; j < counterShort.length; j++) {
-				if (rowNumber == counterShort[j][0]) {
+			for (j = 0; j < counter.length; j++) {
+				if (rowNumber == counter[j][0]) {
 					break;
 				}
 			}
-
-			// find out in which row the zone has to go. Remember that each zones involves
-			// to rows of Rasters
-			int rowInLayout;
+			int rowInFactoryStructure;
 			boolean rowEven = false;
 			if (j % 2 == 0) {
 				rowEven = true;
-				rowInLayout = j;
-				rowInLayout = (rowInLayout + 2) / 2 - 1;
+				rowInFactoryStructure = j;
+				rowInFactoryStructure = (rowInFactoryStructure + 2) / 2 - 1;
 			} else {
-				rowInLayout = j;
-				rowInLayout = (rowInLayout + 1) / 2 - 1;
+				rowInFactoryStructure = j;
+				rowInFactoryStructure = (rowInFactoryStructure + 1) / 2 - 1;
 			}
 
-			// get the zone for this specific raster
-			String zoneName = matrix[i][1];  //matrix rowinimport 1
+			// get the zone(name) for this specific raster
+			String zoneName = matrix[i][1]; // matrix rowinimport 1
 
-			// see if this zone is already in the factoryLayout. if not, add the zone and
-			// add the raster into this zone.
-			// if yes, get into zone and add the new raster in its interal layout.
+			/*
+			 *  see if this zone is already in the factoryLayout. 
+			 *  if not, add the zone and add the raster into this zone.
+			 *  if yes, get into zone and add the new raster in its internal layout.
+			 */
 			boolean alreadyIn = false;
 			int k;
 			for (k = 0; k < 7; k++) {
-				if (factoryStructure[rowInLayout][6 - k] == null) {
-
+				if (factoryStructure[rowInFactoryStructure][6 - k] == null) {
 					break;
 				} else {
-					if (factoryStructure[rowInLayout][6 - k].equals(zoneName)) {
+					if (factoryStructure[rowInFactoryStructure][6 - k].equals(zoneName)) {
 						alreadyIn = true;
 						break;
 					}
 				}
-
-				if (k != 7) {
-					if (alreadyIn == false) {
-						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
-						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
-						int sizeRaster = Integer.parseInt(matrix[i][17]); //rowInImport
-						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
-						int firstOrSecondRow;
-						if (rowEven == true) {
-							firstOrSecondRow = 0;
-							factoryStructure[rowInLayout][6 - k].amountRasterRow1 += sizeRaster;
-						} else {
-							firstOrSecondRow = 1;
-							factoryStructure[rowInLayout][6 - k].amountRasterRow2 += sizeRaster;
-						}
-						factoryStructure[rowInLayout][6 - k].raster[firstOrSecondRow][42
-								- factoryStructure[rowInLayout][6 - k].amountRasterRow1] = new Raster(rowNumber,
-										columnNumber);
-					}
+			}
+			if (k != 7) { //avoiding out of bounce
+				if (alreadyIn == false) {
+					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
+					factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 				}
+				int firstOrSecondRow;
+				if (rowEven == true) {
+					firstOrSecondRow = 0;
+				} else {
+					firstOrSecondRow = 1;
+				}
+				factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42 - columnNumber
+						- 12] = new Raster(rowNumber, columnNumber);
 
-//			factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber] = new Raster(rowNumber,
-//					columnNumber);
-//			System.out.println(factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber]);
+				/*
+				 * vecchio. Non ancora da cancellare!
+				 */
+//				Double sizeRaster = Double.parseDouble(matrix[i][17].replace(".", "").replace(",", ".")); // rowInImport
+//				int firstOrSecondRow;
+//				if (rowEven == true) {
+//					firstOrSecondRow = 0;
+//					factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow1 += sizeRaster;
+//					factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
+//							- factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow1] = new Raster(rowNumber,
+//									columnNumber);
+//				} else {
+//					firstOrSecondRow = 1;
+//					factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow2 += sizeRaster;
+//					factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
+//							- factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow2] = new Raster(rowNumber,
+//									columnNumber); //nel raster dobbiamo mettere la info che logistikequipment tiene 
 			}
 		}
-
 	}
 
 	public ArrayList<Zone> createStartingArray(Zone[][] factory) {
