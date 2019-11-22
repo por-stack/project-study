@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class Import {
 
-	public static final String path = "C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; //PROVA
+	public static final String path = "C:\\Users\\Utente\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; //PROVA
 
 	private String matrix [][];
 	private Workbook wb;
