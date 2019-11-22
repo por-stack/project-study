@@ -1,6 +1,6 @@
 
 public class Zone {
-	String name;
+	String name; //name
 	
 	int lastOccupiedRaster; //for calculation 
 	
