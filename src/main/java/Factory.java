@@ -183,17 +183,4 @@ public class Factory {
 			}
 		}
 	}
-
-	public ArrayList<Zone> createStartingArray(Zone[][] factory) {
-		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
-		for (int i = 0; i < factory.length; i++) {
-			for (int j = 0; j < factory[0].length; j++) {
-				if (factory[i][j].isEmpty) {
-					emptyZones.add(factory[i][j]);
-				}
-			}
-		}
-		return emptyZones;
-	}
-
 }
