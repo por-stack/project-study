@@ -51,13 +51,22 @@ public class Factory {
 					if (counter[j][1] > maxNumberColumn)
 						maxNumberColumn = counter[j][1];
 				}
-			// cancel 0-entries
-			cancel0Entries();
-			// create factory structure
-			createFactoryStructure();
-			// put Raster into Zones
-			rasterIntoZones(i);
 		}
+		//test
+		for (int k = 0; k < counter.length; k++) {
+			System.out.println("" + counter[k][0] + "-" + counter[k][1]);
+		}
+		
+		cancel0Entries(); //////////////////////////
+		
+		//test
+		for (int k = 0; k < counterShort.length; k++) {
+			System.out.println("" + counterShort[k][0] + "-" + counterShort[k][1]);
+		}
+		
+		createFactoryStructure();//////////////////////////////
+		rasterIntoZones();////////////////////////////////
+		
 	}
 
 	/*
@@ -69,7 +78,7 @@ public class Factory {
 			u++;
 		}
 		int laenge = u - 1;
-		counterShort = new int[laenge + 1][2];
+		counterShort = new int[laenge + 1][2]; 
 		System.arraycopy(counter, 0, counterShort, 0, laenge + 1);
 	}
 
@@ -79,12 +88,13 @@ public class Factory {
 	public void createFactoryStructure() {
 		int numberRows = counterShort.length;
 		factoryStructure = new Zone[numberRows / 2][7]; // we have a maximum of 7 zones per row
+
 	}
 
 	/*
 	 * put Raster into zones used
 	 */
-	public void rasterIntoZones(int rowInImport) {
+	public void rasterIntoZones() {
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -101,7 +111,7 @@ public class Factory {
 			// to rows of Rasters
 			int rowInLayout;
 			boolean rowEven = false;
-			if (rowNumber % 2 == 0) {
+			if (j % 2 == 0) {
 				rowEven = true;
 				rowInLayout = j;
 				rowInLayout = (rowInLayout + 2) / 2;
@@ -111,7 +121,7 @@ public class Factory {
 			}
 
 			// get the zone for this specific raster
-			String zoneName = matrix[rowInImport][1];
+			String zoneName = matrix[i][1]; //////////////////////////
 
 			// see if this zone is already in the factoryLayout. if not, add the zone and
 			// add the raster into this zone.
@@ -119,10 +129,12 @@ public class Factory {
 			boolean alreadyIn = false;
 			int k;
 			for (k = 0; k < 7; k++) {
-				if (factoryStructure[rowInLayout][6 - k] == null) {
+				if (factoryStructure[rowInLayout ][6 - k] == null) { ///////////////////////////////
+
 					break;
 				} else {
 					if (factoryStructure[rowInLayout][6 - k].equals(zoneName)) {
+						System.out.println("sono passato da qua");    //////////////////// non ci passa --> cambiare rowInLayout
 						alreadyIn = true;
 						break;
 					}
@@ -132,7 +144,7 @@ public class Factory {
 					if (alreadyIn == false) {
 						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
-						int sizeRaster = Integer.parseInt(matrix[rowInImport][17]);
+						int sizeRaster = Integer.parseInt(matrix[i][17]); /////////////
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
 						int firstOrSecondRow;
 						if (rowEven == true) {
