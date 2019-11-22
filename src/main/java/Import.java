@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class Import {
 
-	public static final String path = "C:\\Users\\Utente\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; // non funziona
+	public static final String path = "C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; // non funziona
 
 	private String matrix [][];
 	private Workbook wb;
@@ -30,7 +30,7 @@ public class Import {
 	 *  Workbook, Sheet, Dataformatter
 	 */
 	public void init() throws IOException, InvalidFormatException{
-		wb = WorkbookFactory.create(new File("C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"));
+		wb = WorkbookFactory.create(new File(path));
 		sh = wb.getSheetAt(0);
 		dtfrm = new DataFormatter();
 	}
