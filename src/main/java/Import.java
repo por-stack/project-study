@@ -7,15 +7,14 @@ import java.util.Iterator;
 
 public class Import {
 
-	public static final String path = "C:\\Users\\Utente\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx";
-
+	public static final String path = "C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; //PROVA
 
 	private String matrix [][];
 	private Workbook wb;
 	private Sheet sh;
 	private DataFormatter dtfrm;
 	
-	private int i = 0; 
+	private int i = 0;
 	private int j = 0; 
 	
 	/*
@@ -31,7 +30,7 @@ public class Import {
 	 *  Workbook, Sheet, Dataformatter
 	 */
 	public void init() throws IOException, InvalidFormatException{
-		wb = WorkbookFactory.create(new File(path));
+		wb = WorkbookFactory.create(new File("C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"));
 		sh = wb.getSheetAt(0);
 		dtfrm = new DataFormatter();
 	}
