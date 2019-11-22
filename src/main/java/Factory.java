@@ -57,14 +57,14 @@ public class Factory {
 //			// put Raster into Zones
 //			rasterIntoZones(i);
 		}
-		//test
+		//test Esle 
 		for (int k = 0; k < counter.length; k++) {
 			System.out.println("" + counter[k][0] + "-" + counter[k][1]);
 		}
 		
 		cancel0Entries();
 		
-		//test
+		//test Esle 
 		for (int k = 0; k < counterShort.length; k++) {
 			System.out.println("" + counterShort[k][0] + "-" + counterShort[k][1]);
 		}
@@ -99,7 +99,7 @@ public class Factory {
 	/*
 	 * put Raster into zones used
 	 */
-	public void rasterIntoZones() {
+	public void rasterIntoZones() { //int rowInImport 
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -116,17 +116,17 @@ public class Factory {
 			// to rows of Rasters
 			int rowInLayout;
 			boolean rowEven = false;
-			if (rowNumber % 2 == 0) {
+			if (j % 2 == 0) {
 				rowEven = true;
 				rowInLayout = j;
-				rowInLayout = (rowInLayout + 2) / 2;
+				rowInLayout = (rowInLayout + 2) / 2 - 1;
 			} else {
 				rowInLayout = j;
-				rowInLayout = (rowInLayout + 1) / 2;
+				rowInLayout = (rowInLayout + 1) / 2 - 1;
 			}
 
 			// get the zone for this specific raster
-			String zoneName = matrix[i][1];
+			String zoneName = matrix[i][1];  //matrix rowinimport 1
 
 			// see if this zone is already in the factoryLayout. if not, add the zone and
 			// add the raster into this zone.
@@ -148,7 +148,7 @@ public class Factory {
 					if (alreadyIn == false) {
 						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
-						int sizeRaster = Integer.parseInt(matrix[i][17]);
+						int sizeRaster = Integer.parseInt(matrix[i][17]); //rowInImport
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
 						int firstOrSecondRow;
 						if (rowEven == true) {
