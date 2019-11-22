@@ -7,14 +7,12 @@ import org.apache.poi.util.SystemOutLogger;
 public class Factory {
 
 	private Import mport;
-	private Zone zone;
-	private Raster raster;
 	private String[][] matrix;
 	private Information[] informationPerRaw;
-	int[][] counter; // for canel0Entries
-	int maxNumberColumn = 0; // for createFactoryStrucure
-	int[][] counterShort; // for cancel0Entries, createFactoryStructure
-	Zone[][] factoryStructure; // for createFactoryStructure
+	private int[][] counter; // for canel0Entries
+	private int maxNumberColumn = 0; // for createFactoryStrucure
+	private int[][] counterShort; // for cancel0Entries, createFactoryStructure
+	private Zone[][] factoryStructure; // for createFactoryStructure
 
 	public Factory() throws InvalidFormatException, IOException {
 		mport = new Import();
@@ -51,27 +49,11 @@ public class Factory {
 					if (counter[j][1] > maxNumberColumn)
 						maxNumberColumn = counter[j][1];
 				}
-			
-//			// create factory structure
-//			createFactoryStructure();
-//			// put Raster into Zones
-//			rasterIntoZones(i);
 		}
-		//test Esle 
-		for (int k = 0; k < counter.length; k++) {
-			System.out.println("" + counter[k][0] + "-" + counter[k][1]);
-		}
-		
 		cancel0Entries();
-		
-		//test Esle 
-		for (int k = 0; k < counterShort.length; k++) {
-			System.out.println("" + counterShort[k][0] + "-" + counterShort[k][1]);
-		}
-		
 		createFactoryStructure();
 		rasterIntoZones();
-		
+
 	}
 
 	/*
@@ -83,7 +65,7 @@ public class Factory {
 			u++;
 		}
 		int laenge = u - 1;
-		counterShort = new int[laenge + 1][2]; 
+		counterShort = new int[laenge + 1][2];
 		System.arraycopy(counter, 0, counterShort, 0, laenge + 1);
 	}
 
@@ -99,7 +81,7 @@ public class Factory {
 	/*
 	 * put Raster into zones used
 	 */
-	public void rasterIntoZones() { //int rowInImport 
+	public void rasterIntoZones() { // int rowInImport
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -126,7 +108,7 @@ public class Factory {
 			}
 
 			// get the zone for this specific raster
-			String zoneName = matrix[i][1];  //matrix rowinimport 1
+			String zoneName = matrix[i][1]; // matrix rowinimport 1
 
 			// see if this zone is already in the factoryLayout. if not, add the zone and
 			// add the raster into this zone.
@@ -148,8 +130,8 @@ public class Factory {
 					if (alreadyIn == false) {
 						factoryStructure[rowInLayout][6 - k] = new Zone(zoneName);
 						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
-						int sizeRaster = Integer.parseInt(matrix[i][17]); //rowInImport
-						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
+						int sizeRaster = Integer.parseInt(matrix[i][17]); // rowInImport
+//						factoryStructure[rowInLayout][6 - k].raster = new Raster[2][43];
 						int firstOrSecondRow;
 						if (rowEven == true) {
 							firstOrSecondRow = 0;
@@ -169,19 +151,13 @@ public class Factory {
 //			System.out.println(factoryStructure[j][factoryStructure[0].length - 1 + 12 - columnNumber]);
 			}
 		}
-
 	}
 
-	public ArrayList<Zone> createStartingArray(Zone[][] factory) {
-		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
-		for (int i = 0; i < factory.length; i++) {
-			for (int j = 0; j < factory[0].length; j++) {
-				if (factory[i][j].isEmpty) {
-					emptyZones.add(factory[i][j]);
-				}
-			}
-		}
-		return emptyZones;
+	public String[][] getMatrix() {
+		return matrix;
 	}
 
+	public Zone[][] getFactoryStructure() {
+		return factoryStructure;
+	}
 }
