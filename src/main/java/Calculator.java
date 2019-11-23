@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.xmlbeans.impl.jam.internal.elements.ArrayClassImpl;
 
 public class Calculator {
 
@@ -17,18 +18,39 @@ public class Calculator {
 	 * and a list of the empty zones is created.
 	 */
 	public Calculator() throws InvalidFormatException, IOException {
-		initial = new Factory();
-		initial.createFactoryStructure();
+		// qui ho levato la initialisieurung di factoy structure, perche viene gia fatta
+		// nella main.
+		// inoltre la methode createfactorystructure non esite piú!
 		emptyZones = createEmptyZones(initial.getFactoryStructure());
+		zonesToAllocate = createZonesToAllocate(initial.getFactoryStructure()); // to implement
+		performAlgorithm(initial.getFactoryStructure());
 	}
 
-	public Zone[][] performAlgorithm() {
+	public Zone[][] performAlgorithm(Zone[][] factory) {
 		/*	
 		 */
-		if (zonesToAllocate.isEmpty())
-			return initial.getFactoryStructure();
+		// this is the factory structure that we are going to modify in every step
+		Zone[][] newFactory = copyOfFactoryModification(factory);
 
-		return initial.getFactoryStructure();
+		if (zonesToAllocate.isEmpty()) {
+			return newFactory;
+		}
+
+		return newFactory;
+	}
+
+	/*
+	 * creates a copy of a matrix array
+	 */
+	public Zone[][] copyOfFactoryModification(Zone[][] factory) {
+		Zone[][] copyFactory = new Zone[factory.length][];
+		for (int i = 0; i < factory.length; i++) {
+			Zone[] row = factory[i];
+			int rowLength = row.length;
+			copyFactory[i] = new Zone[rowLength];
+			System.arraycopy(row, 0, copyFactory[i], 0, rowLength);
+		}
+		return copyFactory;
 	}
 
 	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
@@ -44,6 +66,15 @@ public class Calculator {
 	}
 
 	/*
+	 * to implement
+	 */
+	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
+		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
+
+		return zonesToAllocate;
+	}
+
+	/*
 	 * After having computed the new factory layout, we reconvert the factory to
 	 * excel
 	 */
@@ -52,12 +83,12 @@ public class Calculator {
 	}
 
 	public static void main(String[] args) throws InvalidFormatException, IOException {
-		Calculator calc = new Calculator();
+		// Initialize objects and start algorithm
 
 //		Import old = new Import(); 
 //		old.demo();
 
-		 
+		Factory factory = new Factory();
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 	}

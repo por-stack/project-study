@@ -9,7 +9,7 @@ public class Factory {
 	private Import mport;
 	private String[][] matrix;
 	private Information[] informationPerRaw;
-	private int[][] counter; // constructed in: countRowsColumns
+	private int[][] counter; // for canel0Entries
 	private int maxNumberColumn = 0; // for createFactoryStrucure
 	private Zone[][] factoryStructure; // for createFactoryStructure
 
@@ -69,7 +69,6 @@ public class Factory {
 
 		// make the matrix shorter, cancelling the superfluos 0-entries
 		cancel0Entries();
-
 	}
 
 	/*
@@ -103,7 +102,6 @@ public class Factory {
 
 	public void rasterIntoZones() {
 		// take every single entry in the column "Materialfläche"
-
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -130,15 +128,13 @@ public class Factory {
 				rowInFactoryStructure = (rowInFactoryStructure + 1) / 2 - 1;
 			}
 
-
 			// get the zone(name) for this specific raster
-
 			String zoneName = matrix[i][1]; // matrix rowinimport 1
 
 			/*
-			 *  see if this zone is already in the factoryLayout. 
-			 *  if not, add the zone and add the raster into this zone.
-			 *  if yes, get into zone and add the new raster in its internal layout.
+			 * see if this zone is already in the factoryLayout. if not, add the zone and
+			 * add the raster into this zone. if yes, get into zone and add the new raster
+			 * in its internal layout.
 			 */
 			boolean alreadyIn = false;
 			int k;
@@ -151,13 +147,11 @@ public class Factory {
 						break;
 					}
 				}
-
 			}
-			if (k != 7) { //avoiding out of bounce
+			if (k != 7) { // avoiding out of bounce
 				if (alreadyIn == false) {
 					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
 					factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
-
 				}
 				int firstOrSecondRow;
 				if (rowEven == true) {
