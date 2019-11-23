@@ -10,6 +10,7 @@ public class Calculator {
 	 * input factory to work and list of zones to allocate
 	 */
 	private Factory initial;
+	private Zone[][] newFactoryStructure;
 	private ArrayList<Zone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
@@ -23,7 +24,8 @@ public class Calculator {
 		// inoltre la methode createfactorystructure non esite piú!
 		emptyZones = createEmptyZones(initial.getFactoryStructure());
 		zonesToAllocate = createZonesToAllocate(initial.getFactoryStructure()); // to implement
-		performAlgorithm(initial.getFactoryStructure());
+		newFactoryStructure = performAlgorithm(initial.getFactoryStructure());
+		//calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure); 
 	}
 
 	public Zone[][] performAlgorithm(Zone[][] factory) {

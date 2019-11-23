@@ -160,7 +160,7 @@ public class Factory {
 					firstOrSecondRow = 1;
 				}
 				factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42 - columnNumber
-						- 12] = new Raster(rowNumber, columnNumber);
+						- 12] = new Raster(rowNumber, columnNumber); //manca logisticequipment 
 
 				/*
 				 * vecchio. Non ancora da cancellare!
