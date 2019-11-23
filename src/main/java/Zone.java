@@ -13,6 +13,8 @@ public class Zone {
 	boolean isEmpty; //in case of empty zone
 	
 	Raster[][] raster = new Raster[2][43];
+	
+	int dimensionBahnhof; 
 
 	Zone neighbRight;
 	Zone neighbLeft;

@@ -24,8 +24,6 @@ public class Calculator {
 		// inoltre la methode createfactorystructure non esite piú!
 		emptyZones = createEmptyZones(initial.getFactoryStructure());
 		zonesToAllocate = createZonesToAllocate(initial.getFactoryStructure()); // to implement
-		newFactoryStructure = performAlgorithm(initial.getFactoryStructure());
-		//calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure); 
 	}
 
 	public Zone[][] performAlgorithm(Zone[][] factory) {
@@ -37,8 +35,14 @@ public class Calculator {
 		if (zonesToAllocate.isEmpty()) {
 			return newFactory;
 		}
+		
+		newFactory = calculate(factory); 
 
 		return newFactory;
+	}
+	
+	public Zone[][] calculate(Zone[][] factory ) {
+		
 	}
 
 	/*
@@ -72,7 +76,6 @@ public class Calculator {
 	 */
 	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
-
 		return zonesToAllocate;
 	}
 
@@ -93,5 +96,7 @@ public class Calculator {
 		Factory factory = new Factory();
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
+		newFactoryStructure = calculator.performAlgorithm(initial.getFactoryStructure());
+		//calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure); 
 	}
 }
