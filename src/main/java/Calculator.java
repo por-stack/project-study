@@ -18,13 +18,13 @@ public class Calculator {
 	 */
 	public Calculator() throws InvalidFormatException, IOException {
 		initial = new Factory();
-		initial.createStructureFactory();
+		initial.createFactoryStructure();
 		emptyZones = createEmptyZones(initial.getFactoryStructure());
 	}
 
 	public Zone[][] performAlgorithm() {
 		/*	
-		 */	
+		 */
 		if (zonesToAllocate.isEmpty())
 			return initial.getFactoryStructure();
 
@@ -52,20 +52,12 @@ public class Calculator {
 	}
 
 	public static void main(String[] args) throws InvalidFormatException, IOException {
-		// Initialize objects and start algorithm
+		Calculator calc = new Calculator();
 
 //		Import old = new Import(); 
 //		old.demo();
-<<<<<<< HEAD
 
-		Factory factory = new Factory();
-		factory.createStructureFactory();
-
-=======
-		
-		Factory factory = new Factory(); 
-		
->>>>>>> 551e307b5f763f500361c491b1ee82f0b902ae14
+		 
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 	}
