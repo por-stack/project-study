@@ -22,8 +22,10 @@ public class Calculator {
 		// qui ho levato la initialisieurung di factoy structure, perche viene gia fatta
 		// nella main.
 		// inoltre la methode createfactorystructure non esite piú!
+		initial = new Factory();
 		emptyZones = createEmptyZones(initial.getFactoryStructure());
 		zonesToAllocate = createZonesToAllocate(initial.getFactoryStructure()); // to implement
+
 	}
 
 	public Zone[][] performAlgorithm(Zone[][] factory) {
@@ -42,7 +44,7 @@ public class Calculator {
 	}
 	
 	public Zone[][] calculate(Zone[][] factory ) {
-		
+		return null;
 	}
 
 	/*
@@ -93,10 +95,12 @@ public class Calculator {
 //		Import old = new Import(); 
 //		old.demo();
 
-		Factory factory = new Factory();
+//		Factory factory = new Factory();
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
-		newFactoryStructure = calculator.performAlgorithm(initial.getFactoryStructure());
+		
+		Calculator calculator = new Calculator();
+//		newFactoryStructure = calculator.performAlgorithm(initial.getFactoryStructure());
 		//calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure); 
 	}
 }

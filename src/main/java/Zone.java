@@ -14,7 +14,8 @@ public class Zone {
 	
 	Raster[][] raster = new Raster[2][43];
 	
-	int dimensionBahnhof; 
+	int dimensionTrainStationRow1;
+	int dimensionTrainStationRow2;
 
 	Zone neighbRight;
 	Zone neighbLeft;
