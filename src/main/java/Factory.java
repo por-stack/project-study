@@ -12,11 +12,16 @@ public class Factory {
 	private int[][] counter; // for canel0Entries
 	private int maxNumberColumn = 0; // for createFactoryStrucure
 	private Zone[][] factoryStructure; // for createFactoryStructure
+	
+	private ArrayList<Zone> emptyZones;
+	private ArrayList<Zone> zonesToAllocate;
 
 	public Factory() throws InvalidFormatException, IOException {
-		mport = new Import();
+		this.mport = new Import();
 		this.matrix = mport.getMatrix();
-		initializeFactory();
+		this.initializeFactory();
+		this.emptyZones = createEmptyZones(factoryStructure);
+		this.zonesToAllocate = createZonesToAllocate(factoryStructure); // to implement
 	}
 
 	public void initializeFactory() {
@@ -181,6 +186,27 @@ public class Factory {
 			}
 		}
 	}
+	
+	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
+		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
+		for (int i = 0; i < factory.length; i++) {
+			for (int j = 0; j < factory[0].length; j++) {
+				if (factory[i][j].isEmpty) {
+					emptyZones.add(factory[i][j]);
+				}
+			}
+		}
+		return emptyZones;
+	}
+
+	/*
+	 * to implement
+	 */
+	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
+		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
+		
+		return zonesToAllocate;
+	}
 
 	public String[][] getMatrix() {
 		return matrix;
@@ -188,5 +214,33 @@ public class Factory {
 
 	public Zone[][] getFactoryStructure() {
 		return factoryStructure;
+	}
+
+	/**
+	 * @return the emptyZones
+	 */
+	public ArrayList<Zone> getEmptyZones() {
+		return emptyZones;
+	}
+
+	/**
+	 * @param emptyZones the emptyZones to set
+	 */
+	public void setEmptyZones(ArrayList<Zone> emptyZones) {
+		this.emptyZones = emptyZones;
+	}
+
+	/**
+	 * @return the zonesToAllocate
+	 */
+	public ArrayList<Zone> getZonesToAllocate() {
+		return zonesToAllocate;
+	}
+
+	/**
+	 * @param zonesToAllocate the zonesToAllocate to set
+	 */
+	public void setZonesToAllocate(ArrayList<Zone> zonesToAllocate) {
+		this.zonesToAllocate = zonesToAllocate;
 	}
 }

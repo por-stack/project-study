@@ -9,10 +9,8 @@ public class Calculator {
 	/*
 	 * input factory to work and list of zones to allocate
 	 */
-	private Factory initial;
-	private Zone[][] newFactoryStructure;
-	private ArrayList<Zone> emptyZones;
-	private ArrayList<Zone> zonesToAllocate;
+	private static Factory initial;
+	private static Zone[][] newFactoryStructure;
 
 	/*
 	 * The initial factory is created with the input data. The factory is analyzed
@@ -22,29 +20,67 @@ public class Calculator {
 		// qui ho levato la initialisieurung di factoy structure, perche viene gia fatta
 		// nella main.
 		// inoltre la methode createfactorystructure non esite piú!
-		initial = new Factory();
-		emptyZones = createEmptyZones(initial.getFactoryStructure());
-		zonesToAllocate = createZonesToAllocate(initial.getFactoryStructure()); // to implement
 
 	}
 
-	public Zone[][] performAlgorithm(Zone[][] factory) {
+	public Zone[][] performAlgorithm(Factory factory) {
 		/*	
 		 */
 		// this is the factory structure that we are going to modify in every step
-		Zone[][] newFactory = copyOfFactoryModification(factory);
+		Zone[][] newFactory = copyOfFactoryModification(factory.getFactoryStructure());
 
-		if (zonesToAllocate.isEmpty()) {
+		if (factory.getZonesToAllocate().isEmpty()) {
 			return newFactory;
 		}
-		
-		newFactory = calculate(factory); 
+
+		newFactory = calculate(factory);
 
 		return newFactory;
 	}
-	
-	public Zone[][] calculate(Zone[][] factory ) {
-		return null;
+
+	public Zone[][] calculate(Factory factory)) {
+		Object information = false; //infromation contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
+		information = fitPerfectly(factory); 
+		(if information.applicable) {
+			return information; 
+		}
+		fitPerfectlyWithList(); 
+		fitMoving1Neighbour(); 
+		fitMoving1NeighbourWithList(); 
+		fitMoving2Neighbours(); 
+		fitMoving2NeighboursWithList(); 
+		fitMoving3Neighbours(); 
+		fitMoving3NeighboursWithList();
+		fitMoving4Neighbours()
+		fitMoving4NeighboursWithList(); 
+		fitMoving5Neighbours(); 
+		fitMoving5NeighboursWithList(); 
+		fitMoving6Neighbours(); 
+		fitMoving6NeighboursWithList(); 
+	}
+
+	public void fitPerfectly(Factory factory) {
+		// prendi le zone da allocare
+		// compara la prima zona con prima zona libera
+		for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
+			Zone toAllocate = factory.getZonesToAllocate().get(i);
+			for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+				Zone freeZone = factory.getEmptyZones().get(j);
+				if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
+					// ottimo
+				}
+
+			}
+		}
+		// ci sta? (totale raster uguale)
+		// se si, calcola costo e ricordatelo, salva la struttura modificata
+		// se no, segna che non é possibile allocare
+		// compara con prossima zona ...
+		// esistono zone che possono allocate?
+		// se si, compara costi di tutti i si
+		// scegli quella con i costi minori: applica la struttura nuova e metti trovato
+		// = true --> return costi e struttura nuova
+		// se no, lascia la struttura com'é e ridai trovato false;
 	}
 
 	/*
@@ -61,26 +97,6 @@ public class Calculator {
 		return copyFactory;
 	}
 
-	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
-		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
-		for (int i = 0; i < factory.length; i++) {
-			for (int j = 0; j < factory[0].length; j++) {
-				if (factory[i][j].isEmpty) {
-					emptyZones.add(factory[i][j]);
-				}
-			}
-		}
-		return emptyZones;
-	}
-
-	/*
-	 * to implement
-	 */
-	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
-		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
-		return zonesToAllocate;
-	}
-
 	/*
 	 * After having computed the new factory layout, we reconvert the factory to
 	 * excel
@@ -95,12 +111,10 @@ public class Calculator {
 //		Import old = new Import(); 
 //		old.demo();
 
-//		Factory factory = new Factory();
-//		Calculator calculator = new Calculator();
-//		calculator.performAlgorithm(new Factory());
-		
+		Factory factory = new Factory();
 		Calculator calculator = new Calculator();
-//		newFactoryStructure = calculator.performAlgorithm(initial.getFactoryStructure());
-		//calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure); 
+//		calculator.performAlgorithm(new Factory());
+		newFactoryStructure = calculator.performAlgorithm(initial);
+		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 	}
 }
