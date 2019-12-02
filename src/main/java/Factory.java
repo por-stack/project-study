@@ -12,8 +12,8 @@ public class Factory {
 	private int[][] counter; // for canel0Entries
 	private int maxNumberColumn = 0; // for createFactoryStrucure
 	private Zone[][] factoryStructure; // for createFactoryStructure
-	
-	private ArrayList<Zone> emptyZones;
+
+	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
 	public Factory() throws InvalidFormatException, IOException {
@@ -155,7 +155,7 @@ public class Factory {
 			}
 			if (k != 7) { // avoiding out of bounce
 				if (alreadyIn == false) {
-					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
+					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0);
 					factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 				}
 				int firstOrSecondRow;
@@ -165,7 +165,7 @@ public class Factory {
 					firstOrSecondRow = 1;
 				}
 				factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42 - columnNumber
-						- 12] = new Raster(rowNumber, columnNumber); //manca logisticequipment 
+						- 12] = new Raster(rowNumber, columnNumber); // manca logisticequipment
 
 				/*
 				 * vecchio. Non ancora da cancellare!
@@ -187,13 +187,15 @@ public class Factory {
 			}
 		}
 	}
-	
-	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
-		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
+
+	public ArrayList<EmptyZone> createEmptyZones(Zone[][] factory) {
+		ArrayList<EmptyZone> emptyZones = new ArrayList<EmptyZone>();
 		for (int i = 0; i < factory.length; i++) {
 			for (int j = 0; j < factory[0].length; j++) {
 				if (factory[i][j].isEmpty) {
-					emptyZones.add(factory[i][j]);
+					EmptyZone emptyZone = new EmptyZone(factory[i][j].name, factory[i][j].amountRasterRow1,
+							factory[i][j].amountRasterRow2, i, j);
+					emptyZones.add(emptyZone);
 				}
 			}
 		}
@@ -205,7 +207,7 @@ public class Factory {
 	 */
 	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
-		
+
 		return zonesToAllocate;
 	}
 
@@ -220,14 +222,14 @@ public class Factory {
 	/**
 	 * @return the emptyZones
 	 */
-	public ArrayList<Zone> getEmptyZones() {
+	public ArrayList<EmptyZone> getEmptyZones() {
 		return emptyZones;
 	}
 
 	/**
 	 * @param emptyZones the emptyZones to set
 	 */
-	public void setEmptyZones(ArrayList<Zone> emptyZones) {
+	public void setEmptyZones(ArrayList<EmptyZone> emptyZones) {
 		this.emptyZones = emptyZones;
 	}
 

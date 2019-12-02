@@ -39,7 +39,9 @@ public class Calculator {
 	}
 
 	public Zone[][] calculate(Factory factory)) {
-		Object information = false; //infromation contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
+		
+		//checkForLargerZone
+		Object information = false; //information contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
 		information = fitPerfectly(factory); 
 		(if information.applicable) {
 			return information; 
@@ -59,30 +61,51 @@ public class Calculator {
 		fitMoving6NeighboursWithList(); 
 	}
 
-	public void fitPerfectly(Factory factory) {
+	public Information fitPerfectly(Factory factory) {
 		// prendi le zone da allocare
 		// compara la prima zona con prima zona libera
+		ArrayList<Information> allocationOptions = new ArrayList<Information>();
+
 		for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
 			Zone toAllocate = factory.getZonesToAllocate().get(i);
 			for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-				Zone freeZone = factory.getEmptyZones().get(j);
+				EmptyZone freeZone = factory.getEmptyZones().get(j);
 				if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
-					// ottimo
+					int cost = calculateCost(freeZone, toAllocate);
+					Factory modifiedStructure = allocate(factory, freeZone, toAllocate);
+					allocationOptions.add(new Information(true, modifiedStructure, cost));
 				}
-
 			}
-		}
-		// ci sta? (totale raster uguale)
-		// se si, calcola costo e ricordatelo, salva la struttura modificata
-		// se no, segna che non é possibile allocare
-		// compara con prossima zona ...
-		// esistono zone che possono allocate?
-		// se si, compara costi di tutti i si
-		// scegli quella con i costi minori: applica la struttura nuova e metti trovato
-		// = true --> return costi e struttura nuova
-		// se no, lascia la struttura com'é e ridai trovato false;
-	}
 
+		}
+	}
+	// ci sta? (totale raster uguale)
+	// se si, calcola costo e ricordatelo, salva la struttura modificata
+	// se no, segna che non é possibile allocare
+	// compara con prossima zona ...
+	// esistono zone che possono allocate?
+	// se si, compara costi di tutti i si
+	// scegli quella con i costi minori: applica la struttura nuova e metti trovato
+	// = true --> return costi e struttura nuova
+	// se no, lascia la struttura com'é e ridai trovato false;
+
+	
+	/*
+	 * calculateCost() of allocation 
+	 */
+	public int calculateCost(Zone freeZone, Zone toAllocate) {
+		//
+	}
+	
+	/*
+	 * 
+	 */
+	public Factory allocate(Factory factory, EmptyZone emptyZone, Zone toAllocate) {
+		Zone[][] tempFactory = factory.getFactoryStructure(); 
+		int i = emptyZone.locationInFactory[0];
+		int j = emptyZone.locationInFactory[1];
+		tempFactory[i][j] = toAllocate; 
+	}
 	/*
 	 * creates a copy of a matrix array
 	 */

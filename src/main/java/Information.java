@@ -1,5 +1,12 @@
 
 public class Information {
+	
+	boolean applicable; 
+	
+	Factory modifiedStructure;
+	
+	double costs; 
+	
 	int row; //row the information is about
 	
 	int lengthRow; //how many raster are occupied in the row	
@@ -12,7 +19,13 @@ public class Information {
 	Zone[] freeZone; //length, logistic equipment
 	
 	int amountZones; 
-	Zone[] occupiedZones; //da dove a dove, ogni zona quanti Raster contiene, 
+	Zone[] occupiedZones; //da dove a dove, ogni zona quanti Raster contiene
+	
+	public Information (boolean applicable, Factory modifiedStructure, int cost) {
+		this.applicable = applicable; 
+		this.modifiedStructure = modifiedStructure;
+		this.costs = cost; 
+	}
 	
 	
 }
