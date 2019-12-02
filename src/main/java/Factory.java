@@ -31,13 +31,13 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-		System.out.println(factoryStructure);
+		System.out.println(this.factoryStructure);
 	}
 
 	/*
 	 * from the matrix that contains the same information as the excel: take each
-	 * single entry in the column "Materialfläche". this will we our first step do
-	 * count how many rows and columns per row there are. Additonally we will aldo
+	 * single entry in the column "Materialfläche". this will be our first step do
+	 * count how many rows and columns per row there are. Additionally we will also
 	 * save the "name" of each row for future purposes example of how
 	 */
 	public void countRowsColumns() {
@@ -69,7 +69,6 @@ public class Factory {
 					if (counter[j][1] > maxNumberColumn)
 						maxNumberColumn = counter[j][1];
 				}
-
 		}
 
 		// make the matrix shorter, cancelling the superfluos 0-entries
@@ -114,7 +113,7 @@ public class Factory {
 
 			/*
 			 * next part: taking in consideration the information in counter, we can
-			 * determine in wihich row the zone has to go
+			 * determine in which row the zone has to go
 			 */
 			int j;
 			for (j = 0; j < counter.length; j++) {
@@ -147,13 +146,13 @@ public class Factory {
 				if (factoryStructure[rowInFactoryStructure][6 - k] == null) {
 					break;
 				} else {
-					if (factoryStructure[rowInFactoryStructure][6 - k].equals(zoneName)) {
+					if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName)) { //////// add.name
 						alreadyIn = true;
 						break;
 					}
 				}
 			}
-			if (k != 7) { // avoiding out of bounce
+			if (k != 7) { // avoiding out of bound
 				if (alreadyIn == false) {
 					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0);
 					factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
