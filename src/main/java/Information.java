@@ -21,7 +21,7 @@ public class Information {
 	int amountZones; 
 	Zone[] occupiedZones; //da dove a dove, ogni zona quanti Raster contiene
 	
-	public Information (boolean applicable, Factory modifiedStructure, int cost) {
+	public Information (boolean applicable, Factory modifiedStructure, double cost) {
 		this.applicable = applicable; 
 		this.modifiedStructure = modifiedStructure;
 		this.costs = cost; 

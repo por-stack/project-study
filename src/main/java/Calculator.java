@@ -38,15 +38,21 @@ public class Calculator {
 		return newFactory;
 	}
 
-	public Zone[][] calculate(Factory factory)) {
+	public Information calculate(Factory factory) {
+		 
 		
-		//checkForLargerZone
-		Object information = false; //information contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
+		Information information; //information contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
+		
+		//level 0
+		information = checkForLargerZones();
+		if (information.applicable) return information;
+		
+		//level 1
 		information = fitPerfectly(factory); 
-		(if information.applicable) {
-			return information; 
-		}
-		fitPerfectlyWithList(); 
+		if (information.applicable) return information; 
+		
+		//level 2
+		information = fitPerfectlyWithList(); 
 		fitMoving1Neighbour(); 
 		fitMoving1NeighbourWithList(); 
 		fitMoving2Neighbours(); 
@@ -66,6 +72,10 @@ public class Calculator {
 		// compara la prima zona con prima zona libera
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 
+		// for every ZoneToAllocate iterate over the emptyZones and check if there is a
+		// feasible solution.
+		// save information (applicable, modifiedstructure, cost) for every feasible
+		// solution
 		for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
 			Zone toAllocate = factory.getZonesToAllocate().get(i);
 			for (int j = 0; j < factory.getEmptyZones().size(); j++) {
@@ -77,35 +87,61 @@ public class Calculator {
 				}
 			}
 
+			// check if there is any feasible solution.
+			// If there is more than one, chosse the cheapest allocation.
+			if (allocationOptions.size() == 0) {
+				// qui ce da vedere se e quando usare la seconda hirarchy 
+				return new Information(false, null, 0);
+			} else if (allocationOptions.size() == 1) {
+				return new Information(true, allocationOptions.get(0).modifiedStructure,
+						allocationOptions.get(0).costs);
+			} else {
+				Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+				int counter = 0;
+				double minCost = allocationOptionsArray[counter].costs;
+				for (int j = counter; j < allocationOptions.size(); j++) {
+					if (minCost > allocationOptionsArray[counter].costs) {
+						minCost = allocationOptionsArray[counter].costs;
+						counter = j;
+					}
+				}
+				return new Information(true, allocationOptions.get(counter).modifiedStructure,
+						allocationOptions.get(counter).costs);
+			}
 		}
+		return null;
 	}
-	// ci sta? (totale raster uguale)
-	// se si, calcola costo e ricordatelo, salva la struttura modificata
-	// se no, segna che non é possibile allocare
-	// compara con prossima zona ...
-	// esistono zone che possono allocate?
-	// se si, compara costi di tutti i si
-	// scegli quella con i costi minori: applica la struttura nuova e metti trovato
-	// = true --> return costi e struttura nuova
-	// se no, lascia la struttura com'é e ridai trovato false;
 
-	
 	/*
-	 * calculateCost() of allocation 
+	 * calculateCost() of allocation
 	 */
 	public int calculateCost(Zone freeZone, Zone toAllocate) {
-		//
+		int cost = 0;
+		for (int i = 0; i < freeZone.getLogisticEquipment().size(); i++) {
+			int freeZoneLE = freeZone.getLogisticEquipment().get(i).anzahl;
+			int toAllocateLE = toAllocate.getLogisticEquipment().get(i).anzahl;
+			if (freeZoneLE >= toAllocateLE) {
+				cost = +freeZoneLE - toAllocateLE;
+			} else {
+				cost = +toAllocateLE - freeZoneLE;
+			}
+		}
+		return cost;
 	}
-	
+
 	/*
-	 * 
+	 * allocate()
 	 */
 	public Factory allocate(Factory factory, EmptyZone emptyZone, Zone toAllocate) {
-		Zone[][] tempFactory = factory.getFactoryStructure(); 
+		Zone[][] tempStructure = factory.getFactoryStructure();
 		int i = emptyZone.locationInFactory[0];
 		int j = emptyZone.locationInFactory[1];
-		tempFactory[i][j] = toAllocate; 
+		tempStructure[i][j] = toAllocate;
+		Factory tempFactory = factory; 
+		tempFactory.setFactoryStructure(tempStructure);
+		return tempFactory;
 	}
+
 	/*
 	 * creates a copy of a matrix array
 	 */
@@ -134,10 +170,12 @@ public class Calculator {
 //		Import old = new Import(); 
 //		old.demo();
 
-		Factory factory = new Factory();
+		initial = new Factory();
 		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 		newFactoryStructure = calculator.performAlgorithm(initial);
+		Factory newFactory = initial;
+		newFactory.setFactoryStructure(newFactoryStructure);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 	}
 }
