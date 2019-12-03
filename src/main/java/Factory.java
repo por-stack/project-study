@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.SystemOutLogger;
@@ -12,7 +13,8 @@ public class Factory {
 	private int[][] counter; // for canel0Entries
 	private int maxNumberColumn = 0; // for createFactoryStrucure
 	private Zone[][] factoryStructure; // for createFactoryStructure
-	
+	private boolean isTrainStat = false;
+
 	private ArrayList<Zone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
@@ -20,8 +22,8 @@ public class Factory {
 		this.mport = new Import();
 		this.matrix = mport.getMatrix();
 		this.initializeFactory();
-		this.emptyZones = createEmptyZones(factoryStructure);
-		this.zonesToAllocate = createZonesToAllocate(factoryStructure); // to implement
+//		this.emptyZones = createEmptyZones(factoryStructure);
+//		this.zonesToAllocate = createZonesToAllocate(factoryStructure); // to implement
 	}
 
 	public void initializeFactory() {
@@ -31,7 +33,9 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-		System.out.println(this.factoryStructure);
+
+		// prints the matrix 'counter'
+		System.out.println(Arrays.deepToString(counter));
 	}
 
 	/*
@@ -106,7 +110,7 @@ public class Factory {
 
 	public void rasterIntoZones() {
 		// take every single entry in the column "Materialfläche"
-		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
+		for (int i = 1; i < mport.getI() - 1; i++) { // j=5 // breakpoint
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
 			int columnNumber = Integer.parseInt(fullPosition.substring(4));
@@ -154,8 +158,17 @@ public class Factory {
 			}
 			if (k != 7) { // avoiding out of bound
 				if (alreadyIn == false) {
+					if (matrix[i][2].equals("BHF")) {
+						if (true) {
+
+						}
+					}
 					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
 					factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
+				}
+				if (matrix[i][2].equals("BHF")) {
+					
+					continue;
 				}
 				int firstOrSecondRow;
 				if (rowEven == true) {
@@ -163,8 +176,8 @@ public class Factory {
 				} else {
 					firstOrSecondRow = 1;
 				}
-				factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42 - columnNumber
-						- 12] = new Raster(rowNumber, columnNumber); //manca logisticequipment 
+				factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
+						- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, ); // manca logisticequipment
 
 				/*
 				 * vecchio. Non ancora da cancellare!
@@ -186,7 +199,7 @@ public class Factory {
 			}
 		}
 	}
-	
+
 	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
 		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
 		for (int i = 0; i < factory.length; i++) {
@@ -204,7 +217,7 @@ public class Factory {
 	 */
 	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
-		
+
 		return zonesToAllocate;
 	}
 

@@ -37,27 +37,27 @@ public class Calculator {
 
 		return newFactory;
 	}
-
-	public Zone[][] calculate(Factory factory)) {
-		Object information = false; //infromation contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
-		information = fitPerfectly(factory); 
-		(if information.applicable) {
-			return information; 
-		}
-		fitPerfectlyWithList(); 
-		fitMoving1Neighbour(); 
-		fitMoving1NeighbourWithList(); 
-		fitMoving2Neighbours(); 
-		fitMoving2NeighboursWithList(); 
-		fitMoving3Neighbours(); 
-		fitMoving3NeighboursWithList();
-		fitMoving4Neighbours()
-		fitMoving4NeighboursWithList(); 
-		fitMoving5Neighbours(); 
-		fitMoving5NeighboursWithList(); 
-		fitMoving6Neighbours(); 
-		fitMoving6NeighboursWithList(); 
-	}
+//
+//	public Zone[][] calculate(Factory factory)) {
+//		Object information = false; //infromation contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
+//		information = fitPerfectly(factory); 
+//		(if information.applicable) {
+//			return information; 
+//		}
+//		fitPerfectlyWithList(); 
+//		fitMoving1Neighbour(); 
+//		fitMoving1NeighbourWithList(); 
+//		fitMoving2Neighbours(); 
+//		fitMoving2NeighboursWithList(); 
+//		fitMoving3Neighbours(); 
+//		fitMoving3NeighboursWithList();
+//		fitMoving4Neighbours()
+//		fitMoving4NeighboursWithList(); 
+//		fitMoving5Neighbours(); 
+//		fitMoving5NeighboursWithList(); 
+//		fitMoving6Neighbours(); 
+//		fitMoving6NeighboursWithList(); 
+//	}
 
 	public void fitPerfectly(Factory factory) {
 		// prendi le zone da allocare
@@ -112,9 +112,9 @@ public class Calculator {
 //		old.demo();
 
 		Factory factory = new Factory();
-		Calculator calculator = new Calculator();
+//		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
-		newFactoryStructure = calculator.performAlgorithm(initial);
+//		newFactoryStructure = calculator.performAlgorithm(initial);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 	}
 }

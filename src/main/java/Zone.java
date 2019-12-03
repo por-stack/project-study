@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Zone {
 	String name; // name
@@ -26,6 +27,16 @@ public class Zone {
 		this.name = name;
 		amountRasterRow1 = 0;
 		amountRasterRow2 = 0;
+	}
+
+	@Override
+	public String toString() {
+		return "Zone [name=" + name + ", lastOccupiedRaster=" + lastOccupiedRaster + ", amountRasterRow1="
+				+ amountRasterRow1 + ", amountRasterRow2=" + amountRasterRow2 + ", rows=" + Arrays.toString(rows)
+				+ ", posInFactoryLayout=" + posInFactoryLayout + ", isEmpty=" + isEmpty + ", raster="
+				+ Arrays.toString(raster) + ", dimensionTrainStationRow1=" + dimensionTrainStationRow1
+				+ ", dimensionTrainStationRow2=" + dimensionTrainStationRow2 + ", totalNumberRaster="
+				+ totalNumberRaster + ", neighbRight=" + neighbRight + ", neighbLeft=" + neighbLeft + "]";
 	}
 
 }
