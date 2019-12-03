@@ -12,4 +12,6 @@ public class LogisticEquipment {
 	public void anzahlSteigern() {
 		anzahl =+ 1; 
 	}
+	
+	//discutere 
 }
