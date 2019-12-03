@@ -72,7 +72,7 @@ public class Calculator {
 		Information information; //information (boolean applicable, Zone[][] modifiedStructure, double cost) 
 		
 		//level 0
-		information = checkForLargerZones(zone, factory);
+		information = checkForLargerZone(zone, factory);
 		if (information.applicable) return information;
 		
 		//level 1
@@ -112,11 +112,34 @@ public class Calculator {
 	}
 
 	public Information checkForLargerZone(Zone zone, Factory factory) {
-		Zone toAllocate = zone; 
-		boolean allZonesLarger = true; 
+		Zone toAllocate = zone;
+		boolean allZonesLarger = true;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			EmptyZone freeZone = factory.getEmptyZones().get(j);
-			if (freeZone )
+			if (toAllocate.totalNumberRaster > freeZone.totalNumberRaster) {
+				allZonesLarger = false;
+				break;
+			}
+		}
+		// if all zones are larger, then we check wich of the emptyZones is the largest
+		// one
+		if (allZonesLarger) {
+			int largestSize = factory.getEmptyZones().get(0).totalNumberRaster;
+			int positionLargest = 0;
+			for (int j = 1; j < factory.getEmptyZones().size(); j++) {
+				if (factory.getEmptyZones().get(j).totalNumberRaster > largestSize) {
+					positionLargest = j;
+				}
+			}
+			//da vedere ancora come fare, dato che la zona piú grande nel programma é come se andasse spezzata in due zone nuove 
+			int cost = calculateCost(factory.getEmptyZones().get(positionLargest),
+					toAllocate);
+			Factory modifiedStructure = allocateInLargerZone(factory, factory.getEmptyZones().get(positionLargest),
+					toAllocate);
+			
+			return new Information(true, modifiedStructure, cost)
+		} else {
+			return new Information(false, null, 0);
 		}
 	}
 
@@ -161,7 +184,7 @@ public class Calculator {
 	}
 
 	public Information fitPerfectlyWithList(Zone zone, Factory factory) {
-		
+
 	}
 
 	/*
