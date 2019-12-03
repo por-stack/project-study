@@ -1,5 +1,6 @@
 
 public class LogisticEquipment {
+	//make sure, that the equipment is always in the same order as a list
 	String name; 
 	int anzahl; 
 	

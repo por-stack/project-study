@@ -44,11 +44,14 @@ public class Calculator {
 		 */
 
 		while (!zonesToBeAllocated.isEmpty()) {
+			zonesToBeAllocated = initial.getZonesToAllocate(); //update
+
 			for (int i = 0; i < zonesToBeAllocated.size(); i++) {
 				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
 			}
 
 			// choose the cheapest for this iteration
+			// error: guarda se applicable é true
 			int i = 0, j = 0;
 			Information informationOfBestZone = zonesToBeAllocated.get(i).information;
 			for (i = 1; i < zonesToBeAllocated.size(); i++) {
@@ -68,6 +71,7 @@ public class Calculator {
 	}
 
 	public Information calculate(Zone zone, Factory factory) {
+		//cambia ordine:prima withlist poi senza 
 		
 		Information information; //information (boolean applicable, Zone[][] modifiedStructure, double cost) 
 		
@@ -79,34 +83,34 @@ public class Calculator {
 		information = fitPerfectly(zone, factory); 
 		if (information.applicable) return information; 
 		
-		//level 2
-		information = fitPerfectlyWithList(zone, factory); 
-		if (information.applicable) return information;
+//		//level 2
+//		information = fitPerfectlyWithList(zone, factory); 
+//		if (information.applicable) return information;
 		
 		//level 3
 		information = fitMoving1Neighbour(zone, factory); 
 		if (information.applicable) return information;
 		
-		//level 4
-		information = fitMoving1NeighbourWithList(); 
-		if (information.applicable) return information;
+//		//level 4
+//		information = fitMoving1NeighbourWithList(); 
+//		if (information.applicable) return information;
 		
 		//level 5
 		information = fitMoving2Neighbours(); 
 		if (information.applicable) return information;
 		
-		//level 6
-		information = fitMoving2NeighboursWithList(); 
-		if (information.applicable) return information;
+//		//level 6
+//		information = fitMoving2NeighboursWithList(); 
+//		if (information.applicable) return information;
 		
 		fitMoving3Neighbours(); 
-		fitMoving3NeighboursWithList();
+//		fitMoving3NeighboursWithList();
 		fitMoving4Neighbours()
-		fitMoving4NeighboursWithList(); 
+//		fitMoving4NeighboursWithList(); 
 		fitMoving5Neighbours(); 
-		fitMoving5NeighboursWithList(); 
+//		fitMoving5NeighboursWithList(); 
 		fitMoving6Neighbours(); 
-		fitMoving6NeighboursWithList(); 
+//		fitMoving6NeighboursWithList(); 
 		
 		return null; 
 	}
@@ -118,7 +122,7 @@ public class Calculator {
 			EmptyZone freeZone = factory.getEmptyZones().get(j);
 			if (toAllocate.totalNumberRaster > freeZone.totalNumberRaster) {
 				allZonesLarger = false;
-				break;
+				return new Information(false, null, 0);
 			}
 		}
 		// if all zones are larger, then we check wich of the emptyZones is the largest
@@ -147,8 +151,7 @@ public class Calculator {
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 
 		// for the ZoneToAllocate given as parameter iterate over the emptyZones and
-		// check if there is a
-		// feasible solution.
+		// check if there is a feasible solution.
 		// save information (applicable, modifiedstructure, cost) for every feasible
 		// solution
 		Zone toAllocate = zone;
@@ -196,9 +199,9 @@ public class Calculator {
 			int freeZoneLE = freeZone.getLogisticEquipment().get(i).anzahl;
 			int toAllocateLE = toAllocate.getLogisticEquipment().get(i).anzahl;
 			if (freeZoneLE >= toAllocateLE) {
-				cost = +freeeZoneLE - toAllocateLE;
+				cost =+ freeZoneLE - toAllocateLE;
 			} else {
-				cost = +toAllocateLE - freeZoneLE;
+				cost =+ toAllocateLE - freeZoneLE;
 			}
 		}
 		return cost;
