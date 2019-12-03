@@ -24,21 +24,49 @@ public class Calculator {
 	}
 
 	public Zone[][] performAlgorithm(Factory factory) {
-		/*	
-		 */
-		// this is the factory structure that we are going to modify in every step
-		Zone[][] newFactory = copyOfFactoryModification(factory.getFactoryStructure());
 
-		if (factory.getZonesToAllocate().isEmpty()) {
-			return newFactory;
+		ArrayList<Zone> zonesToBeAllocated = factory.getZonesToAllocate();
+
+		// in case the list of zonesToBeAllocated is empty
+		if (zonesToBeAllocated.isEmpty()) {
+			return factory.getFactoryStructure();
 		}
 
-		newFactory = calculate(factory);
+		/*
+		 * What should happen in this method: Thinking of our algorithm, we have an
+		 * initial list with all the zonesToBeAllocated. We want than individually each
+		 * of these zones get into the algorithm (calculate)) once. When each of them
+		 * has hone thorugh once, we check the information of each of these zones,
+		 * comparing the cost and choose the cheapest one. Only now the structure in
+		 * factoryö.getFactoryStructure is really modified. This implies that when
+		 * entering in calculate the structure needs to be copied.
+		 */
 
-		return newFactory;
+		while (!zonesToBeAllocated.isEmpty()) {
+			for (int i = 0; i < zonesToBeAllocated.size(); i++) {
+				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i));
+			}
+
+			// choose the cheapest for this iteration
+			int i = 0, j = 0;
+			Information informationOfBestZone = zonesToBeAllocated.get(i).information;
+			for (i = 1; i < zonesToBeAllocated.size(); i++) {
+				if (zonesToBeAllocated.get(i).information.costs < informationOfBestZone.costs) {
+					informationOfBestZone = zonesToBeAllocated.get(i).information;
+					j = i;
+				}
+			}
+
+			// apply the modifications to real factoryStructure. take zone out of
+			// zonesToBeAllocated
+			factory.setFactoryStructure(zonesToBeAllocated.get(j).information.modifiedStructure.getFactoryStructure());
+			zonesToBeAllocated.remove(j); 
+		}
+
+		return informationOfBestZone.modifiedStructure.getFactoryStructure();
 	}
 
-	public Information calculate(Factory factory) {
+	public Information calculate(Zone zone) {
 		 
 		
 		Information information; //information contains boolean applicable and the modified structure coming from the lower lvel in the recursion 
@@ -52,7 +80,9 @@ public class Calculator {
 		if (information.applicable) return information; 
 		
 		//level 2
-		information = fitPerfectlyWithList(); 
+		information = fitPerfectlyWithList(factory); 
+		
+		
 		fitMoving1Neighbour(); 
 		fitMoving1NeighbourWithList(); 
 		fitMoving2Neighbours(); 
@@ -65,6 +95,10 @@ public class Calculator {
 		fitMoving5NeighboursWithList(); 
 		fitMoving6Neighbours(); 
 		fitMoving6NeighboursWithList(); 
+	}
+
+	public Information checkForLargerZone(Factory factory) {
+
 	}
 
 	public Information fitPerfectly(Factory factory) {
@@ -90,7 +124,7 @@ public class Calculator {
 			// check if there is any feasible solution.
 			// If there is more than one, chosse the cheapest allocation.
 			if (allocationOptions.size() == 0) {
-				// qui ce da vedere se e quando usare la seconda hirarchy 
+				// qui ce da vedere se e quando usare la seconda hirarchy
 				return new Information(false, null, 0);
 			} else if (allocationOptions.size() == 1) {
 				return new Information(true, allocationOptions.get(0).modifiedStructure,
@@ -112,6 +146,10 @@ public class Calculator {
 		return null;
 	}
 
+	public Information fitPerfectlyWithList(Factory factory) {
+		List<>
+	}
+
 	/*
 	 * calculateCost() of allocation
 	 */
@@ -121,7 +159,7 @@ public class Calculator {
 			int freeZoneLE = freeZone.getLogisticEquipment().get(i).anzahl;
 			int toAllocateLE = toAllocate.getLogisticEquipment().get(i).anzahl;
 			if (freeZoneLE >= toAllocateLE) {
-				cost = +freeZoneLE - toAllocateLE;
+				cost = +freeeZoneLE - toAllocateLE;
 			} else {
 				cost = +toAllocateLE - freeZoneLE;
 			}
@@ -137,7 +175,7 @@ public class Calculator {
 		int i = emptyZone.locationInFactory[0];
 		int j = emptyZone.locationInFactory[1];
 		tempStructure[i][j] = toAllocate;
-		Factory tempFactory = factory; 
+		Factory tempFactory = factory;
 		tempFactory.setFactoryStructure(tempStructure);
 		return tempFactory;
 	}

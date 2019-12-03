@@ -8,14 +8,12 @@ public class Factory {
 
 	private Import mport;
 	private String[][] matrix;
-	private Information[] informationPerRaw;
 	private int[][] counter; // for canel0Entries
 	private int maxNumberColumn = 0; // for createFactoryStrucure
 	private Zone[][] factoryStructure; // for createFactoryStructure
 
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
-	
 	
 
 	public Factory() throws InvalidFormatException, IOException {

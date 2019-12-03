@@ -18,6 +18,8 @@ public class Zone {
 
 	private ArrayList<LogisticEquipment> logisticEquipment = new ArrayList<LogisticEquipment>();
 	
+	Information information = null; //questa ci serve in calculator per la funzione performalgorithm 
+	
 	public Zone(String name, int row1, int row2) {
 		this.name = name;
 		amountRasterRow1 = row1;
