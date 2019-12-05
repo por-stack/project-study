@@ -1,42 +1,60 @@
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Zone {
 	String name; // name
 
 	int lastOccupiedRaster; // for calculation
-
-	int amountRasterRow1;
-	int amountRasterRow2;
 	int[] rows = new int[2];
-
 	int posInFactoryLayout;
+	Raster[][] raster = new Raster[2][43];
 
 	boolean isEmpty; // in case of empty zone
 
-	Raster[][] raster = new Raster[2][43];
-
+	int amountRasterRow1;
+	int amountRasterRow2;
 	int dimensionTrainStationRow1;
 	int dimensionTrainStationRow2;
-
 	int totalNumberRaster = amountRasterRow1 + amountRasterRow2 + dimensionTrainStationRow1 + dimensionTrainStationRow2;
 
-	Zone neighbRight;
-	Zone neighbLeft;
-
-	public Zone(String name) {
+	private ArrayList<LogisticEquipment> logisticEquipment = new ArrayList<LogisticEquipment>();
+	
+	Information information = null; //questa ci serve in calculator per la funzione performalgorithm 
+	
+	public Zone(String name, int row1, int row2) {
 		this.name = name;
-		amountRasterRow1 = 0;
-		amountRasterRow2 = 0;
+		amountRasterRow1 = row1;
+		amountRasterRow2 = row2;
+		
+		logisticEquipment.add(new LogisticEquipment("2er XLT", 0));
+		logisticEquipment.add(new LogisticEquipment("3 Ebenen Regal", 0));
+		logisticEquipment.add(new LogisticEquipment("3 Ebenen Spez. Regal", 0));
+		logisticEquipment.add(new LogisticEquipment("3er XLT", 0));
+		logisticEquipment.add(new LogisticEquipment("Bahnhof", 0));
+		logisticEquipment.add(new LogisticEquipment("DLR", 0));
+		logisticEquipment.add(new LogisticEquipment("FREI", 0));
+		logisticEquipment.add(new LogisticEquipment("GI", 0));
+		logisticEquipment.add(new LogisticEquipment("GI_Scheiben", 0));
+		logisticEquipment.add(new LogisticEquipment("GU", 0));
+		logisticEquipment.add(new LogisticEquipment("GW", 0));
+		logisticEquipment.add(new LogisticEquipment("Leergut", 0));
+		logisticEquipment.add(new LogisticEquipment("Lift-Scheibe", 0));
+		logisticEquipment.add(new LogisticEquipment("SÄULE", 0));
+		logisticEquipment.add(new LogisticEquipment("XU_groß", 0));
+		logisticEquipment.add(new LogisticEquipment("XW_groß", 0));
 	}
 
-	@Override
-	public String toString() {
-		return "Zone [name=" + name + ", lastOccupiedRaster=" + lastOccupiedRaster + ", amountRasterRow1="
-				+ amountRasterRow1 + ", amountRasterRow2=" + amountRasterRow2 + ", rows=" + Arrays.toString(rows)
-				+ ", posInFactoryLayout=" + posInFactoryLayout + ", isEmpty=" + isEmpty + ", raster="
-				+ Arrays.toString(raster) + ", dimensionTrainStationRow1=" + dimensionTrainStationRow1
-				+ ", dimensionTrainStationRow2=" + dimensionTrainStationRow2 + ", totalNumberRaster="
-				+ totalNumberRaster + ", neighbRight=" + neighbRight + ", neighbLeft=" + neighbLeft + "]";
+	/**
+	 * @return the logisticEquipment
+	 */
+	public ArrayList<LogisticEquipment> getLogisticEquipment() {
+		return logisticEquipment;
+	}
+
+	/**
+	 * @param logisticEquipment the logisticEquipment to set
+	 */
+	public void setLogisticEquipment(ArrayList<LogisticEquipment> logisticEquipment) {
+		this.logisticEquipment = logisticEquipment;
 	}
 
 }
