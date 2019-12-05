@@ -14,6 +14,7 @@ public class Factory {
 	private int maxNumberColumn = 0; // for createFactoryStrucure
 	private Zone[][] factoryStructure; // for createFactoryStructure
 	private boolean isTrainStat = false;
+	private int number;
 
 	private ArrayList<Zone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
@@ -111,6 +112,7 @@ public class Factory {
 	public void rasterIntoZones() {
 		// take every single entry in the column "Materialfläche"
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5 // breakpoint
+			isTrainStat = false;
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
 			int columnNumber = Integer.parseInt(fullPosition.substring(4));
@@ -139,6 +141,11 @@ public class Factory {
 			// get the zone(name) for this specific raster
 			String zoneName = matrix[i][1]; // matrix rowinimport 1
 
+			// this raster is part of a train station
+			if (matrix[i][2].equals("BHF")) {
+				isTrainStat = true;
+			}
+
 			/*
 			 * see if this zone is already in the factoryLayout. if not, add the zone and
 			 * add the raster into this zone. if yes, get into zone and add the new raster
@@ -157,27 +164,48 @@ public class Factory {
 				}
 			}
 			if (k != 7) { // avoiding out of bound
-				if (alreadyIn == false) {
-					if (matrix[i][2].equals("BHF")) {
-						if (true) {
-
-						}
-					}
-					factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
-					factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
-				}
-				if (matrix[i][2].equals("BHF")) {
-					
-					continue;
-				}
 				int firstOrSecondRow;
 				if (rowEven == true) {
 					firstOrSecondRow = 0;
 				} else {
 					firstOrSecondRow = 1;
 				}
-				factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
-						- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, ); // manca logisticequipment
+				if (alreadyIn == false) {
+					// If the train station belongs to 2 zones, no new zone must be created. The
+					// rasters must be divided between the two zones.
+					if (!matrix[i][1].contains("/")) {
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
+						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
+						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
+								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
+																											// logisticequipment
+					} else {
+						if ((Integer
+								.parseInt((zoneName.substring(zoneName.indexOf("/") + 1)).substring(0, 2)) >= (Integer
+										.parseInt((zoneName.substring(0, zoneName.indexOf("/"))).substring(0, 2))))) {
+							number = (Integer
+									.parseInt((zoneName.substring(zoneName.indexOf("/") + 1)).substring(0, 2)));
+						} else
+							number = (Integer.parseInt((zoneName.substring(0, zoneName.indexOf("/"))).substring(0, 2)));
+
+						String string = Integer.toString(number);
+
+						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
+						int remaining = dimTrSt - dimTrSt / 2; // non dovrebbe servire
+						// divide rasters
+						factoryStructure[rowInFactoryStructure][6 - k + 1].raster[firstOrSecondRow][(42
+								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber, columnNumber,
+										isTrainStat);
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string);
+						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
+						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
+								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
+					}
+				} else {
+					factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
+							- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
+																										// logisticequipment
+				}
 
 				/*
 				 * vecchio. Non ancora da cancellare!
