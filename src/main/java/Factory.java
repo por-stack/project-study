@@ -113,6 +113,12 @@ public class Factory {
 	public void rasterIntoZones() {
 		// take every single entry in the column "Materialfläche"
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5 // breakpoint
+			
+			
+			//debug
+			if (i == 127)
+				System.out.println("");
+			
 			isTrainStat = false;
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -163,7 +169,7 @@ public class Factory {
 						break;
 					}
 					if (zoneName.length() > 3) {
-						if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName.substring(4))) {
+						if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName.substring(0, 3))) {
 							alreadyIn = true;
 							break;
 						}
@@ -224,8 +230,8 @@ public class Factory {
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
 										columnNumber - (dimTrSt / 2), isTrainStat);
 						if (factoryStructure[rowInFactoryStructure][6 - k - 1] == null) {
-							factoryStructure[rowInFactoryStructure][6 - k - 1] = new Zone(zoneName.substring(0, 3), 0,
-									0, rowInFactoryStructure, 6 - k);
+							factoryStructure[rowInFactoryStructure][6 - k - 1] = new Zone(zoneName.substring(4), 0,
+									0, rowInFactoryStructure, 6 - k - 1);
 						}
 						factoryStructure[rowInFactoryStructure][6 - k - 1].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
