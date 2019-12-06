@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -192,17 +193,22 @@ public class Calculator {
 		// Combine this emptyzone with 1 neigbour.
 		// There are 2 possible combinations when moving 1 neighbour.
 		// Check if there is a feasible solution.
-		// Save information (applicable, modifiedstructure, cost) for every feasible solution
+		// Save information (applicable, modifiedstructure, cost) for every feasible
+		// solution
 		Zone toAllocateAlone = zone;
-		
-		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-			EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
-			if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
-				int cost = calculateCost(freeZone, toAllocate);
-				Factory modifiedStructure = allocatePerfectFit(factory, freeZone, toAllocate);
-				allocationOptions.add(new Information(true, modifiedStructure, cost));
-			}
+		if (toAllocateAlone.locationInFactory[1] != 0) {
+
 		}
+		if (toAllocateAlone.locationInFactory[1] != F)
+
+			for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+				EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
+				if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
+					int cost = calculateCost(freeZone, toAllocate);
+					Factory modifiedStructure = allocatePerfectFit(factory, freeZone, toAllocate);
+					allocationOptions.add(new Information(true, modifiedStructure, cost));
+				}
+			}
 
 		// check if there is any feasible solution.
 		// If there is more than one, chosse the cheapest allocation.
@@ -266,12 +272,14 @@ public class Calculator {
 		int i = emptyZone.locationInFactory[0];
 		int j = emptyZone.locationInFactory[1];
 
-		// porto tempStructure tutto su null per averlo come counter;
-		for (int j2 = 0; j2 < tempStructure.length; j2++) {
-			for (int k = 0; k < tempStructure[0].length; k++) {
-				tempStructure[j2][k] = null;
-			}
-		}
+		// forse non serve piú
+//		// porto tempStructure tutto su null per averlo come counter;
+//		for (int j2 = 0; j2 < tempStructure.length; j2++) {
+//			for (int k = 0; k < tempStructure[0].length; k++) {
+//				tempStructure[j2][k] = null;
+//			}
+//		}
+
 		// find out what is remaining in the empty zone and what is gone with the
 		// allocation of the ZoneToBeAllocated
 		int remaindAmountRasterRow1 = emptyZone.amountRasterRow1 - toAllocate.amountRasterRow1;
@@ -307,7 +315,7 @@ public class Calculator {
 		toAllocate.dimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
 
 		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", newEmptyDimensionTrainStationRow1,
-				newEmptyDimensionTrainStationRow2); // this zone has 0 logistic equipment
+				newEmptyDimensionTrainStationRow2, i, j + 1); // this zone has 0 logistic equipment
 		newEmptyZone.amountRasterRow1 = remaindAmountRasterRow1;
 		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
 		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
@@ -327,6 +335,7 @@ public class Calculator {
 					tempStructure[i][it] = factoryStructure[i][it];
 				} else {
 					it++;
+					passedOver_ToAllocate_and_NewEmptyZone = true;
 				}
 			} else {
 				tempStructure[i][it] = factoryStructure[i][it - 1];

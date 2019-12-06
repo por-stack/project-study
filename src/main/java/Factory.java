@@ -34,10 +34,6 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-
-		// prints the matrix 'counter'
-		System.out.println(Arrays.deepToString(counter));
-		System.out.println(matrix[19][1].equals("51S"));
 	}
 
 	/*
@@ -190,7 +186,6 @@ public class Factory {
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
 																											// logisticequipment
 					} else {
-						System.out.println("bella");
 						String string = "";
 						if ((Integer
 								.parseInt((zoneName.substring(zoneName.indexOf("/") + 1)).substring(0, 2)) >= (Integer
@@ -213,7 +208,6 @@ public class Factory {
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
 					}
 				} else {
-					System.out.println("non   èbella");
 					if (!matrix[i][1].contains("/")) {
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
@@ -231,7 +225,7 @@ public class Factory {
 		}
 	}
 
-	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
+	public ArrayList<Zone> createEmptyZones(Zone[][] factory) { // si puó usare solamente una volta
 		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
 		for (int i = 0; i < factory.length; i++) {
 			for (int j = 0; j < factory[0].length; j++) {
@@ -259,7 +253,7 @@ public class Factory {
 	public Zone[][] getFactoryStructure() {
 		return factoryStructure;
 	}
-	
+
 	public void setFactoryStructure(Zone[][] factoryStructure) {
 		this.factoryStructure = factoryStructure;
 	}
