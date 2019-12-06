@@ -213,12 +213,18 @@ public class Factory {
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
 																											// logisticequipment
 					}
-					// bahnhof
+					// bahnhof with "/"
 					else {
 						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][(42
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
 										columnNumber - (dimTrSt / 2), isTrainStat);
+						if (factoryStructure[rowInFactoryStructure][6 - k - 1] == null) {
+							factoryStructure[rowInFactoryStructure][6 - k - 1] = new Zone(zoneName.substring(0, 3), 0,
+									0, rowInFactoryStructure, 6 - k);
+						}
+						factoryStructure[rowInFactoryStructure][6 - k - 1].raster[firstOrSecondRow][42
+								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
 					}
 				}
 			}
