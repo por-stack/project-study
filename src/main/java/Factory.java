@@ -259,6 +259,10 @@ public class Factory {
 	public Zone[][] getFactoryStructure() {
 		return factoryStructure;
 	}
+	
+	public void setFactoryStructure(Zone[][] factoryStructure) {
+		this.factoryStructure = factoryStructure;
+	}
 
 	/**
 	 * @return the emptyZones
