@@ -213,7 +213,7 @@ public class Factory {
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
 					}
 				} else {
-					System.out.println("nonbella");
+					System.out.println("non   èbella");
 					if (!matrix[i][1].contains("/")) {
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
