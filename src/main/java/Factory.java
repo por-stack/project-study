@@ -174,7 +174,7 @@ public class Factory {
 					// If the train station belongs to 2 zones, no new zone must be created. The
 					// rasters must be divided between the two zones.
 					if (!matrix[i][1].contains("/")) {
-						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0);
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
@@ -196,7 +196,7 @@ public class Factory {
 						factoryStructure[rowInFactoryStructure][6 - k + 1].raster[firstOrSecondRow][(42
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber, columnNumber,
 										isTrainStat);
-						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string);
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string, 0, 0);
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
@@ -245,7 +245,7 @@ public class Factory {
 	 */
 	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
-
+		//inseriamole nell'ordine giusto: dal piú grande al piu piccolo 
 		return zonesToAllocate;
 	}
 
@@ -255,6 +255,10 @@ public class Factory {
 
 	public Zone[][] getFactoryStructure() {
 		return factoryStructure;
+	}
+	
+	public void setFactoryStructure(Zone[][] factoryStructure) {
+		this.factoryStructure = factoryStructure; 
 	}
 
 	/**

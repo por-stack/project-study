@@ -3,9 +3,10 @@ import java.util.ArrayList;
 public class Zone {
 	String name; // name
 
-	int lastOccupiedRaster; // for calculation
-	int[] rows = new int[2];
-	int posInFactoryLayout;
+//	int lastOccupiedRaster; // for calculation. non utilizzato? 
+	
+	int[] locationInFactory = new int[2];  
+	
 	Raster[][] raster = new Raster[2][43];
 
 	boolean isEmpty; // in case of empty zone
@@ -18,12 +19,14 @@ public class Zone {
 
 	private ArrayList<LogisticEquipment> logisticEquipment = new ArrayList<LogisticEquipment>();
 	
-	Information information = null; //questa ci serve in calculator per la funzione performalgorithm 
-	
-	public Zone(String name, int row1, int row2) {
+	public Information information = null; //questa ci serve in calculator per la funzione performalgorithm 
+
+	public Zone(String name, int row1, int row2, int i, int j) {
 		this.name = name;
 		amountRasterRow1 = row1;
 		amountRasterRow2 = row2;
+		locationInFactory[0] = i; 
+		locationInFactory[1] = j; 
 		
 		logisticEquipment.add(new LogisticEquipment("2er XLT", 0));
 		logisticEquipment.add(new LogisticEquipment("3 Ebenen Regal", 0));
