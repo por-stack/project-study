@@ -39,12 +39,12 @@ public class Calculator {
 		 * of these zones get into the algorithm (calculate)) once. When each of them
 		 * has hone thorugh once, we check the information of each of these zones,
 		 * comparing the cost and choose the cheapest one. Only now the structure in
-		 * factoryö.getFactoryStructure is really modified. This implies that when
+		 * factory.getFactoryStructure is really modified. This implies that when
 		 * entering in calculate the structure needs to be copied.
 		 */
 
 		while (!zonesToBeAllocated.isEmpty()) {
-			zonesToBeAllocated = initial.getZonesToAllocate(); //update
+			zonesToBeAllocated = initial.getZonesToAllocate(); // after
 
 			for (int i = 0; i < zonesToBeAllocated.size(); i++) {
 				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
@@ -119,10 +119,9 @@ public class Calculator {
 		Zone toAllocate = zone;
 		boolean allZonesLarger = true;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-			EmptyZone freeZone = factory.getEmptyZones().get(j);
+			EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
 			if (toAllocate.totalNumberRaster > freeZone.totalNumberRaster) {
 				allZonesLarger = false;
-				return new Information(false, null, 0);
 			}
 		}
 		// if all zones are larger, then we check wich of the emptyZones is the largest
@@ -135,13 +134,13 @@ public class Calculator {
 					positionLargest = j;
 				}
 			}
-			//da vedere ancora come fare, dato che la zona piú grande nel programma é come se andasse spezzata in due zone nuove 
-			int cost = calculateCost(factory.getEmptyZones().get(positionLargest),
-					toAllocate);
-			Factory modifiedStructure = allocateInLargerZone(factory, factory.getEmptyZones().get(positionLargest),
-					toAllocate);
-			
-			return new Information(true, modifiedStructure, cost)
+			// da vedere ancora come fare, dato che la zona piú grande nel programma é come
+			// se andasse spezzata in due zone nuove
+			int cost = calculateCost(factory.getEmptyZones().get(positionLargest), toAllocate);
+			Factory modifiedStructure = allocateInLargerZone(factory,
+					(EmptyZone) factory.getEmptyZones().get(positionLargest), toAllocate);
+
+			return new Information(true, modifiedStructure, cost);
 		} else {
 			return new Information(false, null, 0);
 		}
@@ -156,7 +155,7 @@ public class Calculator {
 		// solution
 		Zone toAllocate = zone;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-			EmptyZone freeZone = factory.getEmptyZones().get(j);
+			EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
 			if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
 				int cost = calculateCost(freeZone, toAllocate);
 				Factory modifiedStructure = allocatePerfectFit(factory, freeZone, toAllocate);
@@ -186,8 +185,46 @@ public class Calculator {
 		}
 	}
 
-	public Information fitPerfectlyWithList(Zone zone, Factory factory) {
+	public Information fitMoving1Neighbour(Zone zone, Factory factory) {
+		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 
+		// for the ZoneToAllocate given as parameter iterate over the emptyZones.
+		// Combine this emptyzone with 1 neigbour.
+		// There are 2 possible combinations when moving 1 neighbour.
+		// Check if there is a feasible solution.
+		// Save information (applicable, modifiedstructure, cost) for every feasible solution
+		Zone toAllocateAlone = zone;
+		
+		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+			EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
+			if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
+				int cost = calculateCost(freeZone, toAllocate);
+				Factory modifiedStructure = allocatePerfectFit(factory, freeZone, toAllocate);
+				allocationOptions.add(new Information(true, modifiedStructure, cost));
+			}
+		}
+
+		// check if there is any feasible solution.
+		// If there is more than one, chosse the cheapest allocation.
+		if (allocationOptions.size() == 0) {
+			// qui ce da vedere se e quando usare la seconda hirarchy
+			return new Information(false, null, 0);
+		} else if (allocationOptions.size() == 1) {
+			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
+		} else {
+			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+			int counter = 0;
+			double minCost = allocationOptionsArray[counter].costs;
+			for (int j = counter; j < allocationOptions.size(); j++) {
+				if (minCost > allocationOptionsArray[counter].costs) {
+					minCost = allocationOptionsArray[counter].costs;
+					counter = j;
+				}
+			}
+			return new Information(true, allocationOptions.get(counter).modifiedStructure,
+					allocationOptions.get(counter).costs);
+
+		}
 	}
 
 	/*
@@ -199,9 +236,9 @@ public class Calculator {
 			int freeZoneLE = freeZone.getLogisticEquipment().get(i).anzahl;
 			int toAllocateLE = toAllocate.getLogisticEquipment().get(i).anzahl;
 			if (freeZoneLE >= toAllocateLE) {
-				cost =+ freeZoneLE - toAllocateLE;
+				cost = +freeZoneLE - toAllocateLE;
 			} else {
-				cost =+ toAllocateLE - freeZoneLE;
+				cost = +toAllocateLE - freeZoneLE;
 			}
 		}
 		return cost;
@@ -218,6 +255,86 @@ public class Calculator {
 		Factory tempFactory = factory;
 		tempFactory.setFactoryStructure(tempStructure);
 		return tempFactory;
+	}
+
+	/*
+	 * allocationInLargerZone()
+	 */
+	public Factory allocateInLargerZone(Factory factory, EmptyZone emptyZone, Zone toAllocate) {
+		Zone[][] factoryStructure = factory.getFactoryStructure();
+		Zone[][] tempStructure = new Zone[factoryStructure.length][factoryStructure[0].length + 1];
+		int i = emptyZone.locationInFactory[0];
+		int j = emptyZone.locationInFactory[1];
+
+		// porto tempStructure tutto su null per averlo come counter;
+		for (int j2 = 0; j2 < tempStructure.length; j2++) {
+			for (int k = 0; k < tempStructure[0].length; k++) {
+				tempStructure[j2][k] = null;
+			}
+		}
+		// find out what is remaining in the empty zone and what is gone with the
+		// allocation of the ZoneToBeAllocated
+		int remaindAmountRasterRow1 = emptyZone.amountRasterRow1 - toAllocate.amountRasterRow1;
+		int remaindAmountRasterRow2 = emptyZone.amountRasterRow2 - toAllocate.amountRasterRow2;
+		int totalDimensionTrainStationRow1 = emptyZone.dimensionTrainStationRow1 + toAllocate.dimensionTrainStationRow1;
+		int totalDimensionTrainStationRow2 = emptyZone.dimensionTrainStationRow2 + toAllocate.dimensionTrainStationRow2;
+
+		int toAllocateDimensionTrainStationRow1;
+		int newEmptyDimensionTrainStationRow1;
+		int toAllocateDimensionTrainStationRow2;
+		int newEmptyDimensionTrainStationRow2;
+		// totalDimensionTrainStationRow1 aufteilen auf die toAllcate und die
+		// newEmptyZone
+		if (totalDimensionTrainStationRow1 % 2 == 0) {
+			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
+			newEmptyDimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
+		} else {
+			newEmptyDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
+			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 - newEmptyDimensionTrainStationRow1;
+		}
+		// totalDimensionTrainStationRow2 aufteilen auf die toAllcate und die
+		// newEmptyZone
+		if (totalDimensionTrainStationRow2 % 2 == 0) {
+			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
+			newEmptyDimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
+		} else {
+			newEmptyDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
+			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 - newEmptyDimensionTrainStationRow2;
+		}
+
+		// assignment of sizes
+		toAllocate.dimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
+		toAllocate.dimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
+
+		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", newEmptyDimensionTrainStationRow1,
+				newEmptyDimensionTrainStationRow2); // this zone has 0 logistic equipment
+		newEmptyZone.amountRasterRow1 = remaindAmountRasterRow1;
+		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
+		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
+		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
+
+		// allocazione della ZoneToBeAllocated
+		tempStructure[i][j] = toAllocate;
+		tempStructure[i][j + 1] = newEmptyZone;
+
+		// copying the initial factoryStructure into the new tempStructure, that will be
+		// given back.
+		// int i = row
+		boolean passedOver_ToAllocate_and_NewEmptyZone = false;
+		for (int it = 0; it < tempStructure.length; it++) {
+			if (passedOver_ToAllocate_and_NewEmptyZone == false) {
+				if (it != j) {
+					tempStructure[i][it] = factoryStructure[i][it];
+				} else {
+					it++;
+				}
+			} else {
+				tempStructure[i][it] = factoryStructure[i][it - 1];
+			}
+		}
+
+		factory.setFactoryStructure(tempStructure);
+		return factory;
 	}
 
 	/*
@@ -249,11 +366,11 @@ public class Calculator {
 //		old.demo();
 
 		initial = new Factory();
-//		Calculator calculator = new Calculator();
+		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
-//		newFactoryStructure = calculator.performAlgorithm(initial);
+		newFactoryStructure = calculator.performAlgorithm();
 		Factory newFactory = initial;
-//		newFactory.setFactoryStructure(newFactoryStructure);
+		newFactory.setFactoryStructure(newFactoryStructure);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 	}
 }
