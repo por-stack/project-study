@@ -6,16 +6,29 @@ public class Raster {
 	private boolean isTrainStat;
 	private int row;
 	private int column;
-	private Zone belongTo;
 
 	public Raster(int row, int column, boolean isTrainStat) {
 		this.row = row;
 		this.column = column;
-		this.isTrainStat = isTrainStat;
+		this.setIsTrainStat(isTrainStat);
 	}
 
 	@Override
 	public String toString() {
-		return "Raster [isUsable=" + isUsable + ", row=" + row + ", column=" + column + "]";
+		return "Raster [isTrainStat= " + isTrainStat +  ", isUsable=" + isUsable + ", row=" + row + ", column=" + column + "]";
+	}
+
+	/**
+	 * @return the isTrainStat
+	 */
+	public boolean getIsTrainStat() {
+		return isTrainStat;
+	}
+
+	/**
+	 * @param isTrainStat the isTrainStat to set
+	 */
+	public void setIsTrainStat(boolean isTrainStat) {
+		this.isTrainStat = isTrainStat;
 	}
 }

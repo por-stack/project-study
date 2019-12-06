@@ -34,10 +34,6 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-
-		// prints the matrix 'counter'
-		System.out.println(Arrays.deepToString(counter));
-		System.out.println(matrix[19][1].equals("51S"));
 	}
 
 	/*
@@ -241,7 +237,7 @@ public class Factory {
 		}
 	}
 
-	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
+	public ArrayList<Zone> createEmptyZones(Zone[][] factory) { // si puó usare solamente una volta
 		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
 		for (int i = 0; i < factory.length; i++) {
 			for (int j = 0; j < factory[0].length; j++) {
