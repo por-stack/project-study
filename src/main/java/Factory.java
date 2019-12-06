@@ -37,6 +37,7 @@ public class Factory {
 
 		// prints the matrix 'counter'
 		System.out.println(Arrays.deepToString(counter));
+		System.out.println(matrix[19][1].equals("51S"));
 	}
 
 	/*
@@ -157,9 +158,15 @@ public class Factory {
 				if (factoryStructure[rowInFactoryStructure][6 - k] == null) {
 					break;
 				} else {
-					if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName)) { //////// add.name
+					if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName)) {
 						alreadyIn = true;
 						break;
+					}
+					if (zoneName.length() > 3) {
+						if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName.substring(4))) {
+							alreadyIn = true;
+							break;
+						}
 					}
 				}
 			}
@@ -174,37 +181,49 @@ public class Factory {
 					// If the train station belongs to 2 zones, no new zone must be created. The
 					// rasters must be divided between the two zones.
 					if (!matrix[i][1].contains("/")) {
-						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName);
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0); // calculated how
+																									// many raster per
+																									// zone
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
 																											// logisticequipment
 					} else {
+						System.out.println("bella");
+						String string = "";
 						if ((Integer
 								.parseInt((zoneName.substring(zoneName.indexOf("/") + 1)).substring(0, 2)) >= (Integer
 										.parseInt((zoneName.substring(0, zoneName.indexOf("/"))).substring(0, 2))))) {
-							number = (Integer
-									.parseInt((zoneName.substring(zoneName.indexOf("/") + 1)).substring(0, 2)));
+							string = (zoneName.substring(zoneName.indexOf("/") + 1));
 						} else
-							number = (Integer.parseInt((zoneName.substring(0, zoneName.indexOf("/"))).substring(0, 2)));
-
-						String string = Integer.toString(number);
+							string = (zoneName.substring(0, zoneName.indexOf("/")));
 
 						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
 						int remaining = dimTrSt - dimTrSt / 2; // non dovrebbe servire
 						// divide rasters
 						factoryStructure[rowInFactoryStructure][6 - k + 1].raster[firstOrSecondRow][(42
-								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber, columnNumber,
-										isTrainStat);
-						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string);
+								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
+										columnNumber - (dimTrSt / 2), isTrainStat);
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string, 0, 0); // calculate how many
+																									// raster per row
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
 					}
 				} else {
-					factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
-							- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
-																										// logisticequipment
+					System.out.println("nonbella");
+					if (!matrix[i][1].contains("/")) {
+						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
+								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
+																											// logisticequipment
+					} 
+					// bahnhof
+					else {
+						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
+						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][(42
+								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
+										columnNumber - (dimTrSt / 2), isTrainStat);
+					}
 				}
 
 				/*
@@ -283,5 +302,9 @@ public class Factory {
 	 */
 	public void setZonesToAllocate(ArrayList<Zone> zonesToAllocate) {
 		this.zonesToAllocate = zonesToAllocate;
+	}
+
+	public static void main(String[] args) throws InvalidFormatException, IOException {
+		Factory initial = new Factory();
 	}
 }
