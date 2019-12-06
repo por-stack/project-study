@@ -181,9 +181,10 @@ public class Factory {
 					// If the train station belongs to 2 zones, no new zone must be created. The
 					// rasters must be divided between the two zones.
 					if (!matrix[i][1].contains("/")) {
-						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0); // calculated how
-																									// many raster per
-																									// zone
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0, rowInFactoryStructure,
+								6 - k); // calculated how
+						// many raster per
+						// zone
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
@@ -204,8 +205,9 @@ public class Factory {
 						factoryStructure[rowInFactoryStructure][6 - k + 1].raster[firstOrSecondRow][(42
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
 										columnNumber - (dimTrSt / 2), isTrainStat);
-						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string, 0, 0); // calculate how many
-																									// raster per row
+						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string, 0, 0, rowInFactoryStructure,
+								6 - k); // calculate how many
+						// raster per row
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
@@ -216,7 +218,7 @@ public class Factory {
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
 																											// logisticequipment
-					} 
+					}
 					// bahnhof
 					else {
 						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
@@ -225,24 +227,6 @@ public class Factory {
 										columnNumber - (dimTrSt / 2), isTrainStat);
 					}
 				}
-
-				/*
-				 * vecchio. Non ancora da cancellare!
-				 */
-//				Double sizeRaster = Double.parseDouble(matrix[i][17].replace(".", "").replace(",", ".")); // rowInImport
-//				int firstOrSecondRow;
-//				if (rowEven == true) {
-//					firstOrSecondRow = 0;
-//					factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow1 += sizeRaster;
-//					factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
-//							- factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow1] = new Raster(rowNumber,
-//									columnNumber);
-//				} else {
-//					firstOrSecondRow = 1;
-//					factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow2 += sizeRaster;
-//					factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
-//							- factoryStructure[rowInFactoryStructure][6 - k].amountRasterRow2] = new Raster(rowNumber,
-//									columnNumber); //nel raster dobbiamo mettere la info che logistikequipment tiene 
 			}
 		}
 	}
