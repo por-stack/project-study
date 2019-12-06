@@ -190,7 +190,6 @@ public class Factory {
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
 																											// logisticequipment
 					} else {
-						System.out.println("bella");
 						String string = "";
 						if ((Integer
 								.parseInt((zoneName.substring(zoneName.indexOf("/") + 1)).substring(0, 2)) >= (Integer
@@ -213,18 +212,23 @@ public class Factory {
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
 					}
 				} else {
-					System.out.println("non   èbella");
 					if (!matrix[i][1].contains("/")) {
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
 																											// logisticequipment
 					}
-					// bahnhof
+					// bahnhof with "/"
 					else {
 						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][(42
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
 										columnNumber - (dimTrSt / 2), isTrainStat);
+						if (factoryStructure[rowInFactoryStructure][6 - k - 1] == null) {
+							factoryStructure[rowInFactoryStructure][6 - k - 1] = new Zone(zoneName.substring(0, 3), 0,
+									0, rowInFactoryStructure, 6 - k);
+						}
+						factoryStructure[rowInFactoryStructure][6 - k - 1].raster[firstOrSecondRow][42
+								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
 					}
 				}
 			}
@@ -259,7 +263,7 @@ public class Factory {
 	public Zone[][] getFactoryStructure() {
 		return factoryStructure;
 	}
-	
+
 	public void setFactoryStructure(Zone[][] factoryStructure) {
 		this.factoryStructure = factoryStructure;
 	}
