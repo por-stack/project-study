@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+//cancella
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.xmlbeans.impl.jam.internal.elements.ArrayClassImpl;
@@ -396,23 +397,7 @@ public class Calculator {
 //		old.demo();
 
 		initial = new Factory();
-<<<<<<< HEAD
-//		demoFactory(initial);
-		Zone[][] factoryStructure = initial.getFactoryStructure();
-		for (int i = 0; i < factoryStructure.length; i++) {
-			System.out.println("\n" + "NEW ROW" + "\n");
-			for (int j = 0; j < factoryStructure[0].length; j++) {
-				if (factoryStructure[i][6-j] == null) {
-					System.out.println("null");
-				} else {
-					System.out.println(factoryStructure[i][6-j].name);
-					System.out.println(Arrays.deepToString(factoryStructure[i][6-j].raster));
-				}
-			}
-		}
-=======
 		demoFactory(initial);
->>>>>>> de89dd47989e961654bd6e96444482241c9b4f33
 		
 		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());

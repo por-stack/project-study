@@ -1,5 +1,6 @@
 
 public class Raster {
+	
 
 	// if it is not a column or an hydrant
 	private boolean isUsable;

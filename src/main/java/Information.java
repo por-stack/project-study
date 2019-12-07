@@ -1,6 +1,7 @@
 
 public class Information {
 	
+	
 	boolean applicable; 
 	
 	Factory modifiedStructure;
