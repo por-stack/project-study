@@ -89,6 +89,7 @@ public class Factory {
 		}
 		int laenge = u - 1;
 		counterShort = new int[laenge + 1][2];
+		System.arraycopy(counter,0, counterShort, 0, laenge+1);
 		counter = counterShort;
 	}
 
