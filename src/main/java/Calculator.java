@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+//cancella
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.xmlbeans.impl.jam.internal.elements.ArrayClassImpl;
@@ -121,7 +122,7 @@ public class Calculator {
 	 * MODIFICARE TUTTA LA METHODE 
 	 */
 	public Information checkForLargerZone(Zone zone, Factory factory) {
-		Zone toAllocate = zone;+
+		Zone toAllocate = zone;
 		//falscher ansatz 
 		boolean allZonesLarger = true;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
