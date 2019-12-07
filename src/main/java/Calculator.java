@@ -116,18 +116,24 @@ public class Calculator {
 		return null; 
 	}
 
+	/*
+	 * cambia methode: ancche nel caso in cui ci fosse solamente 1 zona piú grande, usiamo allocationInLargerZone 
+	 * MODIFICARE TUTTA LA METHODE 
+	 */
 	public Information checkForLargerZone(Zone zone, Factory factory) {
-		Zone toAllocate = zone;
+		Zone toAllocate = zone;+
+		//falscher ansatz 
 		boolean allZonesLarger = true;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
 			if (toAllocate.totalNumberRaster > freeZone.totalNumberRaster) {
-				allZonesLarger = false;
+				allZonesLarger = false; //leva 
+				//metti qui l'algoritmo 
 			}
 		}
-		// if all zones are larger, then we check wich of the emptyZones is the largest
+		// if there si more than one larger zone, then we check wich of the emptyZones is the largest
 		// one
-		if (allZonesLarger) {
+		if (allZonesLarger) { //leva 
 			int largestSize = factory.getEmptyZones().get(0).totalNumberRaster;
 			int positionLargest = 0;
 			for (int j = 1; j < factory.getEmptyZones().size(); j++) {
