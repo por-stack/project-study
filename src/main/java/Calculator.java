@@ -195,14 +195,14 @@ public class Calculator {
 		// Check if there is a feasible solution.
 		// Save information (applicable, modifiedstructure, cost) for every feasible
 		// solution
-		Zone toAllocateAlone = zone;
-		if (toAllocateAlone.locationInFactory[1] != 0) {
-
-		}
-		if (toAllocateAlone.locationInFactory[1] != F)
-
+		Zone toAllocate = zone;
+		
 			for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-				EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
+				EmptyZone freeZoneAlone = (EmptyZone) factory.getEmptyZones().get(j);
+				//create all combinations between empty zone and neigbours 
+				//iterate over the empty zone 
+				int numberNeighbour = 1; 
+				int locationInFactory[] = freeZoneAlone.locationInFactory;
 				if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
 					int cost = calculateCost(freeZone, toAllocate);
 					Factory modifiedStructure = allocatePerfectFit(factory, freeZone, toAllocate);
@@ -347,7 +347,7 @@ public class Calculator {
 	}
 
 	/*
-	 * creates a copy of a matrix array
+	 * creates a copy of a matrix array //va cambiata la syntax. in parte presa da internet
 	 */
 	public Zone[][] copyOfFactoryModification(Zone[][] factory) {
 		Zone[][] copyFactory = new Zone[factory.length][];
