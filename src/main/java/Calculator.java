@@ -396,13 +396,13 @@ public class Calculator {
 //		old.demo();
 
 		initial = new Factory();
-//		demoFactory(initial);
+		demoFactory(initial);
 		
 		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
-		newFactoryStructure = calculator.performAlgorithm();
-		Factory newFactory = initial;
-		newFactory.setFactoryStructure(newFactoryStructure);
+//		newFactoryStructure = calculator.performAlgorithm();
+//		Factory newFactory = initial;
+//		newFactory.setFactoryStructure(newFactoryStructure);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 	}
 }
