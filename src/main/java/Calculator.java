@@ -373,14 +373,8 @@ public class Calculator {
 	public void convertToExcel(Factory factory) {
 
 	}
-
-	public static void main(String[] args) throws InvalidFormatException, IOException {
-		// Initialize objects and start algorithm
-
-//		Import old = new Import(); 
-//		old.demo();
-
-		initial = new Factory();
+	
+	public static void demoFactory(Factory initial) {
 		Zone[][] factoryStructure = initial.getFactoryStructure();
 		for (int i = 0; i < factoryStructure.length; i++) {
 			System.out.println("\n" + "NEW ROW" + "\n");
@@ -393,6 +387,17 @@ public class Calculator {
 				}
 			}
 		}
+	}
+
+	public static void main(String[] args) throws InvalidFormatException, IOException {
+		// Initialize objects and start algorithm
+
+//		Import old = new Import(); 
+//		old.demo();
+
+		initial = new Factory();
+//		demoFactory(initial);
+		
 		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 		newFactoryStructure = calculator.performAlgorithm();
