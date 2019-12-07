@@ -34,10 +34,6 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-
-		// prints the matrix 'counter'
-		System.out.println(Arrays.deepToString(counter));
-		System.out.println(matrix[19][1].equals("51S"));
 	}
 
 	/*
@@ -93,7 +89,6 @@ public class Factory {
 		}
 		int laenge = u - 1;
 		counterShort = new int[laenge + 1][2];
-		System.arraycopy(counter, 0, counterShort, 0, laenge + 1);
 		counter = counterShort;
 	}
 
@@ -113,11 +108,6 @@ public class Factory {
 	public void rasterIntoZones() {
 		// take every single entry in the column "Materialfläche"
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5 // breakpoint
-
-			// debug
-			if (i == 127)
-				System.out.println("");
-
 			isTrainStat = false;
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));

@@ -121,7 +121,7 @@ public class Calculator {
 	 * MODIFICARE TUTTA LA METHODE 
 	 */
 	public Information checkForLargerZone(Zone zone, Factory factory) {
-		Zone toAllocate = zone;+
+		Zone toAllocate = zone;
 		//falscher ansatz 
 		boolean allZonesLarger = true;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
@@ -397,6 +397,18 @@ public class Calculator {
 
 		initial = new Factory();
 //		demoFactory(initial);
+		Zone[][] factoryStructure = initial.getFactoryStructure();
+		for (int i = 0; i < factoryStructure.length; i++) {
+			System.out.println("\n" + "NEW ROW" + "\n");
+			for (int j = 0; j < factoryStructure[0].length; j++) {
+				if (factoryStructure[i][6-j] == null) {
+					System.out.println("null");
+				} else {
+					System.out.println(factoryStructure[i][6-j].name);
+					System.out.println(Arrays.deepToString(factoryStructure[i][6-j].raster));
+				}
+			}
+		}
 		
 		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
