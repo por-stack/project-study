@@ -113,12 +113,11 @@ public class Factory {
 	public void rasterIntoZones() {
 		// take every single entry in the column "Materialfläche"
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5 // breakpoint
-			
-			
-			//debug
+
+			// debug
 			if (i == 127)
 				System.out.println("");
-			
+
 			isTrainStat = false;
 			String fullPosition = matrix[i][5];
 			int rowNumber = Integer.parseInt(fullPosition.substring(0, 3));
@@ -304,5 +303,18 @@ public class Factory {
 
 	public static void main(String[] args) throws InvalidFormatException, IOException {
 		Factory initial = new Factory();
+
+		Zone[][] factoryStructure = initial.getFactoryStructure();
+		for (int i = 0; i < factoryStructure.length; i++) {
+			System.out.println("\n" + "NEW ROW" + "\n");
+			for (int j = 0; j < factoryStructure[0].length; j++) {
+				if (factoryStructure[i][6 - j] == null) {
+					System.out.println("null");
+				} else {
+					System.out.println(factoryStructure[i][6 - j].name);
+					System.out.println(Arrays.deepToString(factoryStructure[i][6 - j].raster));
+				}
+			}
+		}
 	}
 }
