@@ -34,6 +34,10 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
+
+		// prints the matrix 'counter'
+		System.out.println(Arrays.deepToString(counter));
+		System.out.println(matrix[19][1].equals("51S"));
 	}
 
 	/*
@@ -165,7 +169,7 @@ public class Factory {
 						break;
 					}
 					if (zoneName.length() > 3) {
-						if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName.substring(0, 3))) {
+						if (factoryStructure[rowInFactoryStructure][6 - k].name.equals(zoneName.substring(4))) {
 							alreadyIn = true;
 							break;
 						}
@@ -226,7 +230,7 @@ public class Factory {
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
 										columnNumber - (dimTrSt / 2), isTrainStat);
 						if (factoryStructure[rowInFactoryStructure][6 - k - 1] == null) {
-							factoryStructure[rowInFactoryStructure][6 - k - 1] = new Zone(zoneName.substring(4), 0,
+							factoryStructure[rowInFactoryStructure][6 - k - 1] = new Zone(zoneName.substring(0, 3), 0,
 									0, rowInFactoryStructure, 6 - k - 1);
 						}
 						factoryStructure[rowInFactoryStructure][6 - k - 1].raster[firstOrSecondRow][42
@@ -237,7 +241,7 @@ public class Factory {
 		}
 	}
 
-	public ArrayList<Zone> createEmptyZones(Zone[][] factory) { // si puó usare solamente una volta
+	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
 		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
 		for (int i = 0; i < factory.length; i++) {
 			for (int j = 0; j < factory[0].length; j++) {
