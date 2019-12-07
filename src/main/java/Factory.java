@@ -300,42 +300,4 @@ public class Factory {
 	public void setZonesToAllocate(ArrayList<Zone> zonesToAllocate) {
 		this.zonesToAllocate = zonesToAllocate;
 	}
-
-<<<<<<< HEAD
-//	public static void main(String[] args) throws InvalidFormatException, IOException {
-//		Factory initial = new Factory();
-//
-//		Zone[][] factoryStructure = initial.getFactoryStructure();
-//		for (int i = 0; i < factoryStructure.length; i++) {
-//			System.out.println("\n" + "NEW ROW" + "\n");
-//			for (int j = 0; j < factoryStructure[0].length; j++) {
-//				if (factoryStructure[i][6 - j] == null) {
-//					System.out.println("null");
-//				} else {
-//					System.out.println(factoryStructure[i][6 - j].name);
-//					System.out.println(Arrays.deepToString(factoryStructure[i][6 - j].raster));
-//				}
-//			}
-//		}
-//	}
-=======
-	public static void main(String[] args) throws InvalidFormatException, IOException {
-		Factory initial = new Factory();
-
-		Zone[][] factoryStructure = initial.getFactoryStructure();
-		for (int i = 0; i < factoryStructure.length; i++) {
-			System.out.println("\n" + "NEW ROW" + "\n");
-			for (int j = 0; j < factoryStructure[0].length; j++) {
-				if (factoryStructure[i][6 - j] == null) {
-					System.out.println("null");
-				} else {
-					System.out.println(factoryStructure[i][6 - j].name);
-					System.out.println(Arrays.deepToString(factoryStructure[i][6 - j].raster));
-				}
-			}
-		}
-		
-		initial.mport.demo();
-	}
->>>>>>> 7065457e125343d606ebe89bb5f554f0673c2a8a
 }
