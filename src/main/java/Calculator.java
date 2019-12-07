@@ -396,6 +396,7 @@ public class Calculator {
 //		old.demo();
 
 		initial = new Factory();
+<<<<<<< HEAD
 //		demoFactory(initial);
 		Zone[][] factoryStructure = initial.getFactoryStructure();
 		for (int i = 0; i < factoryStructure.length; i++) {
@@ -409,12 +410,15 @@ public class Calculator {
 				}
 			}
 		}
+=======
+		demoFactory(initial);
+>>>>>>> de89dd47989e961654bd6e96444482241c9b4f33
 		
 		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
-		newFactoryStructure = calculator.performAlgorithm();
-		Factory newFactory = initial;
-		newFactory.setFactoryStructure(newFactoryStructure);
+//		newFactoryStructure = calculator.performAlgorithm();
+//		Factory newFactory = initial;
+//		newFactory.setFactoryStructure(newFactoryStructure);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 	}
 }
