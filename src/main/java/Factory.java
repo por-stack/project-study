@@ -316,5 +316,7 @@ public class Factory {
 				}
 			}
 		}
+		
+		initial.mport.demo();
 	}
 }
