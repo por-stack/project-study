@@ -78,8 +78,11 @@ public class Calculator {
 		Information information; //information (boolean applicable, Zone[][] modifiedStructure, double cost) 
 		
 		//level 0
-		information = checkForLargerZone(zone, factory);
-		if (information.applicable) return information;
+		if (zone.equals(initial.getZonesToAllocate().get(0))) {
+			information = checkForLargerZone(zone, factory);
+			if (information.applicable) 
+				return information;
+		} 
 		
 		//level 1
 		information = fitPerfectly(zone, factory); 
@@ -118,40 +121,32 @@ public class Calculator {
 	}
 
 	/*
-	 * cambia methode: ancche nel caso in cui ci fosse solamente 1 zona piú grande, usiamo allocationInLargerZone 
-	 * MODIFICARE TUTTA LA METHODE 
+	 * The Zone we are looking at
 	 */
 	public Information checkForLargerZone(Zone zone, Factory factory) {
+		ArrayList<Information> allocationOptions = new ArrayList<Information>();
+
 		Zone toAllocate = zone;
-		//falscher ansatz 
-		boolean allZonesLarger = true;
+		// falscher ansatz
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
-			if (toAllocate.totalNumberRaster > freeZone.totalNumberRaster) {
-				allZonesLarger = false; //leva 
-				//metti qui l'algoritmo 
+			if (toAllocate.totalNumberRaster < freeZone.totalNumberRaster) {
+				// metti qui l'algoritmo
+				int cost = calculateCost(freeZone, toAllocate);
+				Factory modifiedStructure = allocateInLargerZone(factory, freeZone, toAllocate);
+				allocationOptions.add(new Information(true, modifiedStructure, cost));
 			}
 		}
-		// if there si more than one larger zone, then we check wich of the emptyZones is the largest
-		// one
-		if (allZonesLarger) { //leva 
-			int largestSize = factory.getEmptyZones().get(0).totalNumberRaster;
-			int positionLargest = 0;
-			for (int j = 1; j < factory.getEmptyZones().size(); j++) {
-				if (factory.getEmptyZones().get(j).totalNumberRaster > largestSize) {
-					positionLargest = j;
-				}
-			}
-			// da vedere ancora come fare, dato che la zona piú grande nel programma é come
-			// se andasse spezzata in due zone nuove
-			int cost = calculateCost(factory.getEmptyZones().get(positionLargest), toAllocate);
-			Factory modifiedStructure = allocateInLargerZone(factory,
-					(EmptyZone) factory.getEmptyZones().get(positionLargest), toAllocate);
 
-			return new Information(true, modifiedStructure, cost);
-		} else {
-			return new Information(false, null, 0);
+		double cost = allocationOptions.get(0).costs;
+		int j = 0;
+		for (int i = 1; i < allocationOptions.size(); i++) {
+			if (allocationOptions.get(i).costs < cost) {
+				cost = allocationOptions.get(i).costs;
+				j = i;
+			}
 		}
+		return allocationOptions.get(j);
 	}
 
 	public Information fitPerfectly(Zone zone, Factory factory) {
@@ -203,19 +198,26 @@ public class Calculator {
 		// Save information (applicable, modifiedstructure, cost) for every feasible
 		// solution
 		Zone toAllocate = zone;
-		
-			for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-				EmptyZone freeZoneAlone = (EmptyZone) factory.getEmptyZones().get(j);
-				//create all combinations between empty zone and neigbours 
-				//iterate over the empty zone 
-				int numberNeighbour = 1; 
-				int locationInFactory[] = freeZoneAlone.locationInFactory;
-				if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
-					int cost = calculateCost(freeZone, toAllocate);
-					Factory modifiedStructure = allocatePerfectFit(factory, freeZone, toAllocate);
-					allocationOptions.add(new Information(true, modifiedStructure, cost));
-				}
+
+		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+			EmptyZone freeZoneAlone = (EmptyZone) factory.getEmptyZones().get(j);
+			// create all combinations between empty zone and neigbours
+			// iterate over the empty zone
+			int numberNeighbour = 1;
+			int locationInFactory[] = freeZoneAlone.locationInFactory;
+			
+			for (int i = numberNeighbour; i < 0; i--) {
+				int left = i;
+				int right = numberNeighbour - left; 
+				
 			}
+			
+					if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
+						int cost = calculateCost(freeZone, toAllocate);
+						Factory modifiedStructure = allocatePerfectFit(factory, freeZone, toAllocate);
+						allocationOptions.add(new Information(true, modifiedStructure, cost));
+					}
+		}
 
 		// check if there is any feasible solution.
 		// If there is more than one, chosse the cheapest allocation.
@@ -354,7 +356,8 @@ public class Calculator {
 	}
 
 	/*
-	 * creates a copy of a matrix array //va cambiata la syntax. in parte presa da internet
+	 * creates a copy of a matrix array //va cambiata la syntax. in parte presa da
+	 * internet
 	 */
 	public Zone[][] copyOfFactoryModification(Zone[][] factory) {
 		Zone[][] copyFactory = new Zone[factory.length][];
@@ -374,17 +377,17 @@ public class Calculator {
 	public void convertToExcel(Factory factory) {
 
 	}
-	
+
 	public static void demoFactory(Factory initial) {
 		Zone[][] factoryStructure = initial.getFactoryStructure();
 		for (int i = 0; i < factoryStructure.length; i++) {
 			System.out.println("\n" + "NEW ROW" + "\n");
 			for (int j = 0; j < factoryStructure[0].length; j++) {
-				if (factoryStructure[i][6-j] == null) {
+				if (factoryStructure[i][6 - j] == null) {
 					System.out.println("null");
 				} else {
-					System.out.println(factoryStructure[i][6-j].name);
-					System.out.println(Arrays.deepToString(factoryStructure[i][6-j].raster));
+					System.out.println(factoryStructure[i][6 - j].name);
+					System.out.println(Arrays.deepToString(factoryStructure[i][6 - j].raster));
 				}
 			}
 		}
@@ -398,7 +401,7 @@ public class Calculator {
 
 		initial = new Factory();
 		demoFactory(initial);
-		
+
 		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
 //		newFactoryStructure = calculator.performAlgorithm();
