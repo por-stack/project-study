@@ -175,9 +175,31 @@ public class Factory {
 				} else {
 					firstOrSecondRow = 1;
 				}
+				/**
+				 * The for loop in code-line ~113 elaborates for each iteration one line of the
+				 * excel input file. Let's define it as "line". Each line represents one
+				 * logistic equipment of a zone or a train station. Some train stations belong
+				 * only to ONE zone, whereas some others are being shared from 2 zones. Let's
+				 * define these as "double stations". We distinguish 2 particular cases, each of
+				 * them with subcases:
+				 * 
+				 * Case 1: The zone of the given line is not yet contained in the structure.
+				 * Case 1.1: The line is a logistic equipment or a normal train station______
+				 * Case 1.2: The line is a double station
+				 * 
+				 * Case 2: The zone of the given line is already contained in the structure.
+				 * Case 2.1: The line is a logistic equipment or a normal train station________
+				 * Case 2.2: The line is a double station
+				 */
+
+				// CASE 1
 				if (alreadyIn == false) {
-					// If the train station belongs to 2 zones, no new zone must be created. The
-					// rasters must be divided between the two zones.
+					// CASE 1.1
+					// The new zone is created and added to the factoryStructure. Secondly, the
+					// logistic equipment or normal train station is added to the "raster"-matrix of
+					// the zone, in the correct place. The logistic-equipment-balance-list of the
+					// zone is updated with the new logistic equipment. The zone's counting
+					// variables for rasters and train stations are updated as well.
 					if (!matrix[i][1].contains("/")) {
 						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0, rowInFactoryStructure,
 								6 - k);
@@ -198,7 +220,13 @@ public class Factory {
 
 						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
 
-					} else {
+					}
+
+					// CASE 1.2
+					// This case represents the scenario of a double station, e.g. "51S/41S", whose
+					// right-end zone, here "41S", is yet not contained in the factoryStructure.
+					// This particular scenario will probably never concretize.
+					else {
 						String string = "";
 						if ((Integer
 								.parseInt((zoneName.substring(zoneName.indexOf("/") + 1)).substring(0, 2)) >= (Integer
@@ -234,8 +262,7 @@ public class Factory {
 						factoryStructure[rowInFactoryStructure][6 - k + 1].calculateAmounts();
 
 						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string, 0, 0, rowInFactoryStructure,
-								6 - k); // calculate how many
-						// raster per row
+								6 - k);
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
@@ -255,7 +282,15 @@ public class Factory {
 
 						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
 					}
-				} else {
+				}
+
+				// CASE 2
+				else {
+					// CASE 2.1
+					// The logistic equipment or the normal train station are added to the already
+					// existing zone. The logistic-equipment-balance-list of the
+					// zone is updated with the new logistic equipment. The zone's counting
+					// variables for rasters and train stations are updated as well.
 					if (!matrix[i][1].contains("/")) {
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
@@ -269,9 +304,19 @@ public class Factory {
 									.increaseDimensionTrainStatRow(firstOrSecondRow, dim);
 						}
 						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
-					
+
 					}
-					// bahnhof with "/"
+					// CASE 2.2
+					// This case represents the scenario of a double station, which needs to be
+					// shared by two adjacent zones. The double station is splitted in two parts.
+					// Here, we distinguish two cases again: the station has an even length, or an
+					// odd length. In the first case, two rasters are assigned to the right zone and
+					// the remaining two to the left zone. In case of an odd zone, one raster more
+					// will be assigned to the right zone.
+					// The left zone does sometimes not even exist at this point. In this case the
+					// left zone is created here and the train station is assigned.
+					// For each of the two zones, the counting
+					// variables for rasters and train stations are updated.
 					else {
 						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
 						int remaining = dimTrSt - dimTrSt / 2;
@@ -342,6 +387,7 @@ public class Factory {
 	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
 		// INSERISCI NELL ORDINE GIUSTO
+
 		return zonesToAllocate;
 	}
 

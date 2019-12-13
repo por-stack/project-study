@@ -47,6 +47,9 @@ public class Zone {
 		logisticEquipment.add(new LogisticEquipment("XW_groß", 0, 4));
 	}
 
+	/**
+	 * Calculates / updates the count of rasters contained in this zone
+	 */
 	public void calculateAmounts() {
 		totalNumberRaster = amountRasterRow1 + amountRasterRow2 + dimensionTrainStationRow1 + dimensionTrainStationRow2;
 	}
@@ -65,6 +68,13 @@ public class Zone {
 		this.logisticEquipment = logisticEquipment;
 	}
 
+	/**
+	 * Returns the dimension of the given logistic equipment
+	 * 
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
 	public int getLogEquipDim(String string) throws Exception {
 		for (int i = 0; i < logisticEquipment.size(); i++) {
 			if (logisticEquipment.get(i).getName().equals(string))
@@ -74,6 +84,14 @@ public class Zone {
 		throw new Exception("logEquipNotFoundForDimension");
 	}
 
+	/**
+	 * Increases the size of amountRasterRow1 or amountRasterRow2 by the dimension
+	 * of the given logistic equipment
+	 * 
+	 * @param row
+	 * @param name
+	 * @throws Exception
+	 */
 	public void increaseAmountRasterRow(int row, String name) throws Exception {
 		if (row == 0)
 			amountRasterRow1 += getLogEquipDim(name);
@@ -81,6 +99,13 @@ public class Zone {
 			amountRasterRow2 += getLogEquipDim(name);
 	}
 
+	/**
+	 * Increases the given logistic equipment in the logistic-equipment-balance-list
+	 * of this zone by 1
+	 * 
+	 * @param name
+	 * @throws Exception
+	 */
 	public void increaseLogEquip(String name) throws Exception {
 		// here, we do not consider bahnhof
 		if (name.equals("Bahnhof"))
@@ -99,6 +124,13 @@ public class Zone {
 		logisticEquipment.get(i).anzahlSteigern();
 	}
 
+	/**
+	 * Increases the size of dimensionTrainStationRow1 or dimensionTrainStationRow2
+	 * depending on dim
+	 * 
+	 * @param row
+	 * @param dim
+	 */
 	public void increaseDimensionTrainStatRow(int row, int dim) {
 		if (row == 0) {
 			dimensionTrainStationRow1 += dim;
