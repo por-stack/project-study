@@ -1,0 +1,9 @@
+diff a/src/main/java/Calculator.java b/src/main/java/Calculator.java	(rejected hunks)
+@@ -383,6 +383,7 @@
+ 				if (factoryStructure[i][6-j] == null) {
+ 					System.out.println("null");
+ 				} else {
++					System.out.println(factoryStructure[i][6-j].toString());
+ 					System.out.println(Arrays.deepToString(factoryStructure[i][6-j].raster));
+ 				}
+ 			}

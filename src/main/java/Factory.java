@@ -193,7 +193,7 @@ public class Factory {
 						else {
 							int dim = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
 							factoryStructure[rowInFactoryStructure][6 - k]
-									.increaseDimensionTrainStatROw(firstOrSecondRow, dim);
+									.increaseDimensionTrainStatRow(firstOrSecondRow, dim);
 						}
 
 						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
@@ -225,10 +225,10 @@ public class Factory {
 						else {
 							if (dimEven)
 								factoryStructure[rowInFactoryStructure][6 - k + 1]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, dimTrSt / 2);
 							else
 								factoryStructure[rowInFactoryStructure][6 - k + 1]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2 + 1);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, dimTrSt / 2 + 1);
 						}
 
 						factoryStructure[rowInFactoryStructure][6 - k + 1].calculateAmounts();
@@ -247,10 +247,10 @@ public class Factory {
 						else {
 							if (dimEven)
 								factoryStructure[rowInFactoryStructure][6 - k]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, remaining);
 							else
 								factoryStructure[rowInFactoryStructure][6 - k]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining - 1);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, remaining - 1);
 						}
 
 						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
@@ -266,7 +266,7 @@ public class Factory {
 						else {
 							int dim = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
 							factoryStructure[rowInFactoryStructure][6 - k]
-									.increaseDimensionTrainStatROw(firstOrSecondRow, dim);
+									.increaseDimensionTrainStatRow(firstOrSecondRow, dim);
 						}
 						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
 					
@@ -290,10 +290,10 @@ public class Factory {
 						else {
 							if (dimEven)
 								factoryStructure[rowInFactoryStructure][6 - k]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, dimTrSt / 2);
 							else
 								factoryStructure[rowInFactoryStructure][6 - k]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2 + 1);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, dimTrSt / 2 + 1);
 						}
 
 						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
@@ -311,10 +311,10 @@ public class Factory {
 						else {
 							if (dimEven)
 								factoryStructure[rowInFactoryStructure][6 - k - 1]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, remaining);
 							else
 								factoryStructure[rowInFactoryStructure][6 - k - 1]
-										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining - 1);
+										.increaseDimensionTrainStatRow(firstOrSecondRow, remaining - 1);
 						}
 
 						factoryStructure[rowInFactoryStructure][6 - k - 1].calculateAmounts();

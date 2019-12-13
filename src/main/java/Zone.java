@@ -99,7 +99,7 @@ public class Zone {
 		logisticEquipment.get(i).anzahlSteigern();
 	}
 
-	public void increaseDimensionTrainStatROw(int row, int dim) {
+	public void increaseDimensionTrainStatRow(int row, int dim) {
 		if (row == 0) {
 			dimensionTrainStationRow1 += dim;
 		} else

@@ -148,14 +148,14 @@ public class Calculator {
 //		fitMoving6NeighboursWithList(); 
 //		if (information.applicable) return information;
 
-		//level 15: fitWithRestWithList();
+		// level 15: fitWithRestWithList();
 //		fitWithRestWithList(); 
 
-		//level 16: fitWithRest(); 
-		information = fitWithRest(zone, factory); 
+		// level 16: fitWithRest();
+		information = fitWithRest(zone, factory);
 		if (information.applicable)
-			return information; 
-		
+			return information;
+
 //		fitMoving1NeighbourWithRestWithList();
 //		fitMoving1NeighbourWithRest()
 //		fitMoving2NeighbourWithRestWithList();
@@ -419,14 +419,14 @@ public class Calculator {
 
 		}
 	}
-	
+
 	private Information fitWithRest(Zone zone, Factory factory) {
-		
+
 		return null;
 	}
 
-	//COST
-	
+	// COST
+
 	/*
 	 * calculateCost() of allocation of a zone into an empty zone
 	 */
@@ -465,8 +465,8 @@ public class Calculator {
 		return cost;
 	}
 
-	//ALLOCATION
-	
+	// ALLOCATION
+
 	/*
 	 * allocationInLargerZone()
 	 */
@@ -713,21 +713,21 @@ public class Calculator {
 				if (factoryStructure[i][6 - j] == null) {
 					System.out.println("null");
 				} else {
-					System.out.println(factoryStructure[i][6 - j].name);
+					System.out.println(factoryStructure[i][6-j].toString());
 					System.out.println(Arrays.deepToString(factoryStructure[i][6 - j].raster));
 				}
 			}
 		}
 	}
 
-	public static void main(String[] args) throws InvalidFormatException, IOException {
+	public static void main(String[] args) throws Exception {
 		// Initialize objects and start algorithm
 
 //		Import old = new Import(); 
 //		old.demo();
 
-//		initial = new Factory();
-//		demoFactory(initial);
+		Factory initial = new Factory();
+		demoFactory(initial);
 
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());
