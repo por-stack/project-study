@@ -6,7 +6,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.SystemOutLogger;
 
 public class Factory {
-	
 
 	private Import mport;
 	private String[][] matrix;
@@ -20,7 +19,7 @@ public class Factory {
 	private ArrayList<Zone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
-	public Factory() throws InvalidFormatException, IOException {
+	public Factory() throws Exception {
 		this.mport = new Import();
 		this.matrix = mport.getMatrix();
 		this.initializeFactory();
@@ -28,13 +27,15 @@ public class Factory {
 //		this.zonesToAllocate = createZonesToAllocate(factoryStructure); // to implement
 	}
 
-	public void initializeFactory() {
+	public void initializeFactory() throws Exception {
 		// count how many rows and how many columns each zone has
 		countRowsColumns();
 		// create factory structure
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
+
+		System.out.println("for debug");
 	}
 
 	/*
@@ -90,7 +91,7 @@ public class Factory {
 		}
 		int laenge = u - 1;
 		counterShort = new int[laenge + 1][2];
-		System.arraycopy(counter,0, counterShort, 0, laenge+1);
+		System.arraycopy(counter, 0, counterShort, 0, laenge + 1);
 		counter = counterShort;
 	}
 
@@ -107,7 +108,7 @@ public class Factory {
 	 * put Raster into zones used
 	 */
 
-	public void rasterIntoZones() {
+	public void rasterIntoZones() throws Exception {
 		// take every single entry in the column "Materialfläche"
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5 // breakpoint
 			isTrainStat = false;
@@ -179,13 +180,24 @@ public class Factory {
 					// rasters must be divided between the two zones.
 					if (!matrix[i][1].contains("/")) {
 						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(zoneName, 0, 0, rowInFactoryStructure,
-								6 - k); // calculated how
-						// many raster per
-						// zone
+								6 - k);
+
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
-								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
-																											// logisticequipment
+								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
+
+						factoryStructure[rowInFactoryStructure][6 - k].increaseLogEquip(matrix[i][6]);
+						if (!isTrainStat)
+							factoryStructure[rowInFactoryStructure][6 - k].increaseAmountRasterRow(firstOrSecondRow,
+									matrix[i][6]);
+						else {
+							int dim = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
+							factoryStructure[rowInFactoryStructure][6 - k]
+									.increaseDimensionTrainStatROw(firstOrSecondRow, dim);
+						}
+
+						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
+
 					} else {
 						String string = "";
 						if ((Integer
@@ -197,35 +209,115 @@ public class Factory {
 
 						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
 						int remaining = dimTrSt - dimTrSt / 2; // non dovrebbe servire
+
+						boolean dimEven = false;
+						if (dimTrSt % 2 == 0)
+							dimEven = true;
+
 						// divide rasters
 						factoryStructure[rowInFactoryStructure][6 - k + 1].raster[firstOrSecondRow][(42
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
 										columnNumber - (dimTrSt / 2), isTrainStat);
+						factoryStructure[rowInFactoryStructure][6 - k + 1].increaseLogEquip(matrix[i][6]);
+						if (!isTrainStat)
+							factoryStructure[rowInFactoryStructure][6 - k + 1].increaseAmountRasterRow(firstOrSecondRow,
+									matrix[i][6]);
+						else {
+							if (dimEven)
+								factoryStructure[rowInFactoryStructure][6 - k + 1]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2);
+							else
+								factoryStructure[rowInFactoryStructure][6 - k + 1]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2 + 1);
+						}
+
+						factoryStructure[rowInFactoryStructure][6 - k + 1].calculateAmounts();
+
 						factoryStructure[rowInFactoryStructure][6 - k] = new Zone(string, 0, 0, rowInFactoryStructure,
 								6 - k); // calculate how many
 						// raster per row
 						factoryStructure[rowInFactoryStructure][6 - k].raster = new Raster[2][43];
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
+						factoryStructure[rowInFactoryStructure][6 - k].increaseLogEquip(matrix[i][6]);
+						if (!isTrainStat)
+							factoryStructure[rowInFactoryStructure][6 - k].increaseAmountRasterRow(firstOrSecondRow,
+									matrix[i][6]);
+
+						else {
+							if (dimEven)
+								factoryStructure[rowInFactoryStructure][6 - k]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining);
+							else
+								factoryStructure[rowInFactoryStructure][6 - k]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining - 1);
+						}
+
+						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
 					}
 				} else {
 					if (!matrix[i][1].contains("/")) {
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][42
-								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat); // manca
-																											// logisticequipment
+								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
+						factoryStructure[rowInFactoryStructure][6 - k].increaseLogEquip(matrix[i][6]);
+						if (!isTrainStat)
+							factoryStructure[rowInFactoryStructure][6 - k].increaseAmountRasterRow(firstOrSecondRow,
+									matrix[i][6]);
+						else {
+							int dim = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
+							factoryStructure[rowInFactoryStructure][6 - k]
+									.increaseDimensionTrainStatROw(firstOrSecondRow, dim);
+						}
+						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
+					
 					}
 					// bahnhof with "/"
 					else {
 						int dimTrSt = (int) (Double.parseDouble(matrix[i][17].replace(',', '.')));
+						int remaining = dimTrSt - dimTrSt / 2;
+
+						boolean dimEven = false;
+						if (dimTrSt % 2 == 0)
+							dimEven = true;
+
 						factoryStructure[rowInFactoryStructure][6 - k].raster[firstOrSecondRow][(42
 								- (columnNumber - 12)) - dimTrSt / 2] = new Raster(rowNumber,
 										columnNumber - (dimTrSt / 2), isTrainStat);
+						factoryStructure[rowInFactoryStructure][6 - k].increaseLogEquip(matrix[i][6]);
+						if (!isTrainStat)
+							factoryStructure[rowInFactoryStructure][6 - k].increaseAmountRasterRow(firstOrSecondRow,
+									matrix[i][6]);
+						else {
+							if (dimEven)
+								factoryStructure[rowInFactoryStructure][6 - k]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2);
+							else
+								factoryStructure[rowInFactoryStructure][6 - k]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, dimTrSt / 2 + 1);
+						}
+
+						factoryStructure[rowInFactoryStructure][6 - k].calculateAmounts();
+
 						if (factoryStructure[rowInFactoryStructure][6 - k - 1] == null) {
 							factoryStructure[rowInFactoryStructure][6 - k - 1] = new Zone(zoneName.substring(0, 3), 0,
 									0, rowInFactoryStructure, 6 - k - 1);
 						}
 						factoryStructure[rowInFactoryStructure][6 - k - 1].raster[firstOrSecondRow][42
 								- (columnNumber - 12)] = new Raster(rowNumber, columnNumber, isTrainStat);
+						factoryStructure[rowInFactoryStructure][6 - k - 1].increaseLogEquip(matrix[i][6]);
+						if (!isTrainStat)
+							factoryStructure[rowInFactoryStructure][6 - k - 1].increaseAmountRasterRow(firstOrSecondRow,
+									matrix[i][6]);
+						else {
+							if (dimEven)
+								factoryStructure[rowInFactoryStructure][6 - k - 1]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining);
+							else
+								factoryStructure[rowInFactoryStructure][6 - k - 1]
+										.increaseDimensionTrainStatROw(firstOrSecondRow, remaining - 1);
+						}
+
+						factoryStructure[rowInFactoryStructure][6 - k - 1].calculateAmounts();
 					}
 				}
 			}

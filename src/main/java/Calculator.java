@@ -383,14 +383,14 @@ public class Calculator {
 				if (factoryStructure[i][6-j] == null) {
 					System.out.println("null");
 				} else {
-					System.out.println(factoryStructure[i][6-j].name);
+					System.out.println(factoryStructure[i][6-j].toString());
 					System.out.println(Arrays.deepToString(factoryStructure[i][6-j].raster));
 				}
 			}
 		}
 	}
 
-	public static void main(String[] args) throws InvalidFormatException, IOException {
+	public static void main(String[] args) throws Exception {
 		// Initialize objects and start algorithm
 
 //		Import old = new Import(); 
