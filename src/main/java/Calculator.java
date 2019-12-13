@@ -91,9 +91,8 @@ public class Calculator {
 			return information;
 
 		// level 2: fitPerfectlyWithList
-		information = fitPerfectlyWithList(zone, factory);
-		if (information.applicable)
-			return information;
+//		information = fitPerfectlyWithList(zone, factory);
+//		if (information.applicable) return information;
 
 		// level 3: fitMoving1Neighbour
 		information = fitMovingNeighbour(zone, factory, 1);
@@ -141,19 +140,40 @@ public class Calculator {
 //		if (information.applicable) return information;
 
 		// level 13: fitMoving6Neighbours
-		information = fitMovingNeighbour(zone, factory, 2);
+		information = fitMovingNeighbour(zone, factory, 6);
 		if (information.applicable)
 			return information;
 
-		// fitMoving6NeighboursWithList
+		// level 14: fitMoving6NeighboursWithList
 //		fitMoving6NeighboursWithList(); 
 //		if (information.applicable) return information;
+
+		//level 15: fitWithRestWithList();
+//		fitWithRestWithList(); 
+
+		//level 16: fitWithRest(); 
+		information = fitWithRest(zone, factory); 
+		if (information.applicable)
+			return information; 
+		
+//		fitMoving1NeighbourWithRestWithList();
+//		fitMoving1NeighbourWithRest()
+//		fitMoving2NeighbourWithRestWithList();
+//		fitMoving2eighbourWithRest()
+//		fitMoving3NeighbourWithRestWithList();
+//		fitMoving3NeighbourWithRest()
+//		fitMoving4NeighbourWithRestWithList();
+//		fitMoving4NeighbourWithRest()
+//		fitMoving5NeighbourWithRestWithList();
+//		fitMoving5NeighbourWithRest()
+//		fitMoving6NeighbourWithRestWithList();
+//		fitMoving6NeighbourWithRest()
 
 		return null;
 	}
 
 	/*
-	 * The Zone we are looking at
+	 * checkForLargerZone()
 	 */
 	public Information checkForLargerZone(Zone zone, Factory factory) {
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
@@ -182,77 +202,97 @@ public class Calculator {
 		return allocationOptions.get(j);
 	}
 
-	private Information fitPerfectlyWithList(Zone zone, Factory factory) {
-		ArrayList<Information> allocationOptions = new ArrayList<Information>();
-
-		// for the ZoneToAllocate given as parameter iterate over the emptyZones and
-		// check if there is a feasible solution.
-		// save information (applicable, modifiedstructure, cost) for every feasible
-		// solution
-		Zone toAllocate = zone;
-		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-			EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
-			if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
-				int cost = calculateCost(freeZone, toAllocate);
-				Information information = allocatePerfectFit(factory, freeZone, toAllocate);
-				information.costs = +cost;
-				allocationOptions.add(information);
-			}
-		}
-
-		// algorithm that creates all combinations of permutations.
-		int length = neighboursToTakeIntoConsideration.size();
-		int[] array = new int[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = i + 1;
-		}
-
-		combinations.clear();
-		combinations(array, length, length);
-
-		int numberPermutations = combinations.size() / length;
-		for (int j = 0; j < numberPermutations; j++) {
-			Factory modifiedStructurePot = modifiedStructure;
-			boolean alleTrue = true;
-			int cost = 0;
-			for (int j2 = 0; j2 < length; j2++) {
-				int inAddition = j * length;
-				int turn = (int) combinations.get(j2 + inAddition);
-				Information information = calculate(neighboursToTakeIntoConsideration.get(turn), modifiedStructure);
-				if (information.applicable == false) {
-					alleTrue = false;
-					break;
-				} else {
-					modifiedStructurePot = information.modifiedStructure;
-					cost += information.costs;
-				}
-			}
-			if (alleTrue == true) {
-				allocationOptions.add(new Information(true, modifiedStructurePot, cost));
-			}
-		}
-
-		// check if there is any feasible solution.
-		// If there is more than one, chosse the cheapest allocation.
-		if (allocationOptions.size() == 0) {
-			// qui ce da vedere se e quando usare la seconda hirarchy
-			return new Information(false, null, 0);
-		} else if (allocationOptions.size() == 1) {
-			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
-		} else {
-			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
-			int counter = 0;
-			double minCost = allocationOptionsArray[counter].costs;
-			for (int j = counter; j < allocationOptions.size(); j++) {
-				if (minCost > allocationOptionsArray[counter].costs) {
-					minCost = allocationOptionsArray[counter].costs;
-					counter = j;
-				}
-			}
-			return new Information(true, allocationOptions.get(counter).modifiedStructure,
-					allocationOptions.get(counter).costs);
-		}
-	}
+//	private Information fitPerfectlyWithList(Zone zone, Factory factory) {
+//		ArrayList<Information> allocationOptions = new ArrayList<Information>();
+//		Factory modifiedStructure = factory; 
+//		
+//		// for the ZoneToAllocate given as parameter iterate over the emptyZones and
+//		// check if there is a feasible solution.
+//		// save information (applicable, modifiedstructure, cost) for every feasible
+//		// solution
+//		Zone toAllocate = zone;
+//		
+//		ArrayList<Zone> zonesToAllocate = initial.getZonesToAllocate();
+//		int length = zonesToAllocate.size();
+//		
+//		//check if the zoneToAllocate is already into the list of zoneSToBeAllocated
+//		boolean alreadyIn = false; 
+//		for (int i = 0; i < length; i++) {
+//			if (zonesToAllocate.get(i).equals(toAllocate)) {
+//				alreadyIn = true; 
+//				break;
+//			}
+//		}
+//		if (alreadyIn == false) {
+//			zonesToAllocate.add(toAllocate);
+//		}
+//		
+//		// algorithm that creates all combinations of permutations.
+//		length = zonesToAllocate.size();
+//		int[] array = new int[length];
+//		for (int i = 0; i < length; i++) {
+//			array[i] = i + 1;
+//		}
+//
+//		combinations.clear();
+//		combinations(array, length, length);
+//
+//		int numberPermutations = combinations.size() / length;
+//		for (int j = 0; j < numberPermutations; j++) {
+//			Factory modifiedStructurePot = modifiedStructure;
+//			boolean alleTrue = true;
+//			int cost = 0;
+//			for (int j2 = 0; j2 < length; j2++) {
+//				int inAddition = j * length;
+//				int turn = (int) combinations.get(j2 + inAddition);
+//				
+//				//modificare to allocate con tutti quelli della lista 
+//				
+//				for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+//					EmptyZone freeZone = (EmptyZone) factory.getEmptyZones().get(j);
+//					if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
+//						int cost = calculateCost(freeZone, toAllocate);
+//						Information information = allocatePerfectFit(factory, freeZone, toAllocate);
+//						information.costs = +cost;
+//						allocationOptions.add(information);
+//					}
+//				}
+//				
+//				Information information = calculate(neighboursToTakeIntoConsideration.get(turn), modifiedStructure);
+//				if (information.applicable == false) {
+//					alleTrue = false;
+//					break;
+//				} else {
+//					modifiedStructurePot = information.modifiedStructure;
+//					cost += information.costs;
+//				}
+//			}
+//			if (alleTrue == true) {
+//				allocationOptions.add(new Information(true, modifiedStructurePot, cost));
+//			}
+//		}
+//
+//		// check if there is any feasible solution.
+//		// If there is more than one, chosse the cheapest allocation.
+//		if (allocationOptions.size() == 0) {
+//			// qui ce da vedere se e quando usare la seconda hirarchy
+//			return new Information(false, null, 0);
+//		} else if (allocationOptions.size() == 1) {
+//			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
+//		} else {
+//			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+//			int counter = 0;
+//			double minCost = allocationOptionsArray[counter].costs;
+//			for (int j = counter; j < allocationOptions.size(); j++) {
+//				if (minCost > allocationOptionsArray[counter].costs) {
+//					minCost = allocationOptionsArray[counter].costs;
+//					counter = j;
+//				}
+//			}
+//			return new Information(true, allocationOptions.get(counter).modifiedStructure,
+//					allocationOptions.get(counter).costs);
+//		}
+//	}
 
 	public Information fitPerfectly(Zone zone, Factory factory) {
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
@@ -379,7 +419,14 @@ public class Calculator {
 
 		}
 	}
+	
+	private Information fitWithRest(Zone zone, Factory factory) {
+		
+		return null;
+	}
 
+	//COST
+	
 	/*
 	 * calculateCost() of allocation of a zone into an empty zone
 	 */
@@ -418,6 +465,8 @@ public class Calculator {
 		return cost;
 	}
 
+	//ALLOCATION
+	
 	/*
 	 * allocationInLargerZone()
 	 */
