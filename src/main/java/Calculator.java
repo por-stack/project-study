@@ -732,7 +732,7 @@ public class Calculator {
 //		Import old = new Import(); 
 //		old.demo();
 
-		Factory initial = new Factory();
+		initial = new Factory();
 //		demoFactory(initial);
 //		demoZonesToAllocate(initial);
 
