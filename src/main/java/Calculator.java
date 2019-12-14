@@ -733,15 +733,14 @@ public class Calculator {
 //		old.demo();
 
 		Factory initial = new Factory();
-		demoFactory(initial);
-		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
-		demoZonesToAllocate(initial);
+//		demoFactory(initial);
+//		demoZonesToAllocate(initial);
 
-//		Calculator calculator = new Calculator();
-//		calculator.performAlgorithm(new Factory());
+		Calculator calculator = new Calculator();
+		calculator.performAlgorithm();
 //		newFactoryStructure = calculator.performAlgorithm();
-//		Factory newFactory = initial;
-//		newFactory.setFactoryStructure(newFactoryStructure);
+		Factory newFactory = initial;
+		newFactory.setFactoryStructure(newFactoryStructure);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 	}
 }
