@@ -35,6 +35,10 @@ public class Factory {
 		// put raster into zones
 		rasterIntoZones();
 
+		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
+
+		createEmptyZones(this.factoryStructure, empty);
+
 		System.out.println("for debug");
 	}
 
@@ -369,12 +373,21 @@ public class Factory {
 		}
 	}
 
-	public ArrayList<Zone> createEmptyZones(Zone[][] factory) {
+	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 } };
+
+	public ArrayList<Zone> createEmptyZones(Zone[][] factoryStructure, int[][] empty) throws Exception {
 		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
-		for (int i = 0; i < factory.length; i++) {
-			for (int j = 0; j < factory[0].length; j++) {
-				if (factory[i][j].isEmpty) {
-					emptyZones.add(factory[i][j]);
+
+		for (int i = 0; i < factoryStructure.length; i++) {
+			for (int j = 0; j < factoryStructure[0].length; j++) {
+				if (empty[i][empty[0].length - j - 1] == 1) {
+					if (factoryStructure[i][factoryStructure[0].length - j - 1] != null) {
+						factoryStructure[i][factoryStructure[0].length - j - 1].setEmpty(true);
+						emptyZones.add(factoryStructure[i][factoryStructure[0].length - j - 1]);
+					}
+				} else {
+//					throw new Exception("Empty zone does not exist in FactoryStructure");
 				}
 			}
 		}
@@ -384,10 +397,42 @@ public class Factory {
 	/*
 	 * to implement
 	 */
-	public ArrayList<Zone> createZonesToAllocate(Zone[][] factory) {
+	public ArrayList<Zone> createZonesToAllocate(Zone[][] factoryStructure) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
 		// INSERISCI NELL ORDINE GIUSTO
 
+		Zone[] array = factoryStructure[3];
+
+		ArrayList<Zone> temp = new ArrayList<Zone>();
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] != null) {
+				temp.add(array[i]);
+			}
+		}
+
+		int numberCycles = temp.size();
+		for (int y = 0; y < numberCycles; y++) {
+			int size = temp.get(0).totalNumberRaster;
+			int location = 0;
+			for (int i = 1; i < temp.size(); i++) {
+				if (temp.get(i).totalNumberRaster > size) {
+					size = temp.get(i).totalNumberRaster;
+					location = i;
+				}
+			}
+			System.out.println(temp.get(location));
+			zonesToAllocate.add(temp.get(location));
+			temp.remove(location);
+		}
+
+		Zone[][] matr = new Zone[3][7];
+
+		for (int i = 0; i < factoryStructure.length - 1; i++) {
+			for (int j = 0; j < factoryStructure[0].length; j++) {
+				matr[i][j] = factoryStructure[i][j];
+			}
+		}
+		this.factoryStructure = matr;
 		return zonesToAllocate;
 	}
 

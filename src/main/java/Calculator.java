@@ -713,10 +713,16 @@ public class Calculator {
 				if (factoryStructure[i][6 - j] == null) {
 					System.out.println("null");
 				} else {
-					System.out.println(factoryStructure[i][6-j].toString());
+					System.out.println(factoryStructure[i][6 - j].toString());
 					System.out.println(Arrays.deepToString(factoryStructure[i][6 - j].raster));
 				}
 			}
+		}
+	}
+
+	public static void demoZonesToAllocate(Factory initial) {
+		for (int i = 0; i < initial.getZonesToAllocate().size(); i++) {
+			System.out.println(initial.getZonesToAllocate().get(i).toString());
 		}
 	}
 
@@ -728,6 +734,8 @@ public class Calculator {
 
 		Factory initial = new Factory();
 		demoFactory(initial);
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+		demoZonesToAllocate(initial);
 
 //		Calculator calculator = new Calculator();
 //		calculator.performAlgorithm(new Factory());

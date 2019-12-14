@@ -9,7 +9,15 @@ public class Zone {
 
 	Raster[][] raster = new Raster[2][43];
 
-	boolean isEmpty; // in case of empty zone
+	boolean isEmpty = false; 
+
+	public boolean isEmpty() {
+		return isEmpty;
+	}
+
+	public void setEmpty(boolean isEmpty) {
+		this.isEmpty = isEmpty;
+	}
 
 	int amountRasterRow1;
 
@@ -142,6 +150,6 @@ public class Zone {
 	public String toString() {
 		return name + ":    raster1: " + amountRasterRow1 + ", raster2: " + amountRasterRow2 + ", dimTrainStat1: "
 				+ dimensionTrainStationRow1 + ", dimTrainStat2: " + dimensionTrainStationRow2 + ", tot: "
-				+ totalNumberRaster + "\n" + "LogEquip: " + logisticEquipment;
+				+ totalNumberRaster + " isEmpty: " + isEmpty +  "\n" + "LogEquip: " + logisticEquipment;
 	}
 }
