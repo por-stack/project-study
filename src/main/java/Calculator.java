@@ -397,14 +397,16 @@ public class Calculator {
 				int right = i;
 				int left = numberNeighbour - right;
 
-				if (left != 0)
+				while (left > 0) {
 					if (locationInFactoryRow - left >= 0) {
 						Zone neighbourOnTheLeft = factory
 								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn - left];
 						if (neighbourOnTheLeft != null)
 							neighboursToTakeIntoConsideration.add(neighbourOnTheLeft);
 					}
-				if (right != 0)
+					left--;
+				}
+				while (right > 0) {
 					if (locationInFactoryColumn + right < 7) {
 						Zone neighbourOnTheRight = factory
 								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn + right];
@@ -413,6 +415,7 @@ public class Calculator {
 									.add(factory.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn
 											+ right]);
 					}
+				}
 
 				int totalNumberRasterIncludingNeighbours = freeZoneAlone.totalNumberRaster;
 				for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
