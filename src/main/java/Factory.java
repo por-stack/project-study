@@ -23,8 +23,6 @@ public class Factory {
 		this.mport = new Import();
 		this.matrix = mport.getMatrix();
 		this.initializeFactory();
-//		this.emptyZones = createEmptyZones(factoryStructure);
-//		this.zonesToAllocate = createZonesToAllocate(factoryStructure); // to implement
 	}
 
 	public void initializeFactory() throws Exception {
@@ -34,12 +32,8 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-
 		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
-
-		createEmptyZones(this.factoryStructure, empty);
-
-		System.out.println("for debug");
+		emptyZones = createEmptyZones(this.factoryStructure, empty);
 	}
 
 	/*
@@ -420,7 +414,6 @@ public class Factory {
 					location = i;
 				}
 			}
-			System.out.println(temp.get(location));
 			zonesToAllocate.add(temp.get(location));
 			temp.remove(location);
 		}

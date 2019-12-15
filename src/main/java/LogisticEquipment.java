@@ -2,7 +2,7 @@
 public class LogisticEquipment {
 	// make sure, that the equipment is always in the same order as a list
 	private String name;
-	private int anzahl;
+	int anzahl;
 	private int dimension;
 
 	public LogisticEquipment(String name, int anzahl, int dimension) {
