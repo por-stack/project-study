@@ -439,6 +439,7 @@ public class Factory {
 
 	public void setFactoryStructure(Zone[][] factoryStructure) {
 		this.factoryStructure = factoryStructure;
+		createZonesToAllocate(this.factoryStructure); 
 	}
 
 	/**

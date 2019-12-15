@@ -59,33 +59,41 @@ public class Calculator {
 			}
 
 			// choose the cheapest for this iteration
-			// error: guarda se applicable é true
 			int i = 0, j = 0;
-			Information informationOfBestZone = zonesToBeAllocated.get(i).information;
-			for (i = 1; i < zonesToBeAllocated.size(); i++) {
+			Information informationOfBestZone = null;
+			boolean found = false;
+			while (!found) {
+				if (zonesToBeAllocated.get(i).information.applicable) {
+					found = true;
+					informationOfBestZone = zonesToBeAllocated.get(i).information;
+				} else {
+					i++;
+					j = i; 
+				}
+			}
+			for (i++; i < zonesToBeAllocated.size(); i++) {
 				if (zonesToBeAllocated.get(i).information.applicable) {
 					if (zonesToBeAllocated.get(i).information.costs < informationOfBestZone.costs) {
 						informationOfBestZone = zonesToBeAllocated.get(i).information;
 						j = i;
 					}
 				}
-
-				// apply the modifications to real factoryStructure. take zone out of
-				// zonesToBeAllocated
-				initial.setFactoryStructure(
-						zonesToBeAllocated.get(j).information.modifiedStructure.getFactoryStructure());
-				zonesToBeAllocated.remove(j);
 			}
+
+			// apply the modifications to real factoryStructure. take zone out of
+			// zonesToBeAllocated
+			initial.setFactoryStructure(zonesToBeAllocated.get(j).information.modifiedStructure.getFactoryStructure());
+			zonesToBeAllocated.remove(j);
+
 		}
 		return initial.getFactoryStructure();
 
 	}
 
 	public Information calculate(Zone zone, Factory factory) {
-//		System.out.println("Zone: " + zone.name);
-		// prima with list
-
 		Information information; // information (boolean applicable, Zone[][] modifiedStructure, double cost)
+
+		// FIRST HIERARCHY BASED ON PERFECT FIT
 
 		// level 0: Edge-case: checkForLargerZone
 		if (zone.equals(initial.getZonesToAllocate().get(0))) {
@@ -94,89 +102,146 @@ public class Calculator {
 				return information;
 		}
 
-		// level 1: fitPerfectly
+		// level 1: fitPerfectlyWithList
+//		information = fitPerfectlyWithList(zone, factory);
+//		if (information.applicable) return information;
+
+		// level 2: fitPerfectly
 		information = fitPerfectly(zone, factory);
 		if (information.applicable)
 			return information;
 
-		// level 2: fitPerfectlyWithList
-//		information = fitPerfectlyWithList(zone, factory);
+		// level 3: fitMoving1NeighbourWithList
+//		information = fitMovingNeighbourWithList(); 
 //		if (information.applicable) return information;
 
-		// level 3: fitMoving1Neighbour
+		// level 4: fitMoving1Neighbour
 		information = fitMovingNeighbour(zone, factory, 1);
 		if (information.applicable)
 			return information;
 
-		// level 4: fitMoving1NeighbourWithList
-//		information = fitMovingNeighbourWithList(); 
+		// level 5: fitMoving2NeighbourWithList
+//		information = fitMoving2NeighboursWithList(); 
 //		if (information.applicable) return information;
 
-		// level 5: fitMoving2Neighbour
+		// level 6: fitMoving2Neighbour
 		information = fitMovingNeighbour(zone, factory, 2);
 		if (information.applicable)
 			return information;
 
-		// level 6: fitMoving2NeighbourWithList
-//		information = fitMoving2NeighboursWithList(); 
+		// level 7: fitMoving3NeighboursWithList
+//		fitMoving3NeighboursWithList();
 //		if (information.applicable) return information;
 
-		// level 7: fitMoving3Neighbours
+		// level 8: fitMoving3Neighbours
 		information = fitMovingNeighbour(zone, factory, 3);
 		if (information.applicable)
 			return information;
 
-		// level8: fitMoving3NeighboursWithList
-//		fitMoving3NeighboursWithList();
+		// level 9: fitMoving4NeighbourWithList
+//		fitMoving4NeighboursWithList(); 
 //		if (information.applicable) return information;
 
-		// level9: fitMoving4Neighbour
+		// level 10: fitMoving4Neighbour
 		information = fitMovingNeighbour(zone, factory, 4);
 		if (information.applicable)
 			return information;
 
-		// level10: fitMoving4NeighbourWithList
-//		fitMoving4NeighboursWithList(); 
+		// level 11: fitMoving5NeighboursWithList
+//		fitMoving5NeighboursWithList(); 
 //		if (information.applicable) return information;
 
-		// level 11: fitMoving5Neighbours
+		// level 12: fitMoving5Neighbours
 		information = fitMovingNeighbour(zone, factory, 5);
 		if (information.applicable)
 			return information;
 
-		// level 12: fitMoving5NeighboursWithList
-//		fitMoving5NeighboursWithList(); 
+		// level 13: fitMoving6NeighboursWithList
+//		fitMoving6NeighboursWithList(); 
 //		if (information.applicable) return information;
 
-		// level 13: fitMoving6Neighbours
+		// level 14: fitMoving6Neighbours
 		information = fitMovingNeighbour(zone, factory, 6);
 		if (information.applicable)
 			return information;
 
-		// level 14: fitMoving6NeighboursWithList
-//		fitMoving6NeighboursWithList(); 
-//		if (information.applicable) return information;
+		// SECOND HIERARCHY BASED ON FINDING A BIGGER ZONE. "WITH REST".
 
-		// level 15: fitWithRestWithList();
-//		fitWithRestWithList(); 
-
-		// level 16: fitWithRest();
-//		information = fitWithRest(zone, factory);
+		// level 1: fitWithRestWithList()
+//		information = fitWithRestWithList(); 
 //		if (information.applicable)
-//			return information;
+//		return information;
 
-//		fitMoving1NeighbourWithRestWithList();
-//		fitMoving1NeighbourWithRest()
-//		fitMoving2NeighbourWithRestWithList();
-//		fitMoving2eighbourWithRest()
-//		fitMoving3NeighbourWithRestWithList();
-//		fitMoving3NeighbourWithRest()
-//		fitMoving4NeighbourWithRestWithList();
-//		fitMoving4NeighbourWithRest()
-//		fitMoving5NeighbourWithRestWithList();
-//		fitMoving5NeighbourWithRest()
-//		fitMoving6NeighbourWithRestWithList();
-//		fitMoving6NeighbourWithRest()
+		// level 2: fitWithRest()
+		information = fitWithRest(zone, factory);
+		if (information.applicable)
+			return information;
+
+		// level 2: fitMoving1NeighbourWithRestWithList()
+//		information = fitMoving1NeighbourWithRestWithList();
+//		if (information.applicable)
+//		return information;
+
+		// level 3: fitMoving1NeighbourWithRest()
+		information = fitMovingNeighbourWithRest(zone, factory, 1);
+		if (information.applicable)
+			return information;
+
+		// level 4: fitMoving2NeighbourWithRestWithList()
+//		information = fitMoving2NeighbourWithRestWithList();
+//		if (information.applicable)
+//		return information;
+
+		// level 5: fitMoving2eighbourWithRest()
+//		information = fitMoving2eighbourWithRest(); 
+//		if (information.applicable)
+//		return information;
+
+		// level 6: fitMoving3NeighbourWithRestWithList()
+//		information = fitMoving3NeighbourWithRestWithList();
+//		if (information.applicable)
+//		return information;
+
+		// level 7: fitMoving3NeighbourWithRest()
+//		information = fitMoving3NeighbourWithRest(); 
+//		if (information.applicable)
+//		return information;
+
+		// level 8: fitMoving4NeighbourWithRestWithList()
+//		information = fitMoving4NeighbourWithRestWithList();
+//		if (information.applicable)
+//		return information;
+
+		// level 9: fitMoving4NeighbourWithRest()
+//		information = fitMoving4NeighbourWithRest(); 
+//		if (information.applicable)
+//		return information;
+
+		// level 10: fitMoving5NeighbourWithRestWithList()
+//		information = fitMoving5NeighbourWithRestWithList();
+//		if (information.applicable)
+//		return information;
+
+		// level 11: fitMoving5NeighbourWithRest
+//		information = fitMoving5NeighbourWithRest(); 
+//		if (information.applicable)
+//		return information;
+
+		// level 12: fitMoving6NeighbourWithRestWithList()
+//		information = fitMoving6NeighbourWithRestWithList();
+//		if (information.applicable)
+//		return information;
+
+		// level 13: fitMoving6NeighbourWithRest()
+//		information = fitMoving6NeighbourWithRest(); 
+//		if (information.applicable)
+//		return information;
+
+		// THIRD HIRARHY BASED ON FINDING ANY FEASIBLE SOLUTION; SPLLITTING ZONES IN
+		// HALF IF NEEDED
+
+		// level 1:
+		// ...
 
 		return new Information(false, factory, 0);
 	}
@@ -364,7 +429,7 @@ public class Calculator {
 
 		// for the ZoneToAllocate given as parameter iterate over the emptyZones.
 		// Combine this emptyzone with 1 neigbour.
-		// There are 2 possible combinations when moving 1 neighbour.
+		// There are "numberNeighbours" possible combinations when moving 1 neighbour.
 		// Check if there is a feasible solution.
 		// Save information (applicable, modifiedstructure, cost) for every feasible
 		// solution
@@ -392,7 +457,6 @@ public class Calculator {
 			// and 1 right neighbour. in every iteration a possible allocation will be
 			// checked. Here the recursion will be used.
 
-			// ERRORE
 			for (int i = numberNeighbour; i < 0; i--) {
 				int right = i;
 				int left = numberNeighbour - right;
@@ -455,8 +519,100 @@ public class Calculator {
 	}
 
 	private Information fitWithRest(Zone zone, Factory factory) {
+		return checkForLargerZone(zone, factory);
+	}
 
-		return null;
+	private Information fitMovingNeighbourWithRest(Zone zone, Factory factory, int numberNeighbours) {
+		ArrayList<Information> allocationOptions = new ArrayList<Information>();
+
+		// for the ZoneToAllocate given as parameter iterate over the emptyZones.
+		// Combine this emptyzone with 1 neigbour.
+		// There are "numberNeighbours" possible combinations when moving 1 neighbour.
+		// Check if there is a feasible solution.
+		// Save information (applicable, modifiedstructure, cost) for every feasible
+		// solution
+		Zone toAllocate = zone;
+
+		// list with all the combinations of neighbours for each empty Zones
+
+		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+
+			Zone freeZoneAlone = factory.getEmptyZones().get(j);
+			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
+					freeZoneAlone.amountRasterRow2, freeZoneAlone.dimensionTrainStationRow1,
+					freeZoneAlone.dimensionTrainStationRow2);
+
+			// create all combinations between empty zone and neigbours
+			// iterate over the empty zone
+			int numberNeighbour = numberNeighbours;
+			int locationInFactoryRow = freeZoneAlone.locationInFactory[0];
+			int locationInFactoryColumn = freeZoneAlone.locationInFactory[1];
+
+			ArrayList<Zone> neighboursToTakeIntoConsideration = new ArrayList<Zone>();
+			// for this one specific empty zone one list at the time will be created. in the
+			// first iteration the list will contain one left neighbour and 0 right
+			// neighbours. In the second iteration the list will contain 0 left neighbours
+			// and 1 right neighbour. in every iteration a possible allocation will be
+			// checked. Here the recursion will be used.
+
+			for (int i = numberNeighbour; i < 0; i--) {
+				int right = i;
+				int left = numberNeighbour - right;
+
+				while (left > 0) {
+					if (locationInFactoryRow - left >= 0) {
+						Zone neighbourOnTheLeft = factory
+								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn - left];
+						if (neighbourOnTheLeft != null)
+							neighboursToTakeIntoConsideration.add(neighbourOnTheLeft);
+					}
+					left--;
+				}
+				while (right > 0) {
+					if (locationInFactoryColumn + right < 7) {
+						Zone neighbourOnTheRight = factory
+								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn + right];
+						if (neighbourOnTheRight != null)
+							neighboursToTakeIntoConsideration
+									.add(factory.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn
+											+ right]);
+					}
+				}
+
+				int totalNumberRasterIncludingNeighbours = freeZoneAlone.totalNumberRaster;
+				for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
+					totalNumberRasterIncludingNeighbours = +neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
+				}
+				if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
+					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
+					Information information = allocateInLargerZoneWithNeighbours(factory, (EmptyZone) freeZoneAlone,
+							neighboursToTakeIntoConsideration, toAllocate);
+					information.costs = +cost;
+					allocationOptions.add(information);
+				}
+			}
+		}
+
+		// check if there is any feasible solution.
+		// If there is more than one, chosse the cheapest allocation.
+		if (allocationOptions.size() == 0) {
+			// qui ce da vedere se e quando usare la seconda hirarchy
+			return new Information(false, null, 0);
+		} else if (allocationOptions.size() == 1) {
+			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
+		} else {
+			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+			int counter = 0;
+			double minCost = allocationOptionsArray[counter].costs;
+			for (int j = counter; j < allocationOptions.size(); j++) {
+				if (minCost > allocationOptionsArray[counter].costs) {
+					minCost = allocationOptionsArray[counter].costs;
+					counter = j;
+				}
+			}
+			return new Information(true, allocationOptions.get(counter).modifiedStructure,
+					allocationOptions.get(counter).costs);
+
 	}
 
 	// COST
@@ -507,8 +663,8 @@ public class Calculator {
 	public Information allocateInLargerZone(Factory factory, EmptyZone emptyZone, Zone toAllocate) {
 		Zone[][] factoryStructure = factory.getFactoryStructure();
 		Zone[][] tempStructure = new Zone[factoryStructure.length][factoryStructure[0].length + 1];
-		int i = emptyZone.locationInFactory[0];
-		int j = emptyZone.locationInFactory[1];
+		int iPos = emptyZone.locationInFactory[0];
+		int jPos = emptyZone.locationInFactory[1];
 
 		// forse non serve piú
 //		// porto tempStructure tutto su null per averlo come counter;
@@ -553,15 +709,15 @@ public class Calculator {
 		toAllocate.dimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
 
 		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", newEmptyDimensionTrainStationRow1,
-				newEmptyDimensionTrainStationRow2, i, j + 1); // this zone has 0 logistic equipment
+				newEmptyDimensionTrainStationRow2, iPos, jPos + 1); // this zone has 0 logistic equipment
 		newEmptyZone.amountRasterRow1 = remaindAmountRasterRow1;
 		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
 		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
 		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
 
 		// allocazione della ZoneToBeAllocated
-		tempStructure[i][j] = toAllocate;
-		tempStructure[i][j + 1] = newEmptyZone;
+		tempStructure[iPos][jPos] = toAllocate;
+		tempStructure[iPos][jPos + 1] = newEmptyZone;
 
 		// copying the initial factoryStructure into the new tempStructure, that will be
 		// given back.
@@ -569,14 +725,14 @@ public class Calculator {
 		boolean passedOver_ToAllocate_and_NewEmptyZone = false;
 		for (int it = 0; it < tempStructure.length; it++) {
 			if (passedOver_ToAllocate_and_NewEmptyZone == false) {
-				if (it != j) {
-					tempStructure[i][it] = factoryStructure[i][it];
+				if (it != jPos) {
+					tempStructure[iPos][it] = factoryStructure[iPos][it];
 				} else {
 					it++;
 					passedOver_ToAllocate_and_NewEmptyZone = true;
 				}
 			} else {
-				tempStructure[i][it] = factoryStructure[i][it - 1];
+				tempStructure[iPos][it] = factoryStructure[iPos][it - 1];
 			}
 		}
 
@@ -687,6 +843,90 @@ public class Calculator {
 			return new Information(true, allocationOptions.get(counter).modifiedStructure,
 					allocationOptions.get(counter).costs);
 		}
+	}
+
+	private Information allocateInLargerZoneWithNeighbours(Factory factory, EmptyZone freeZoneAlone,
+			ArrayList<Zone> neighboursToTakeIntoConsideration, Zone toAllocate) {
+
+		Zone[][] factoryStructure = factory.getFactoryStructure();
+		Zone[][] tempStructure = new Zone[factoryStructure.length][factoryStructure[0].length + 1];
+		int iPos = freeZoneAlone.locationInFactory[0];
+		int jPos = freeZoneAlone.locationInFactory[1];
+
+		// forse non serve piú
+//		// porto tempStructure tutto su null per averlo come counter;
+//		for (int j2 = 0; j2 < tempStructure.length; j2++) {
+//			for (int k = 0; k < tempStructure[0].length; k++) {
+//				tempStructure[j2][k] = null;
+//			}
+//		}
+
+		// find out what is remaining in the empty zone and what is gone with the
+		// allocation of the ZoneToBeAllocated
+		int remaindAmountRasterRow1 = freeZoneAlone.amountRasterRow1 - toAllocate.amountRasterRow1;
+		int remaindAmountRasterRow2 = freeZoneAlone.amountRasterRow2 - toAllocate.amountRasterRow2;
+		int totalDimensionTrainStationRow1 = freeZoneAlone.dimensionTrainStationRow1
+				+ toAllocate.dimensionTrainStationRow1;
+		int totalDimensionTrainStationRow2 = freeZoneAlone.dimensionTrainStationRow2
+				+ toAllocate.dimensionTrainStationRow2;
+
+		int toAllocateDimensionTrainStationRow1;
+		int newEmptyDimensionTrainStationRow1;
+		int toAllocateDimensionTrainStationRow2;
+		int newEmptyDimensionTrainStationRow2;
+		// totalDimensionTrainStationRow1 aufteilen auf die toAllcate und die
+		// newEmptyZone
+		if (totalDimensionTrainStationRow1 % 2 == 0) {
+			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
+			newEmptyDimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
+		} else {
+			newEmptyDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
+			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 - newEmptyDimensionTrainStationRow1;
+		}
+		// totalDimensionTrainStationRow2 aufteilen auf die toAllcate und die
+		// newEmptyZone
+		if (totalDimensionTrainStationRow2 % 2 == 0) {
+			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
+			newEmptyDimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
+		} else {
+			newEmptyDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
+			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 - newEmptyDimensionTrainStationRow2;
+		}
+
+		// assignment of sizes
+		toAllocate.dimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
+		toAllocate.dimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
+
+		Zone newEmptyZone = new Zone(freeZoneAlone.name + "Empty", newEmptyDimensionTrainStationRow1,
+				newEmptyDimensionTrainStationRow2, iPos, jPos + 1); // this zone has 0 logistic equipment
+		newEmptyZone.amountRasterRow1 = remaindAmountRasterRow1;
+		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
+		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
+		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
+
+		// allocazione della ZoneToBeAllocated
+		tempStructure[iPos][jPos] = toAllocate;
+		tempStructure[iPos][jPos + 1] = newEmptyZone;
+
+		// copying the initial factoryStructure into the new tempStructure, that will be
+		// given back.
+		// int i = row
+		boolean passedOver_ToAllocate_and_NewEmptyZone = false;
+		for (int it = 0; it < tempStructure.length; it++) {
+			if (passedOver_ToAllocate_and_NewEmptyZone == false) {
+				if (it != jPos) {
+					tempStructure[iPos][it] = factoryStructure[iPos][it];
+				} else {
+					it++;
+					passedOver_ToAllocate_and_NewEmptyZone = true;
+				}
+			} else {
+				tempStructure[iPos][it] = factoryStructure[iPos][it - 1];
+			}
+		}
+
+		factory.setFactoryStructure(tempStructure);
+		return new Information(true, factory, 0);
 	}
 
 	/*
