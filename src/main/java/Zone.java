@@ -9,6 +9,34 @@ public class Zone {
 
 	Raster[][] raster = new Raster[2][43];
 
+	/**
+	 * @return the dimensionTrainStationRow1
+	 */
+	public int getDimensionTrainStationRow1() {
+		return dimensionTrainStationRow1;
+	}
+
+	/**
+	 * @param dimensionTrainStationRow1 the dimensionTrainStationRow1 to set
+	 */
+	public void setDimensionTrainStationRow1(int dimensionTrainStationRow1) {
+		this.dimensionTrainStationRow1 = dimensionTrainStationRow1;
+	}
+
+	/**
+	 * @return the dimensionTrainStationRow2
+	 */
+	public int getDimensionTrainStationRow2() {
+		return dimensionTrainStationRow2;
+	}
+
+	/**
+	 * @param dimensionTrainStationRow2 the dimensionTrainStationRow2 to set
+	 */
+	public void setDimensionTrainStationRow2(int dimensionTrainStationRow2) {
+		this.dimensionTrainStationRow2 = dimensionTrainStationRow2;
+	}
+
 	boolean isEmpty = false; 
 
 	public boolean isEmpty() {
@@ -20,7 +48,6 @@ public class Zone {
 	}
 
 	int amountRasterRow1;
-
 	int amountRasterRow2;
 	int dimensionTrainStationRow1;
 	int dimensionTrainStationRow2;
@@ -36,6 +63,8 @@ public class Zone {
 		amountRasterRow2 = row2; // --->>---
 		locationInFactory[0] = i;
 		locationInFactory[1] = j;
+//		dimensionTrainStationRow1 = i; 
+//		dimensionTrainStationRow2 = j; 
 
 		logisticEquipment.add(new LogisticEquipment("2er XLT", 0, 2));
 		logisticEquipment.add(new LogisticEquipment("3 Ebenen Regal", 0, 1));
@@ -53,6 +82,8 @@ public class Zone {
 		logisticEquipment.add(new LogisticEquipment("SÄULE", 0, 1));
 		logisticEquipment.add(new LogisticEquipment("XU_groß", 0, 3));
 		logisticEquipment.add(new LogisticEquipment("XW_groß", 0, 4));
+		
+		calculateAmounts();
 	}
 
 	/**
