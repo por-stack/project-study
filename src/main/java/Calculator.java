@@ -51,7 +51,7 @@ public class Calculator {
 		 */
 
 		while (!zonesToBeAllocated.isEmpty()) {
-//			System.out.println("zonesToBeAllocated.size: " + zonesToBeAllocated.size());
+			System.out.println("zonesToBeAllocated.size: " + zonesToBeAllocated.size());
 			zonesToBeAllocated = initial.getZonesToAllocate(); // after
 
 			for (int i = 0; i < zonesToBeAllocated.size(); i++) {
@@ -767,7 +767,8 @@ public class Calculator {
 //		old.demo();
 
 		initial = new Factory();
-//		demoFactory(initial);
+		demoFactory(initial);
+		System.out.println("\n\n\n\n\n\n\n\n");
 		demoZonesToAllocate(initial);
 
 		Calculator calculator = new Calculator();
