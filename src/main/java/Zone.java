@@ -37,7 +37,7 @@ public class Zone {
 		this.dimensionTrainStationRow2 = dimensionTrainStationRow2;
 	}
 
-	boolean isEmpty = false; 
+	private boolean isEmpty = false; 
 
 	public boolean isEmpty() {
 		return isEmpty;
