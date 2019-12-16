@@ -256,7 +256,7 @@ public class Calculator {
 	/*
 	 * checkForLargerZone()
 	 */
-	public Information checkForLargerZone(Zone zone, Factory factory) {
+	public Information checkForLargerZone(Zone zone, Factory factory) throws Exception {
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 
 		Zone toAllocate = zone;
@@ -540,7 +540,7 @@ public class Calculator {
 		}
 	}
 
-	private Information fitWithRest(Zone zone, Factory factory) {
+	private Information fitWithRest(Zone zone, Factory factory) throws Exception {
 		return checkForLargerZone(zone, factory);
 	}
 
@@ -686,7 +686,7 @@ public class Calculator {
 	/*
 	 * allocationInLargerZone()
 	 */
-	public Information allocateInLargerZone(Factory factory, EmptyZone emptyZone, Zone toAllocate) {
+	public Information allocateInLargerZone(Factory factory, EmptyZone emptyZone, Zone toAllocate) throws Exception {
 		Zone[][] factoryStructure = factory.getFactoryStructure();
 		Zone[][] tempStructure = new Zone[factoryStructure.length][factoryStructure[0].length + 1];
 		int iPos = emptyZone.locationInFactory[0];
@@ -740,10 +740,11 @@ public class Calculator {
 		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
 		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
 		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
+		newEmptyZone.setEmpty(true);
 
 		// allocazione della ZoneToBeAllocated
 		tempStructure[iPos][jPos] = toAllocate;
-		tempStructure[iPos][jPos + 1] = newEmptyZone;
+		tempStructure[iPos][jPos + 1] = newEmptyZone; 
 
 		// copying the initial factoryStructure into the new tempStructure, that will be
 		// given back.
@@ -776,6 +777,15 @@ public class Calculator {
 		
 		
 		factory.setFactoryStructure(tempStructure);
+		factory.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure())); 
+		boolean worked = false; 
+		for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
+			if (factory.getZonesToAllocate().get(i).equals(toAllocate)) {
+				factory.getZonesToAllocate().remove(i);
+				worked = true; 
+			} 
+		}
+		System.out.println(worked);
 		return new Information(true, factory, 0);
 	}
 
