@@ -768,6 +768,8 @@ public class Calculator {
 //			}
 //		}
 
+		
+		
 		factory.setFactoryStructure(tempStructure);
 		return new Information(true, factory, 0);
 	}
