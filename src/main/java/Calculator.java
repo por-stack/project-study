@@ -750,23 +750,28 @@ public class Calculator {
 		// int i = row
 		boolean passedOver_ToAllocate_and_NewEmptyZone = false;
 		for (int row = 0; row < tempStructure.length; row++) {
-			
+			if (row == iPos) { // we are in the same row in which the ZoneToBeAllocate and the newEmptyzone
+								// have been allocated.
+				for (int column = 0; column < tempStructure[0].length; column++) {
+					if (passedOver_ToAllocate_and_NewEmptyZone == false) {
+						if (column != jPos) {
+							tempStructure[row][column] = factoryStructure[row][column];
+						} else {
+							column++;
+							passedOver_ToAllocate_and_NewEmptyZone = true;
+						}
+					} else { // passedOver == true
+						tempStructure[row][column] = factoryStructure[row][column - 1];
+					}
+				}
+			} else { // we are in a normal row, where we can copy the old Structure in the new one,
+						// without any further problems
+				for (int column = 1; column < tempStructure[0].length; column++) {
+					tempStructure[row][column] = factoryStructure[row][column - 1];
+					// we shift one column to the right, as the tempStructure is 1 unit larger.
+				}
+			}
 		}
-		
-		
-		
-//		for (int it = 0; it < tempStructure.length; it++) {
-//			if (passedOver_ToAllocate_and_NewEmptyZone == false) {
-//				if (it != jPos) {
-//					tempStructure[iPos][it] = factoryStructure[iPos][it];
-//				} else {
-//					it++;
-//					passedOver_ToAllocate_and_NewEmptyZone = true;
-//				}
-//			} else {
-//				tempStructure[iPos][it] = factoryStructure[iPos][it - 1];
-//			}
-//		}
 
 		
 		
