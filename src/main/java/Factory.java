@@ -34,6 +34,8 @@ public class Factory {
 		rasterIntoZones();
 		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
 		emptyZones = createEmptyZones(this.factoryStructure, empty);
+		
+		System.out.println("");
 	}
 
 	/*
