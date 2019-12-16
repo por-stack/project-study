@@ -98,7 +98,7 @@ public class Calculator {
 		if (zone.equals(initial.getZonesToAllocate().get(0))) {
 			information = checkForLargerZone(zone, factory);
 			if (information.applicable) {
-				System.out.println("solution found in level 0");
+				System.out.println("solution for " + zone.name + " found in level 0");
 				return information;
 			}
 		}
@@ -110,7 +110,7 @@ public class Calculator {
 		// level 2: fitPerfectly
 		information = fitPerfectly(zone, factory);
 		if (information.applicable) {
-			System.out.println("solution found in level 1");
+			System.out.println("solution for " + zone.name + " found in level 2");
 			return information;
 		}
 
@@ -120,8 +120,10 @@ public class Calculator {
 
 		// level 4: fitMoving1Neighbour
 		information = fitMovingNeighbour(zone, factory, 1);
-		if (information.applicable)
+		if (information.applicable) {
+			System.out.println("solution for " + zone.name + " found in level 4");
 			return information;
+		}
 
 		// level 5: fitMoving2NeighbourWithList
 //		information = fitMoving2NeighboursWithList(); 
@@ -129,8 +131,10 @@ public class Calculator {
 
 		// level 6: fitMoving2Neighbour
 		information = fitMovingNeighbour(zone, factory, 2);
-		if (information.applicable)
+		if (information.applicable) {
+			System.out.println("solution for " + zone.name + " found in level 6");
 			return information;
+		}
 
 		// level 7: fitMoving3NeighboursWithList
 //		fitMoving3NeighboursWithList();
@@ -259,12 +263,12 @@ public class Calculator {
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			Zone freeZoneTemp = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneTemp.name, freeZoneTemp.amountRasterRow1,
-					freeZoneTemp.amountRasterRow2, 0, 0);
+					freeZoneTemp.amountRasterRow2, freeZoneTemp.locationInFactory[0],
+					freeZoneTemp.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneTemp.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneTemp.dimensionTrainStationRow2);
 			freeZone.calculateAmounts();
 			if (toAllocate.totalNumberRaster < freeZone.totalNumberRaster) {
-				// metti qui l'algoritmo
 				int cost = calculateCost(freeZone, toAllocate);
 				Information information = allocateInLargerZone(factory, freeZone, toAllocate);
 				information.costs += cost;
@@ -401,7 +405,8 @@ public class Calculator {
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			Zone freeZoneTemp = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneTemp.name, freeZoneTemp.amountRasterRow1,
-					freeZoneTemp.amountRasterRow2, 0, 0);
+					freeZoneTemp.amountRasterRow2, freeZoneTemp.locationInFactory[0],
+					freeZoneTemp.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneTemp.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneTemp.dimensionTrainStationRow2);
 			freeZone.calculateAmounts();
@@ -452,10 +457,11 @@ public class Calculator {
 		// list with all the combinations of neighbours for each empty Zones
 
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-			
+
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
-					freeZoneAlone.amountRasterRow2, 0, 0);
+					freeZoneAlone.amountRasterRow2, freeZoneAlone.locationInFactory[0],
+					freeZoneAlone.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneAlone.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneAlone.dimensionTrainStationRow2);
 			freeZone.calculateAmounts();
@@ -555,7 +561,8 @@ public class Calculator {
 
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
-					freeZoneAlone.amountRasterRow2, 0, 0);
+					freeZoneAlone.amountRasterRow2, freeZoneAlone.locationInFactory[0],
+					freeZoneAlone.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneAlone.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneAlone.dimensionTrainStationRow2);
 			freeZone.calculateAmounts();
@@ -742,18 +749,24 @@ public class Calculator {
 		// given back.
 		// int i = row
 		boolean passedOver_ToAllocate_and_NewEmptyZone = false;
-		for (int it = 0; it < tempStructure.length; it++) {
-			if (passedOver_ToAllocate_and_NewEmptyZone == false) {
-				if (it != jPos) {
-					tempStructure[iPos][it] = factoryStructure[iPos][it];
-				} else {
-					it++;
-					passedOver_ToAllocate_and_NewEmptyZone = true;
-				}
-			} else {
-				tempStructure[iPos][it] = factoryStructure[iPos][it - 1];
-			}
+		for (int row = 0; row < tempStructure.length; row++) {
+			
 		}
+		
+		
+		
+//		for (int it = 0; it < tempStructure.length; it++) {
+//			if (passedOver_ToAllocate_and_NewEmptyZone == false) {
+//				if (it != jPos) {
+//					tempStructure[iPos][it] = factoryStructure[iPos][it];
+//				} else {
+//					it++;
+//					passedOver_ToAllocate_and_NewEmptyZone = true;
+//				}
+//			} else {
+//				tempStructure[iPos][it] = factoryStructure[iPos][it - 1];
+//			}
+//		}
 
 		factory.setFactoryStructure(tempStructure);
 		return new Information(true, factory, 0);

@@ -379,13 +379,14 @@ public class Factory {
 					Zone zone = factoryStructure[i][factoryStructure[0].length - j - 1];
 					if (zone != null) {
 						zone.setEmpty(true);
-						EmptyZone emptyZone = new EmptyZone(zone.name, zone.amountRasterRow1, zone.amountRasterRow2, i, factoryStructure[0].length - j - 1); 
+						EmptyZone emptyZone = new EmptyZone(zone.name, zone.amountRasterRow1, zone.amountRasterRow2, i,
+								factoryStructure[0].length - j - 1);
 						emptyZone.setDimensionTrainStationRow1(zone.dimensionTrainStationRow1);
 						emptyZone.setDimensionTrainStationRow2(zone.dimensionTrainStationRow2);
 						emptyZones.add(emptyZone);
+					} else {
+						throw new Exception("Empty zone does not exist in FactoryStructure");
 					}
-				} else {
-					throw new Exception("Empty zone does not exist in FactoryStructure");
 				}
 			}
 		}
