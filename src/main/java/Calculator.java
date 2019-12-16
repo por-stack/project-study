@@ -68,7 +68,7 @@ public class Calculator {
 					informationOfBestZone = zonesToBeAllocated.get(i).information;
 				} else {
 					i++;
-					j = i; 
+					j = i;
 				}
 			}
 			for (i++; i < zonesToBeAllocated.size(); i++) {
@@ -612,7 +612,7 @@ public class Calculator {
 			}
 			return new Information(true, allocationOptions.get(counter).modifiedStructure,
 					allocationOptions.get(counter).costs);
-
+		}
 	}
 
 	// COST
