@@ -16,7 +16,7 @@ public class Factory {
 	private boolean isTrainStat = false;
 	private int number;
 
-	private ArrayList<Zone> emptyZones;
+	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
 	public Factory() throws Exception {
@@ -372,18 +372,23 @@ public class Factory {
 	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0 } };
 
-	public ArrayList<Zone> createEmptyZones(Zone[][] factoryStructure, int[][] empty) throws Exception {
-		ArrayList<Zone> emptyZones = new ArrayList<Zone>();
+	public ArrayList<EmptyZone> createEmptyZones(Zone[][] factoryStructure, int[][] empty) throws Exception {
+		ArrayList<EmptyZone> emptyZones = new ArrayList<EmptyZone>();
 
 		for (int i = 0; i < factoryStructure.length; i++) {
 			for (int j = 0; j < factoryStructure[0].length; j++) {
 				if (empty[i][empty[0].length - j - 1] == 1) {
-					if (factoryStructure[i][factoryStructure[0].length - j - 1] != null) {
-						factoryStructure[i][factoryStructure[0].length - j - 1].setEmpty(true);
-						emptyZones.add(factoryStructure[i][factoryStructure[0].length - j - 1]);
+					Zone zone = factoryStructure[i][factoryStructure[0].length - j - 1];
+					if (zone != null) {
+						zone.setEmpty(true);
+						EmptyZone emptyZone = new EmptyZone(zone.name, zone.amountRasterRow1, zone.amountRasterRow2, i,
+								factoryStructure[0].length - j - 1);
+						emptyZone.setDimensionTrainStationRow1(zone.dimensionTrainStationRow1);
+						emptyZone.setDimensionTrainStationRow2(zone.dimensionTrainStationRow2);
+						emptyZones.add(emptyZone);
+					} else {
+						throw new Exception("Empty zone does not exist in FactoryStructure");
 					}
-				} else {
-//					throw new Exception("Empty zone does not exist in FactoryStructure");
 				}
 			}
 		}
@@ -441,20 +446,19 @@ public class Factory {
 
 	public void setFactoryStructure(Zone[][] factoryStructure) {
 		this.factoryStructure = factoryStructure;
-		createZonesToAllocate(this.factoryStructure); 
 	}
 
 	/**
 	 * @return the emptyZones
 	 */
-	public ArrayList<Zone> getEmptyZones() {
+	public ArrayList<EmptyZone> getEmptyZones() {
 		return emptyZones;
 	}
 
 	/**
 	 * @param emptyZones the emptyZones to set
 	 */
-	public void setEmptyZones(ArrayList<Zone> emptyZones) {
+	public void setEmptyZones(ArrayList<EmptyZone> emptyZones) {
 		this.emptyZones = emptyZones;
 	}
 
