@@ -9,13 +9,12 @@ public class Factory {
 
 	private Import mport;
 	private String[][] matrix;
-	private Information[] informationPerRaw;
+	
 	private int[][] counter; // for canel0Entries
-	private int maxNumberColumn = 0; // for createFactoryStrucure
-	private Zone[][] factoryStructure; // for createFactoryStructure
 	private boolean isTrainStat = false;
-	private int number;
-
+	private int maxNumberColumn = 0; // for createFactoryStrucure
+	
+	private Zone[][] factoryStructure; // for createFactoryStructure
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
@@ -26,6 +25,10 @@ public class Factory {
 		this.mport = new Import();
 		this.matrix = mport.getMatrix();
 		this.initializeFactory();
+	}
+	
+	public Factory(boolean toCopy) { 
+		
 	}
 
 	public void initializeFactory() throws Exception {
@@ -487,5 +490,86 @@ public class Factory {
 	 */
 	public void setZonesToAllocate(ArrayList<Zone> zonesToAllocate) {
 		this.zonesToAllocate = zonesToAllocate;
+	}
+
+	/**
+	 * @return the mport
+	 */
+	public Import getMport() {
+		return mport;
+	}
+
+	/**
+	 * @param mport the mport to set
+	 */
+	public void setMport(Import mport) {
+		this.mport = mport;
+	}
+
+	/**
+	 * @return the counter
+	 */
+	public int[][] getCounter() {
+		return counter;
+	}
+
+	/**
+	 * @param counter the counter to set
+	 */
+	public void setCounter(int[][] counter) {
+		this.counter = counter;
+	}
+
+	/**
+	 * @return the isTrainStat
+	 */
+	public boolean isTrainStat() {
+		return isTrainStat;
+	}
+
+	/**
+	 * @param isTrainStat the isTrainStat to set
+	 */
+	public void setTrainStat(boolean isTrainStat) {
+		this.isTrainStat = isTrainStat;
+	}
+	
+	public boolean getTrainStat() {
+		return this.isTrainStat;
+	}
+
+	/**
+	 * @return the maxNumberColumn
+	 */
+	public int getMaxNumberColumn() {
+		return maxNumberColumn;
+	}
+
+	/**
+	 * @param maxNumberColumn the maxNumberColumn to set
+	 */
+	public void setMaxNumberColumn(int maxNumberColumn) {
+		this.maxNumberColumn = maxNumberColumn;
+	}
+
+	/**
+	 * @return the empty
+	 */
+	public int[][] getEmpty() {
+		return empty;
+	}
+
+	/**
+	 * @param empty the empty to set
+	 */
+	public void setEmpty(int[][] empty) {
+		this.empty = empty;
+	}
+
+	/**
+	 * @param matrix the matrix to set
+	 */
+	public void setMatrix(String[][] matrix) {
+		this.matrix = matrix;
 	}
 }

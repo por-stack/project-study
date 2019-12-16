@@ -2,59 +2,18 @@ import java.util.ArrayList;
 
 public class Zone {
 	String name; // name
-
-//	int lastOccupiedRaster; // for calculation. non utilizzato? 
-
 	int[] locationInFactory = new int[2];
-
 	Raster[][] raster = new Raster[2][43];
-
-	/**
-	 * @return the dimensionTrainStationRow1
-	 */
-	public int getDimensionTrainStationRow1() {
-		return dimensionTrainStationRow1;
-	}
-
-	/**
-	 * @param dimensionTrainStationRow1 the dimensionTrainStationRow1 to set
-	 */
-	public void setDimensionTrainStationRow1(int dimensionTrainStationRow1) {
-		this.dimensionTrainStationRow1 = dimensionTrainStationRow1;
-	}
-
-	/**
-	 * @return the dimensionTrainStationRow2
-	 */
-	public int getDimensionTrainStationRow2() {
-		return dimensionTrainStationRow2;
-	}
-
-	/**
-	 * @param dimensionTrainStationRow2 the dimensionTrainStationRow2 to set
-	 */
-	public void setDimensionTrainStationRow2(int dimensionTrainStationRow2) {
-		this.dimensionTrainStationRow2 = dimensionTrainStationRow2;
-	}
-
+	
 	private boolean isEmpty = false; 
-
-	public boolean isEmpty() {
-		return isEmpty;
-	}
-
-	public void setEmpty(boolean isEmpty) {
-		this.isEmpty = isEmpty;
-	}
-
 	int amountRasterRow1;
 	int amountRasterRow2;
 	int dimensionTrainStationRow1;
 	int dimensionTrainStationRow2;
 	int totalNumberRaster;
-
+	
 	private ArrayList<LogisticEquipment> logisticEquipment = new ArrayList<LogisticEquipment>();
-
+	
 	public Information information = null; // questa ci serve in calculator per la funzione performalgorithm
 
 	public Zone(String name, int row1, int row2, int i, int j) {
@@ -84,6 +43,42 @@ public class Zone {
 		logisticEquipment.add(new LogisticEquipment("XW_groß", 0, 4));
 		
 		calculateAmounts();
+	}
+	
+	/**
+	 * @return the dimensionTrainStationRow1
+	 */
+	public int getDimensionTrainStationRow1() {
+		return dimensionTrainStationRow1;
+	}
+
+	/**
+	 * @param dimensionTrainStationRow1 the dimensionTrainStationRow1 to set
+	 */
+	public void setDimensionTrainStationRow1(int dimensionTrainStationRow1) {
+		this.dimensionTrainStationRow1 = dimensionTrainStationRow1;
+	}
+
+	/**
+	 * @return the dimensionTrainStationRow2
+	 */
+	public int getDimensionTrainStationRow2() {
+		return dimensionTrainStationRow2;
+	}
+
+	/**
+	 * @param dimensionTrainStationRow2 the dimensionTrainStationRow2 to set
+	 */
+	public void setDimensionTrainStationRow2(int dimensionTrainStationRow2) {
+		this.dimensionTrainStationRow2 = dimensionTrainStationRow2;
+	}
+
+	public boolean isEmpty() {
+		return isEmpty;
+	}
+
+	public void setEmpty(boolean isEmpty) {
+		this.isEmpty = isEmpty;
 	}
 
 	/**
