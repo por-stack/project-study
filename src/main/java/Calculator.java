@@ -469,14 +469,12 @@ public class Calculator {
 		// Check if there is a feasible solution.
 		// Save information (applicable, modifiedstructure, cost) for every feasible
 		// solution
-		Zone toAllocate = new EmptyZone(zone.name, zone.amountRasterRow1,
-				zone.amountRasterRow2, zone.locationInFactory[0],
+		Zone toAllocate = new Zone(zone.name, zone.amountRasterRow1, zone.amountRasterRow2, zone.locationInFactory[0],
 				zone.locationInFactory[1]);
 		toAllocate.setDimensionTrainStationRow1(zone.dimensionTrainStationRow1);
 		toAllocate.setDimensionTrainStationRow2(zone.dimensionTrainStationRow2);
 		toAllocate.calculateAmounts();
 		toAllocate.setEmpty(zone.isEmpty());
-				
 
 		// list with all the combinations of neighbours for each empty Zones
 
@@ -499,7 +497,8 @@ public class Calculator {
 
 			ArrayList<Zone> neighboursToTakeIntoConsideration = new ArrayList<Zone>();
 			// for this one specific empty zone one list at the time will be created. in the
-			// first iteration the list will contain one left neighbour and 0 right
+			// first iteration (for example with 1 neighbour) the list will contain one left
+			// neighbour and 0 right
 			// neighbours. In the second iteration the list will contain 0 left neighbours
 			// and 1 right neighbour. in every iteration a possible allocation will be
 			// checked. Here the recursion will be used.
@@ -509,17 +508,9 @@ public class Calculator {
 				int right = i;
 				int left = numberNeighbour - right;
 
-				while (left > 0) {
-					if (locationInFactoryRow - left >= 0) {
-						Zone neighbourOnTheLeft = factory
-								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn - left];
-						if (neighbourOnTheLeft != null)
-							neighboursToTakeIntoConsideration.add(neighbourOnTheLeft);
-					} 
-					left--;
-				}
 				while (right > 0) {
-					if (locationInFactoryColumn + right < 7) {
+//					int toDebug = factory.getFactoryStructure()[0].length; 
+					if (locationInFactoryColumn + right < factory.getFactoryStructure()[0].length) {
 						Zone neighbourOnTheRight = factory
 								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn + right];
 						if (neighbourOnTheRight != null)
@@ -527,16 +518,46 @@ public class Calculator {
 									.add(factory.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn
 											+ right]);
 					}
-					right--; 
+					right--;
 				}
 
+				// extra list for left neighbours. the final thought here is that i want the
+				// left outer neighbour to be last in the list:
+				// neighboursToTaleIntoConsideration. so this list for the left part will be
+				// attached to the normal list, but in inverted sequence
+				// the reason for this decision relies in the allocatePerfectFitWithNeighbour
+				// method.
+				ArrayList<Zone> neighboursToTakeIntoConsiderationOnLeftSide = new ArrayList<Zone>();
+				while (left > 0) {
+					if (locationInFactoryColumn - left >= 0) {
+						Zone neighbourOnTheLeft = factory
+								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn - left];
+						if (neighbourOnTheLeft != null)
+							neighboursToTakeIntoConsiderationOnLeftSide.add(neighbourOnTheLeft);
+					}
+					left--;
+				}
+
+				// attach the list of the left neighbour the the right neighbours but in
+				// opposite sequence
+				for (int k = neighboursToTakeIntoConsiderationOnLeftSide.size() - 1; k >= 0; k--) {
+					neighboursToTakeIntoConsideration.add(neighboursToTakeIntoConsiderationOnLeftSide.get(k));
+				}
+
+				// calculate the total size of the freeZoneAlone and the neighbours taken into
+				// consideration in this cycle
 				int totalNumberRasterIncludingNeighbours = freeZoneAlone.totalNumberRaster;
 				for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
 					totalNumberRasterIncludingNeighbours += neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
 				}
+				// same size?
 				if (toAllocate.totalNumberRaster == totalNumberRasterIncludingNeighbours) {
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
-					Information information = allocatePerfectFitWithNeighbours(factory, (EmptyZone) freeZoneAlone,
+					Factory toReturn = copyFactory(factoryAsParameter);
+					toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set the
+					// emptyZone
+					// on null;
+					Information information = allocatePerfectFitWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
 					information.costs = +cost;
 					allocationOptions.add(information);
@@ -640,7 +661,11 @@ public class Calculator {
 				}
 				if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
-					Information information = allocateInLargerZoneWithNeighbours(factory, (EmptyZone) freeZoneAlone,
+					Factory toReturn = copyFactory(factory);
+					toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set the
+																											// emptyZone
+																											// on null;
+					Information information = allocateInLargerZoneWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
 					information.costs = +cost;
 					allocationOptions.add(information);
@@ -765,7 +790,21 @@ public class Calculator {
 		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
 		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
 		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
+		newEmptyZone.calculateAmounts();
 		newEmptyZone.setEmpty(true);
+		
+		//error handling 
+//		while (newEmptyZone.totalNumberRaster + toAllocate.totalNumberRaster > emptyZone.totalNumberRaster) {
+//			if () {
+//				
+//			} else if() {
+//				
+//			} else if() {
+//				
+//			} else {
+//				
+//			}
+//		}
 
 		// allocazione della ZoneToBeAllocated
 		tempStructure[iPos][jPos] = toAllocate;
@@ -905,6 +944,11 @@ public class Calculator {
 			column = neighbour.locationInFactory[1];
 			modifiedStructure.getFactoryStructure()[row][column] = null;
 		}
+		// put the empty zone on null as well
+		int locationInFactoryRowEmptyZone = freeZoneAlone.locationInFactory[0];
+		int locationInFactoryColumnEmptyZone = freeZoneAlone.locationInFactory[1];
+		modifiedStructure.getFactoryStructure()[locationInFactoryRowEmptyZone][locationInFactoryColumnEmptyZone] = null;
+
 		// put in the zone toAllocate in the structure
 		Zone singleZoneToReturn = new Zone(toAllocate.name, toAllocate.amountRasterRow1, toAllocate.amountRasterRow2,
 				toAllocate.locationInFactory[0], toAllocate.locationInFactory[1]);
@@ -914,33 +958,73 @@ public class Calculator {
 		singleZoneToReturn.setEmpty(toAllocate.isEmpty());
 		// directly copied, as never changed
 		singleZoneToReturn.setLogisticEquipment(toAllocate.getLogisticEquipment());
-		modifiedStructure.getFactoryStructure()[row][column] = singleZoneToReturn;
+		// allocation in rowRight, columnRight
 
-		// move remaining zones in the structure to the right spot.
-		Zone neighbour = neighboursToTakeIntoConsideration.get(0); // for locationInFactory
-		row = neighbour.locationInFactory[0];
-		column = neighbour.locationInFactory[1];
-		for (int i = 1; i < 7; i++) {
-			if (column - i >= 0) {
-				Zone zoneToShift = modifiedStructure.getFactoryStructure()[row][column - i];
-				modifiedStructure.getFactoryStructure()[row][column - i] = null;
-				int upperBound = 6 - (column - i);
-				for (int j = 0; j < upperBound; j++) {
-					if (modifiedStructure.getFactoryStructure()[row][column - i + j] != null) {
-						modifiedStructure.getFactoryStructure()[row][column - i + j - 1] = zoneToShift;
-					}
+		/*
+		 * next part: move remaining zones in the structure to the right spot, such that
+		 * no gaps are left over
+		 */
+		// the location of the freeZoneAlone
+		int rowEmpty = freeZoneAlone.locationInFactory[0];
+		int columnEmpty = freeZoneAlone.locationInFactory[1];
+		// the location in the factory of the last neighbour facing the right. NON FUNZIONA SEMPRE 
+		Zone neighbourRight = neighboursToTakeIntoConsideration.get(0);
+		int rowRight = neighbourRight.locationInFactory[0];
+		int columnRight = neighbourRight.locationInFactory[1];
+		boolean min1RightNeihgbourExists = true;
+		if (columnRight <= columnEmpty) {
+			min1RightNeihgbourExists = false;
+		}
+		// allocation singleZoneToReturn
+		if (min1RightNeihgbourExists) {
+			modifiedStructure.getFactoryStructure()[rowRight][columnRight] = singleZoneToReturn;
+		} else {
+			modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty] = singleZoneToReturn;
+		}
+		// the location in the factory of the last neighbour facing the left
+		int indexLeft = neighboursToTakeIntoConsideration.size() - 1;
+		Zone neighbourLeft = neighboursToTakeIntoConsideration.get(indexLeft);
+		int rowLeft = neighbourLeft.locationInFactory[0];
+		int columnLeft = neighbourLeft.locationInFactory[1];
+		boolean min1LeftNeihgbourExists = true;
+		if (columnLeft >= columnEmpty) {
+			min1LeftNeihgbourExists = false;
+		}
+
+		if (min1LeftNeihgbourExists) {
+			for (int i = 0; i < modifiedStructure.getFactoryStructure()[0].length; i++) {
+				if (columnLeft - 1 - i >= 0) {
+					Zone zoneToBeMoved = modifiedStructure.getFactoryStructure()[rowLeft][columnLeft - 1 - i];
+					modifiedStructure.getFactoryStructure()[rowLeft][columnLeft - 1 - i] = null;
+					modifiedStructure.getFactoryStructure()[rowLeft][columnLeft - 1 - i
+							+ neighboursToTakeIntoConsideration.size()] = zoneToBeMoved;
+				}
+			}
+		} else {
+			for (int i = 0; i < modifiedStructure.getFactoryStructure()[0].length; i++) {
+				if (columnEmpty - 1 - i >= 0) {
+					Zone zoneToBeMoved = modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty - 1 - i];
+					modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty - 1 - i] = null;
+					modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty - 1 - i
+							+ neighboursToTakeIntoConsideration.size()] = zoneToBeMoved;
 				}
 			}
 		}
 
-		// algorithm that creates all combinations of permutations.
+		// nest part: algorithm that creates all combinations of permutations.
+		// we need these permutation because we want to let the neighbours reenter the
+		// algoirhtm in every possible sequence. We know the sequence of how they enter
+		// the factory does matter, as each of them changes the factoryStructure and the
+		// neighboursfollowing the last one, will have to fit in the modified structure
+		// and not in the inital one
 		int length = neighboursToTakeIntoConsideration.size();
 		int[] array = new int[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = i + 1;
+		for (int i1 = 0; i1 < length; i1++) {
+			array[i1] = i1 + 1;
 		}
 
 		combinations.clear();
+
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -973,13 +1057,13 @@ public class Calculator {
 		} else if (allocationOptions.size() == 1) {
 			Factory toReturn = allocationOptions.get(0).modifiedStructure;
 			double costs = allocationOptions.get(0).costs;
-			toReturn.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure()));
-			for (int i1 = 0; i1 < factory.getZonesToAllocate().size(); i1++) {
-				if (factory.getZonesToAllocate().get(i1).equals(toAllocate)) {
-					factory.getZonesToAllocate().remove(i1);
+			toReturn.setEmptyZones(toReturn.createEmptyZones(toReturn.getFactoryStructure()));
+			for (int i = 0; i < toReturn.getZonesToAllocate().size(); i++) {
+				if (toReturn.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
+					toReturn.getZonesToAllocate().remove(i);
 				}
 			}
-			return new Information(true, toReturn, 0);
+			return new Information(true, toReturn, costs);
 		} else {
 			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
 			int counter = 0;
@@ -991,10 +1075,10 @@ public class Calculator {
 				}
 			}
 			Factory toReturn = allocationOptions.get(counter).modifiedStructure;
-			toReturn.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure()));
-			for (int i1 = 0; i1 < factory.getZonesToAllocate().size(); i1++) {
-				if (factory.getZonesToAllocate().get(i1).equals(toAllocate)) {
-					factory.getZonesToAllocate().remove(i1);
+			toReturn.setEmptyZones(toReturn.createEmptyZones(toReturn.getFactoryStructure()));
+			for (int i = 0; i < toReturn.getZonesToAllocate().size(); i++) {
+				if (toReturn.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
+					toReturn.getZonesToAllocate().remove(i);
 				}
 			}
 			return new Information(true, toReturn, allocationOptions.get(counter).costs);
@@ -1129,9 +1213,9 @@ public class Calculator {
 			Factory toReturn = allocationOptions.get(0).modifiedStructure;
 			double costs = allocationOptions.get(0).costs;
 			toReturn.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure()));
-			for (int i1 = 0; i1 < factory.getZonesToAllocate().size(); i1++) {
-				if (factory.getZonesToAllocate().get(i1).equals(toAllocate)) {
-					factory.getZonesToAllocate().remove(i1);
+			for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
+				if (factory.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
+					factory.getZonesToAllocate().remove(i);
 				}
 			}
 			return new Information(true, toReturn, 0);
@@ -1147,9 +1231,9 @@ public class Calculator {
 			}
 			Factory toReturn = allocationOptions.get(counter).modifiedStructure;
 			toReturn.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure()));
-			for (int i1 = 0; i1 < factory.getZonesToAllocate().size(); i1++) {
-				if (factory.getZonesToAllocate().get(i1).equals(toAllocate)) {
-					factory.getZonesToAllocate().remove(i1);
+			for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
+				if (factory.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
+					factory.getZonesToAllocate().remove(i);
 				}
 			}
 			return new Information(true, toReturn, allocationOptions.get(counter).costs);
