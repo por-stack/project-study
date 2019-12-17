@@ -35,9 +35,9 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
-		readEmptyImput();
-		emptyZones = createEmptyZones(this.factoryStructure);
+///		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
+////		readEmptyImput();
+////		emptyZones = createEmptyZones(this.factoryStructure);
 
 		System.out.println("");
 	}
@@ -49,7 +49,7 @@ public class Factory {
 	 * save the "name" of each row for future purposes example of how
 	 */
 	public void countRowsColumns() {
-		counter = new int[mport.getJ()][2];
+		counter = new int[mport.getJ() + 100][2];
 		for (int i = 1; i < mport.getI() - 1; i++) { // j=5
 			String fullPosition = matrix[i][5];
 			int row = Integer.parseInt(fullPosition.substring(0, 3));

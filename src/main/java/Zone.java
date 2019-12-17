@@ -82,6 +82,8 @@ public class Zone {
 		logisticEquipment.add(new LogisticEquipment("SÄULE", 0, 1));
 		logisticEquipment.add(new LogisticEquipment("XU_groß", 0, 3));
 		logisticEquipment.add(new LogisticEquipment("XW_groß", 0, 4));
+		logisticEquipment.add(new LogisticEquipment("XW", 0, 4));
+		logisticEquipment.add(new LogisticEquipment("4er XLT", 0, 4));
 		
 		calculateAmounts();
 	}
