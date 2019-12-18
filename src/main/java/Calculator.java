@@ -418,6 +418,7 @@ public class Calculator {
 		// solution
 		Zone toAllocate = zone;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+			// copy the empty zone j into the variable freeZone
 			Zone freeZoneTemp = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneTemp.name, freeZoneTemp.amountRasterRow1,
 					freeZoneTemp.amountRasterRow2, freeZoneTemp.locationInFactory[0],
@@ -425,6 +426,8 @@ public class Calculator {
 			freeZone.setDimensionTrainStationRow1(freeZoneTemp.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneTemp.dimensionTrainStationRow2);
 			freeZone.calculateAmounts();
+
+			// check if the zone to allocate fits perfectly
 			if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
 				int cost = calculateCost(freeZone, toAllocate);
 				Information information = allocatePerfectFit(factory, freeZone, toAllocate);
@@ -481,6 +484,7 @@ public class Calculator {
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
+			// copy the empty zone into the variable freeZone
 			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
 					freeZoneAlone.amountRasterRow2, freeZoneAlone.locationInFactory[0],
 					freeZoneAlone.locationInFactory[1]);
@@ -523,7 +527,7 @@ public class Calculator {
 
 				// extra list for left neighbours. the final thought here is that i want the
 				// left outer neighbour to be last in the list:
-				// neighboursToTaleIntoConsideration. so this list for the left part will be
+				// neighboursToTakeIntoConsideration. so this list for the left part will be
 				// attached to the normal list, but in inverted sequence
 				// the reason for this decision relies in the allocatePerfectFitWithNeighbour
 				// method.
@@ -550,7 +554,9 @@ public class Calculator {
 				for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
 					totalNumberRasterIncludingNeighbours += neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
 				}
-				// same size?
+
+				// We allocate the zoneToAllocate only if it fits perfectly in the generated
+				// space
 				if (toAllocate.totalNumberRaster == totalNumberRasterIncludingNeighbours) {
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
 					Factory toReturn = copyFactory(factoryAsParameter);
@@ -750,50 +756,110 @@ public class Calculator {
 		int iPos = emptyZone.locationInFactory[0];
 		int jPos = emptyZone.locationInFactory[1];
 
-		// find out what is remaining in the empty zone and what is gone with the
-		// allocation of the ZoneToBeAllocated
-		int remaindAmountRasterRow1 = emptyZone.amountRasterRow1 - toAllocate.amountRasterRow1;
-		int remaindAmountRasterRow2 = emptyZone.amountRasterRow2 - toAllocate.amountRasterRow2;
-		int totalDimensionTrainStationRow1 = emptyZone.dimensionTrainStationRow1 + toAllocate.dimensionTrainStationRow1;
-		int totalDimensionTrainStationRow2 = emptyZone.dimensionTrainStationRow2 + toAllocate.dimensionTrainStationRow2;
+		// calculate total dimension of train station for emptyZone and zoneToAllocate
+		int dimensionTrainStationEmptyZone = emptyZone.getDimensionTrainStationRow1()
+				+ emptyZone.getDimensionTrainStationRow2();
+		int dimensionTrainStationZoneToAllocate = toAllocate.getDimensionTrainStationRow1()
+				+ toAllocate.getDimensionTrainStationRow2();
+		// calculate the difference
+		int differenceTrainStation = dimensionTrainStationEmptyZone - dimensionTrainStationZoneToAllocate;
 
-		int toAllocateDimensionTrainStationRow1;
-		int newEmptyDimensionTrainStationRow1;
-		int toAllocateDimensionTrainStationRow2;
-		int newEmptyDimensionTrainStationRow2;
-		// totalDimensionTrainStationRow1 aufteilen auf die toAllcate und die
-		// newEmptyZone
-		if (totalDimensionTrainStationRow1 % 2 == 0) {
-			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
-			newEmptyDimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
-		} else {
-			newEmptyDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
-			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 - newEmptyDimensionTrainStationRow1;
-		}
-		// totalDimensionTrainStationRow2 aufteilen auf die toAllcate und die
-		// newEmptyZone
-		if (totalDimensionTrainStationRow2 % 2 == 0) {
-			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
-			newEmptyDimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
-		} else {
-			newEmptyDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
-			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 - newEmptyDimensionTrainStationRow2;
+		// calculate the total amount of raster (without train station) for the
+		// emptyZone and for the zoneToAllocate
+		int amountOfRasterRow1AndRow2EmptyZone = emptyZone.amountRasterRow1 + emptyZone.amountRasterRow2;
+		int amountOfRasterRow1AndRow2ZoneToAllocate = toAllocate.amountRasterRow1 + toAllocate.amountRasterRow2;
+		// calculate the difference
+		int differenceRaster = amountOfRasterRow1AndRow2EmptyZone - amountOfRasterRow1AndRow2ZoneToAllocate;
+
+		// Because of the fact that the
+		// emptyZone is larger than the zoneToAllocate, some raster of the emptyZone
+		// remain and are added to the newEmptyZone.
+		// If the difference of train stations is negative, the zoneToAllocate has a
+		// larger trainStation than the emptyZone. Some of the reamining rasters are
+		// used as train station.
+		boolean noTrainStationInNewZone = false;
+		if (differenceTrainStation < 0) {
+			noTrainStationInNewZone = true;
+			differenceRaster += differenceTrainStation;
 		}
 
-		// assignment of sizes
-		toAllocate.dimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
-		toAllocate.dimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
+		// amount of trainStation is positive
+		if (!noTrainStationInNewZone) {
+			// difference is even
+			if (differenceTrainStation % 2 == 0) {
+				Zone newEmptyZone = new Zone(emptyZone.name + "Empty", differenceTrainStation / 2,
+						differenceTrainStation / 2, iPos, jPos + 1); // this zone has 0 logistic equipment
+				
+				
+			}
+			// difference is 1
+			else if (differenceTrainStation == 1) {
+				Zone newEmptyZone = new Zone(emptyZone.name + "Empty", 1, 0, iPos, jPos + 1); // this zone has 0
+																								// logistic equipment
+			}
+			// difference is odd
+			else {
+				Zone newEmptyZone = new Zone(emptyZone.name + "Empty", differenceTrainStation / 2 + 1,
+						differenceTrainStation / 2, iPos, jPos + 1);
+			}
+		}
+		// amount of trainStation is negative. The newEmptyZone will have no
+		// trainStation
+		else {
+			Zone newEmptyZone = new Zone(emptyZone.name + "Empty", 0, 0, iPos, jPos + 1);
+		}
 
-		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", newEmptyDimensionTrainStationRow1,
-				newEmptyDimensionTrainStationRow2, iPos, jPos + 1); // this zone has 0 logistic equipment
 		newEmptyZone.amountRasterRow1 = remaindAmountRasterRow1;
 		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
 		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
 		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
 		newEmptyZone.calculateAmounts();
 		newEmptyZone.setEmpty(true);
-		
-		//error handling 
+
+		// find out what is remaining in the empty zone and what is gone with the
+		// allocation of the ZoneToBeAllocated
+//		int remaindAmountRasterRow1 = emptyZone.amountRasterRow1 - toAllocate.amountRasterRow1;
+//		int remaindAmountRasterRow2 = emptyZone.amountRasterRow2 - toAllocate.amountRasterRow2;
+//		int totalDimensionTrainStationRow1 = emptyZone.dimensionTrainStationRow1 + toAllocate.dimensionTrainStationRow1;
+//		int totalDimensionTrainStationRow2 = emptyZone.dimensionTrainStationRow2 + toAllocate.dimensionTrainStationRow2;
+//
+//		int toAllocateDimensionTrainStationRow1;
+//		int newEmptyDimensionTrainStationRow1;
+//		int toAllocateDimensionTrainStationRow2;
+//		int newEmptyDimensionTrainStationRow2;
+//		// totalDimensionTrainStationRow1 aufteilen auf die toAllcate und die
+//		// newEmptyZone
+//		if (totalDimensionTrainStationRow1 % 2 == 0) {
+//			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
+//			newEmptyDimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
+//		} else {
+//			newEmptyDimensionTrainStationRow1 = totalDimensionTrainStationRow1 / 2;
+//			toAllocateDimensionTrainStationRow1 = totalDimensionTrainStationRow1 - newEmptyDimensionTrainStationRow1;
+//		}
+//		// totalDimensionTrainStationRow2 aufteilen auf die toAllcate und die
+//		// newEmptyZone
+//		if (totalDimensionTrainStationRow2 % 2 == 0) {
+//			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
+//			newEmptyDimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
+//		} else {
+//			newEmptyDimensionTrainStationRow2 = totalDimensionTrainStationRow2 / 2;
+//			toAllocateDimensionTrainStationRow2 = totalDimensionTrainStationRow2 - newEmptyDimensionTrainStationRow2;
+//		}
+//
+//		// assignment of sizes
+//		toAllocate.dimensionTrainStationRow1 = toAllocateDimensionTrainStationRow1;
+//		toAllocate.dimensionTrainStationRow2 = toAllocateDimensionTrainStationRow2;
+//
+//		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", newEmptyDimensionTrainStationRow1,
+//				newEmptyDimensionTrainStationRow2, iPos, jPos + 1); // this zone has 0 logistic equipment
+//		newEmptyZone.amountRasterRow1 = remaindAmountRasterRow1;
+//		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
+//		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
+//		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
+//		newEmptyZone.calculateAmounts();
+//		newEmptyZone.setEmpty(true);
+
+		// error handling
 //		while (newEmptyZone.totalNumberRaster + toAllocate.totalNumberRaster > emptyZone.totalNumberRaster) {
 //			if () {
 //				
@@ -883,8 +949,6 @@ public class Calculator {
 			}
 		}
 
-		
-		
 		factory.setFactoryStructure(tempStructure);
 		factory.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure()));
 		for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
@@ -969,7 +1033,8 @@ public class Calculator {
 		// the location of the freeZoneAlone
 		int rowEmpty = freeZoneAlone.locationInFactory[0];
 		int columnEmpty = freeZoneAlone.locationInFactory[1];
-		// the location in the factory of the last neighbour facing the right. NON FUNZIONA SEMPRE 
+		// the location in the factory of the last neighbour facing the right. NON
+		// FUNZIONA SEMPRE
 		Zone neighbourRight = neighboursToTakeIntoConsideration.get(0);
 		int rowRight = neighbourRight.locationInFactory[0];
 		int columnRight = neighbourRight.locationInFactory[1];
@@ -1389,14 +1454,16 @@ public class Calculator {
 
 		initial = new Factory();
 		demoFactory(initial);
-//		demoZonesToAllocate(initial);
+		System.out.println("\n\n\n\n\n\n\n\n");
+		demoZonesToAllocate(initial);
+		System.out.println("\n\n\n\n\n\n\n\n");
 
-////		Calculator calculator = new Calculator();
-////		calculator.performAlgorithm();
+		Calculator calculator = new Calculator();
+		calculator.performAlgorithm();
 //		newFactoryStructure = calculator.performAlgorithm();
-////		Factory newFactory = initial;
-////		newFactory.setFactoryStructure(newFactoryStructure);
+//		Factory newFactory = initial;
+//		newFactory.setFactoryStructure(newFactoryStructure);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
-		
+
 	}
 }
