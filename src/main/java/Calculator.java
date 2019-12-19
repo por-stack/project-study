@@ -99,6 +99,7 @@ public class Calculator {
 			information = checkForLargerZone(zone, factory);
 			if (information.applicable) {
 				System.out.println("solution for " + zone.name + " found in level 0"); 
+				information.costs = -1.0; 
 				return information;
 			}
 		}
