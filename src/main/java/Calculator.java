@@ -783,36 +783,57 @@ public class Calculator {
 			differenceRaster += differenceTrainStation;
 		}
 
+		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", 0, 0, iPos, jPos + 1); // this zone has 0
+
 		// amount of trainStation is positive
 		if (!noTrainStationInNewZone) {
-			// difference is even
+			// difference of trainStations is even (0 included)
 			if (differenceTrainStation % 2 == 0) {
-				Zone newEmptyZone = new Zone(emptyZone.name + "Empty", differenceTrainStation / 2,
-						differenceTrainStation / 2, iPos, jPos + 1); // this zone has 0 logistic equipment
-				
-				
+				newEmptyZone.dimensionTrainStationRow1 = differenceTrainStation / 2;
+				newEmptyZone.dimensionTrainStationRow2 = differenceTrainStation / 2;
+
+				// difference of rasters is even
+				if (differenceRaster % 2 == 0) {
+					newEmptyZone.amountRasterRow1 = differenceRaster / 2;
+					newEmptyZone.amountRasterRow2 = differenceRaster / 2;
+				}
+				// difference of rasters is odd
+				else {
+					newEmptyZone.amountRasterRow1 = differenceRaster / 2 + 1;
+					newEmptyZone.amountRasterRow2 = differenceRaster / 2;
+				}
+
 			}
-			// difference is 1
-			else if (differenceTrainStation == 1) {
-				Zone newEmptyZone = new Zone(emptyZone.name + "Empty", 1, 0, iPos, jPos + 1); // this zone has 0
-																								// logistic equipment
-			}
-			// difference is odd
+			// difference of train station is odd
 			else {
-				Zone newEmptyZone = new Zone(emptyZone.name + "Empty", differenceTrainStation / 2 + 1,
-						differenceTrainStation / 2, iPos, jPos + 1);
+				newEmptyZone.dimensionTrainStationRow1 = differenceTrainStation / 2 + 1;
+				newEmptyZone.dimensionTrainStationRow2 = differenceTrainStation / 2;
+
+				if (differenceRaster % 2 == 0) {
+
+					newEmptyZone.amountRasterRow1 = differenceRaster / 2;
+					newEmptyZone.amountRasterRow2 = differenceRaster / 2;
+
+				} else {
+					newEmptyZone.amountRasterRow1 = differenceRaster / 2 + 1;
+					newEmptyZone.amountRasterRow2 = differenceRaster / 2;
+				}
 			}
 		}
 		// amount of trainStation is negative. The newEmptyZone will have no
 		// trainStation
 		else {
-			Zone newEmptyZone = new Zone(emptyZone.name + "Empty", 0, 0, iPos, jPos + 1);
+			if (differenceRaster % 2 == 0) {
+
+				newEmptyZone.amountRasterRow1 = differenceRaster / 2;
+				newEmptyZone.amountRasterRow2 = differenceRaster / 2;
+			} else {
+				newEmptyZone.amountRasterRow1 = differenceRaster / 2 + 1;
+				newEmptyZone.amountRasterRow2 = differenceRaster / 2;
+			}
 		}
 
-		newEmptyZone.amountRasterRow1 = remaindAmountRasterRow1;
-		newEmptyZone.amountRasterRow2 = remaindAmountRasterRow2;
-		newEmptyZone.dimensionTrainStationRow1 = newEmptyDimensionTrainStationRow1;
-		newEmptyZone.dimensionTrainStationRow2 = newEmptyDimensionTrainStationRow2;
+		// calculate the amount of rasters and train stations and set zone as empty
 		newEmptyZone.calculateAmounts();
 		newEmptyZone.setEmpty(true);
 
@@ -1452,6 +1473,9 @@ public class Calculator {
 //		Import old = new Import(); 
 //		old.demo();
 
+		// calculating execution time
+		final long start = System.currentTimeMillis();
+
 		initial = new Factory();
 		demoFactory(initial);
 		System.out.println("\n\n\n\n\n\n\n\n");
@@ -1460,6 +1484,11 @@ public class Calculator {
 
 		Calculator calculator = new Calculator();
 		calculator.performAlgorithm();
+
+		// calculating execution time
+		final long end = System.currentTimeMillis();
+		System.out.println("n\n\n\n\"Total execution time: " + (end - start));
+
 //		newFactoryStructure = calculator.performAlgorithm();
 //		Factory newFactory = initial;
 //		newFactory.setFactoryStructure(newFactoryStructure);
