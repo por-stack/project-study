@@ -4,16 +4,16 @@ public class Zone {
 	String name; // name
 	int[] locationInFactory = new int[2];
 	Raster[][] raster = new Raster[2][43];
-	
-	private boolean isEmpty = false; 
+
+	private boolean isEmpty = false;
 	int amountRasterRow1;
 	int amountRasterRow2;
 	int dimensionTrainStationRow1;
 	int dimensionTrainStationRow2;
 	int totalNumberRaster;
-	
+
 	private ArrayList<LogisticEquipment> logisticEquipment = new ArrayList<LogisticEquipment>();
-	
+
 	public Information information = null; // questa ci serve in calculator per la funzione performalgorithm
 
 	public Zone(String name, int row1, int row2, int i, int j) {
@@ -43,10 +43,10 @@ public class Zone {
 		logisticEquipment.add(new LogisticEquipment("XW_groß", 0, 4));
 		logisticEquipment.add(new LogisticEquipment("XW", 0, 4));
 		logisticEquipment.add(new LogisticEquipment("4er XLT", 0, 4));
-		
+
 		calculateAmounts();
 	}
-	
+
 	/**
 	 * @return the dimensionTrainStationRow1
 	 */
@@ -120,6 +120,8 @@ public class Zone {
 		throw new Exception("logEquipNotFoundForDimension");
 	}
 
+
+
 	/**
 	 * Increases the size of amountRasterRow1 or amountRasterRow2 by the dimension
 	 * of the given logistic equipment
@@ -178,6 +180,6 @@ public class Zone {
 	public String toString() {
 		return name + ":    raster1: " + amountRasterRow1 + ", raster2: " + amountRasterRow2 + ", dimTrainStat1: "
 				+ dimensionTrainStationRow1 + ", dimTrainStat2: " + dimensionTrainStationRow2 + ", tot: "
-				+ totalNumberRaster + " isEmpty: " + isEmpty +  "\n" + "LogEquip: " + logisticEquipment;
+				+ totalNumberRaster + " isEmpty: " + isEmpty + "\n" + "LogEquip: " + logisticEquipment;
 	}
 }

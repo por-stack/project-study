@@ -742,6 +742,53 @@ public class Calculator {
 		return cost;
 	}
 
+	/**
+	 * returns true if the given logistic equipment is effectively contained in the
+	 * list: anzahl must be > 0
+	 * 
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean logEquipRemaining(String string, ArrayList<LogisticEquipment> logisticEquipmentToAllocate,
+			ArrayList<LogisticEquipment> logisticEquipmentEmpty) throws Exception {
+		for (int i = 0; i < logisticEquipmentEmpty.size(); i++) {
+			if (logisticEquipmentEmpty.get(i).getName().equals(string)
+					&& logisticEquipmentEmpty.get(i).getAnzahl() > logisticEquipmentToAllocate.get(i).getAnzahl())
+				return true;
+		}
+		return false;
+	}
+
+	// add logistic equipment to the newEmptyZone. For method allocateInLargerZone.
+	public ArrayList<LogisticEquipment> updateLogisticEquipmentNewEmptyZone(
+			ArrayList<LogisticEquipment> logEquipEmptyZone, ArrayList<LogisticEquipment> logEquipZoneToAllocate,
+			ArrayList<LogisticEquipment> logEquipNewEmptyZone, int differenceRaster) throws Exception {
+		int real = differenceRaster;
+		for (int i = differenceRaster; i > 0;) {
+			if (real > 0) {
+				boolean found = false;
+				for (int j = 0; j < logEquipEmptyZone.size(); j++) {
+					LogisticEquipment lg = logEquipEmptyZone.get(j);
+					int anzahl = lg.getAnzahl();
+					int dimension = lg.getDimension();
+					boolean remaining = logEquipRemaining(lg.getName(), logEquipZoneToAllocate, logEquipEmptyZone);
+					if (dimension == real && anzahl > 0 && remaining) {
+						logEquipNewEmptyZone.get(j).anzahlSteigern();
+						real -= dimension;
+						found = true;
+						i = real;
+						break;
+					}
+				}
+				if (!found)
+					i--;
+			} else
+				break;
+		}
+		return logEquipNewEmptyZone;
+	}
+
 	// ALLOCATION
 
 	/*
@@ -836,6 +883,9 @@ public class Calculator {
 		// calculate the amount of rasters and train stations and set zone as empty
 		newEmptyZone.calculateAmounts();
 		newEmptyZone.setEmpty(true);
+		// add logistic equipment to the newEmptyZone
+		newEmptyZone.setLogisticEquipment(updateLogisticEquipmentNewEmptyZone(emptyZone.getLogisticEquipment(),
+				toAllocate.getLogisticEquipment(), newEmptyZone.getLogisticEquipment(), differenceRaster));
 
 		// find out what is remaining in the empty zone and what is gone with the
 		// allocation of the ZoneToBeAllocated
