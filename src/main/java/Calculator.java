@@ -98,7 +98,8 @@ public class Calculator {
 		if (zone.equals(initial.getZonesToAllocate().get(0))) {
 			information = checkForLargerZone(zone, factory);
 			if (information.applicable) {
-				System.out.println("solution for " + zone.name + " found in level 0");
+				System.out.println("solution for " + zone.name + " found in level 0"); 
+				information.costs = -1.0; 
 				return information;
 			}
 		}
@@ -281,6 +282,7 @@ public class Calculator {
 					freeZoneTemp.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneTemp.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneTemp.dimensionTrainStationRow2);
+			freeZone.setLogisticEquipment(freeZoneTemp.getLogisticEquipment());
 			freeZone.calculateAmounts();
 			if (toAllocate.totalNumberRaster < freeZone.totalNumberRaster) {
 				int cost = calculateCost(freeZone, toAllocate);
@@ -367,7 +369,7 @@ public class Calculator {
 //					if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
 //						int cost = calculateCost(freeZone, toAllocate);
 //						Information information = allocatePerfectFit(factory, freeZone, toAllocate);
-//						information.costs = +cost;
+//						information.costs += cost;
 //						allocationOptions.add(information);
 //					}
 //				}
@@ -425,6 +427,7 @@ public class Calculator {
 					freeZoneTemp.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneTemp.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneTemp.dimensionTrainStationRow2);
+			freeZone.setLogisticEquipment(freeZoneTemp.getLogisticEquipment());
 			freeZone.calculateAmounts();
 
 			// check if the zone to allocate fits perfectly
@@ -476,6 +479,7 @@ public class Calculator {
 				zone.locationInFactory[1]);
 		toAllocate.setDimensionTrainStationRow1(zone.dimensionTrainStationRow1);
 		toAllocate.setDimensionTrainStationRow2(zone.dimensionTrainStationRow2);
+		toAllocate.setLogisticEquipment(zone.getLogisticEquipment());
 		toAllocate.calculateAmounts();
 		toAllocate.setEmpty(zone.isEmpty());
 
@@ -490,6 +494,7 @@ public class Calculator {
 					freeZoneAlone.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneAlone.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneAlone.dimensionTrainStationRow2);
+			freeZone.setLogisticEquipment(freeZoneAlone.getLogisticEquipment());
 			freeZone.calculateAmounts();
 			freeZone.setEmpty(freeZoneAlone.isEmpty());
 
@@ -565,7 +570,7 @@ public class Calculator {
 					// on null;
 					Information information = allocatePerfectFitWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
-					information.costs = +cost;
+					information.costs += cost;
 					allocationOptions.add(information);
 				}
 			}
@@ -622,6 +627,7 @@ public class Calculator {
 					freeZoneAlone.locationInFactory[1]);
 			freeZone.setDimensionTrainStationRow1(freeZoneAlone.dimensionTrainStationRow1);
 			freeZone.setDimensionTrainStationRow2(freeZoneAlone.dimensionTrainStationRow2);
+			freeZone.setLogisticEquipment(freeZoneAlone.getLogisticEquipment());
 			freeZone.calculateAmounts();
 
 			// create all combinations between empty zone and neigbours
@@ -663,7 +669,7 @@ public class Calculator {
 
 				int totalNumberRasterIncludingNeighbours = freeZoneAlone.totalNumberRaster;
 				for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
-					totalNumberRasterIncludingNeighbours = +neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
+					totalNumberRasterIncludingNeighbours += neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
 				}
 				if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
@@ -673,7 +679,7 @@ public class Calculator {
 																											// on null;
 					Information information = allocateInLargerZoneWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
-					information.costs = +cost;
+					information.costs += cost;
 					allocationOptions.add(information);
 				}
 			}
@@ -730,13 +736,13 @@ public class Calculator {
 		for (int i = 0; i < freeZoneAlone.getLogisticEquipment().size(); i++) {
 			int freeZoneLE = freeZoneAlone.getLogisticEquipment().get(i).anzahl;
 			for (int j = 0; j < neighboursToTakeIntoConsideration.size(); j++) {
-				freeZoneLE = +neighboursToTakeIntoConsideration.get(j).getLogisticEquipment().get(i).anzahl;
+				freeZoneLE += neighboursToTakeIntoConsideration.get(j).getLogisticEquipment().get(i).anzahl;
 			}
 			int toAllocateLE = toAllocate.getLogisticEquipment().get(i).anzahl;
 			if (freeZoneLE >= toAllocateLE) {
-				cost = +freeZoneLE - toAllocateLE;
+				cost += freeZoneLE - toAllocateLE;
 			} else {
-				cost = +toAllocateLE - freeZoneLE;
+				cost += toAllocateLE - freeZoneLE;
 			}
 		}
 		return cost;
@@ -881,6 +887,7 @@ public class Calculator {
 		}
 
 		// calculate the amount of rasters and train stations and set zone as empty
+		//manca il logisticEquipment nella newEmptyZone 
 		newEmptyZone.calculateAmounts();
 		newEmptyZone.setEmpty(true);
 		// add logistic equipment to the newEmptyZone
@@ -965,6 +972,7 @@ public class Calculator {
 										singleZoneToCopy.locationInFactory[0], singleZoneToCopy.locationInFactory[1]);
 								singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 								singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
+								singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
 								singleZoneToReturn.calculateAmounts();
 								singleZoneToReturn.setEmpty(singleZoneToCopy.isEmpty());
 								// directly copied, as never changed
@@ -986,6 +994,7 @@ public class Calculator {
 									singleZoneToCopy.locationInFactory[1]);
 							singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 							singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
+							singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
 							singleZoneToReturn.calculateAmounts();
 							singleZoneToReturn.setEmpty(singleZoneToCopy.isEmpty());
 							// directly copied, as never changed
@@ -1008,6 +1017,7 @@ public class Calculator {
 								singleZoneToCopy.locationInFactory[1]);
 						singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 						singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
+						singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
 						singleZoneToReturn.calculateAmounts();
 						singleZoneToReturn.setEmpty(singleZoneToCopy.isEmpty());
 						// directly copied, as never changed
@@ -1045,6 +1055,7 @@ public class Calculator {
 				toAllocate.locationInFactory[0], toAllocate.locationInFactory[1]);
 		singleZoneToReturn.dimensionTrainStationRow1 = toAllocate.dimensionTrainStationRow1;
 		singleZoneToReturn.dimensionTrainStationRow2 = toAllocate.dimensionTrainStationRow2;
+		singleZoneToReturn.setLogisticEquipment(toAllocate.getLogisticEquipment());
 		singleZoneToReturn.calculateAmounts();
 		singleZoneToReturn.setEmpty(toAllocate.isEmpty());
 		// directly copied, as never changed
@@ -1091,6 +1102,7 @@ public class Calculator {
 				toAllocate.locationInFactory[0], toAllocate.locationInFactory[1]);
 		singleZoneToReturn.dimensionTrainStationRow1 = toAllocate.dimensionTrainStationRow1;
 		singleZoneToReturn.dimensionTrainStationRow2 = toAllocate.dimensionTrainStationRow2;
+		singleZoneToReturn.setLogisticEquipment(toAllocate.getLogisticEquipment());
 		singleZoneToReturn.calculateAmounts();
 		singleZoneToReturn.setEmpty(toAllocate.isEmpty());
 		// directly copied, as never changed
@@ -1168,6 +1180,13 @@ public class Calculator {
 		int numberPermutations = combinations.size() / length;
 		for (int j = 0; j < numberPermutations; j++) {
 			Factory modifiedStructurePot = copyFactory(modifiedStructure);
+			modifiedStructurePot
+					.setEmptyZones(modifiedStructurePot.createEmptyZones(modifiedStructurePot.getFactoryStructure()));
+			for (int i = 0; i < modifiedStructurePot.getZonesToAllocate().size(); i++) {
+				if (modifiedStructurePot.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
+					modifiedStructurePot.getZonesToAllocate().remove(i); 
+				}
+			}
 			boolean alleTrue = true;
 			int cost = 0;
 			for (int j2 = 0; j2 < length; j2++) {
@@ -1422,6 +1441,7 @@ public class Calculator {
 							singleZoneToCopy.locationInFactory[1]);
 					singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 					singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
+					singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
 					singleZoneToReturn.calculateAmounts();
 					singleZoneToReturn.setEmpty(singleZoneToCopy.isEmpty());
 					// directly copied, as never changed
@@ -1444,6 +1464,7 @@ public class Calculator {
 					singleZoneToCopy.locationInFactory[1]);
 			singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 			singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
+			singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
 			singleZoneToReturn.calculateAmounts();
 			singleZoneToReturn.setEmpty(singleZoneToCopy.isEmpty());
 			// directly copied, as never changed
@@ -1462,6 +1483,7 @@ public class Calculator {
 					singleZoneToCopy.locationInFactory[1]);
 			singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 			singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
+			singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
 			singleZoneToReturn.calculateAmounts();
 			singleZoneToReturn.setEmpty(singleZoneToCopy.isEmpty());
 			// directly copied, as never changed
