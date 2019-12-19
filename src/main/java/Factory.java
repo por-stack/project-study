@@ -389,6 +389,7 @@ public class Factory {
 						emptyZone.setDimensionTrainStationRow1(zone.dimensionTrainStationRow1);
 						emptyZone.setDimensionTrainStationRow2(zone.dimensionTrainStationRow2);
 						emptyZone.setEmpty(true);
+						emptyZone.setLogisticEquipment(zone.getLogisticEquipment());
 						emptyZones.add(emptyZone);
 					}
 				}
