@@ -98,8 +98,8 @@ public class Calculator {
 		if (zone.equals(initial.getZonesToAllocate().get(0))) {
 			information = checkForLargerZone(zone, factory);
 			if (information.applicable) {
-				System.out.println("solution for " + zone.name + " found in level 0"); 
-				information.costs = -1.0; 
+				System.out.println("solution for " + zone.name + " found in level 0");
+				information.costs = -1.0;
 				return information;
 			}
 		}
@@ -749,8 +749,9 @@ public class Calculator {
 	}
 
 	/**
-	 * returns true if the given logistic equipment is effectively contained in the
-	 * list: anzahl must be > 0
+	 * returns true if the difference of amounts of the given logistic equipment
+	 * between the second ArrayList given as parameter and the first is larger than
+	 * 0. Method used in AllocateLargerZone.
 	 * 
 	 * @param string
 	 * @return
@@ -766,21 +767,39 @@ public class Calculator {
 		return false;
 	}
 
-	// add logistic equipment to the newEmptyZone. For method allocateInLargerZone.
+	/**
+	 * Adds logistic equipment to the newEmptyZone, according to the
+	 * logisticEquipment contained in the emptyZone and the zoneToAllocate. For
+	 * method allocateInLargerZone.
+	 * 
+	 * @param logEquipEmptyZone
+	 * @param logEquipZoneToAllocate
+	 * @param logEquipNewEmptyZone
+	 * @param differenceRaster
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<LogisticEquipment> updateLogisticEquipmentNewEmptyZone(
 			ArrayList<LogisticEquipment> logEquipEmptyZone, ArrayList<LogisticEquipment> logEquipZoneToAllocate,
 			ArrayList<LogisticEquipment> logEquipNewEmptyZone, int differenceRaster) throws Exception {
+
+		ArrayList<LogisticEquipment> tempLogEquipEmptyZone = copyLogisticEquipments(logEquipEmptyZone);
+		ArrayList<LogisticEquipment> tempLogEquipZoneToAllocate = copyLogisticEquipments(logEquipZoneToAllocate);
+
 		int real = differenceRaster;
 		for (int i = differenceRaster; i > 0;) {
 			if (real > 0) {
 				boolean found = false;
-				for (int j = 0; j < logEquipEmptyZone.size(); j++) {
-					LogisticEquipment lg = logEquipEmptyZone.get(j);
+				for (int j = 0; j < tempLogEquipEmptyZone.size(); j++) {
+					LogisticEquipment lg = tempLogEquipEmptyZone.get(j);
 					int anzahl = lg.getAnzahl();
 					int dimension = lg.getDimension();
-					boolean remaining = logEquipRemaining(lg.getName(), logEquipZoneToAllocate, logEquipEmptyZone);
-					if (dimension == real && anzahl > 0 && remaining) {
+					boolean remaining = logEquipRemaining(lg.getName(), tempLogEquipZoneToAllocate, tempLogEquipEmptyZone);
+					// in order for a logistic equipment to be added to the newEmptyZone, it has to
+					// be
+					if (dimension == i && anzahl > 0 && remaining) {
 						logEquipNewEmptyZone.get(j).anzahlSteigern();
+						tempLogEquipEmptyZone.get(j).anzahlMindern();
 						real -= dimension;
 						found = true;
 						i = real;
@@ -872,6 +891,10 @@ public class Calculator {
 					newEmptyZone.amountRasterRow2 = differenceRaster / 2;
 				}
 			}
+			// the number of rasters hosting the logistic equipment in the newEmptyZone must
+			// consider the dimension of the train station in the newEmptyZone
+//			differenceRaster -= newEmptyZone.dimensionTrainStationRow1 + newEmptyZone.dimensionTrainStationRow2;
+			// ELIMINARE NON é GIUSTO!
 		}
 		// amount of trainStation is negative. The newEmptyZone will have no
 		// trainStation
@@ -887,7 +910,7 @@ public class Calculator {
 		}
 
 		// calculate the amount of rasters and train stations and set zone as empty
-		//manca il logisticEquipment nella newEmptyZone 
+		// manca il logisticEquipment nella newEmptyZone
 		newEmptyZone.calculateAmounts();
 		newEmptyZone.setEmpty(true);
 		// add logistic equipment to the newEmptyZone
@@ -1184,7 +1207,7 @@ public class Calculator {
 					.setEmptyZones(modifiedStructurePot.createEmptyZones(modifiedStructurePot.getFactoryStructure()));
 			for (int i = 0; i < modifiedStructurePot.getZonesToAllocate().size(); i++) {
 				if (modifiedStructurePot.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
-					modifiedStructurePot.getZonesToAllocate().remove(i); 
+					modifiedStructurePot.getZonesToAllocate().remove(i);
 				}
 			}
 			boolean alleTrue = true;
@@ -1516,6 +1539,22 @@ public class Calculator {
 	 */
 	public void convertToExcel(Factory factory) {
 
+	}
+
+	/**
+	 * returns a copy of the given list of logistic equipments
+	 * 
+	 * @param logisticEquipmentToCopy
+	 * @return
+	 */
+	public ArrayList<LogisticEquipment> copyLogisticEquipments(ArrayList<LogisticEquipment> logisticEquipmentToCopy) {
+		ArrayList<LogisticEquipment> toReturn = new ArrayList<LogisticEquipment>();
+
+		for (int i = 0; i < logisticEquipmentToCopy.size(); i++) {
+			toReturn.add(new LogisticEquipment(logisticEquipmentToCopy.get(i).getName(),
+					logisticEquipmentToCopy.get(i).getAnzahl(), logisticEquipmentToCopy.get(i).getDimension()));
+		}
+		return toReturn;
 	}
 
 	public static void demoFactory(Factory initial) {

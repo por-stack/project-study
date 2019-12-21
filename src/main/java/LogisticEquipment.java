@@ -24,8 +24,18 @@ public class LogisticEquipment {
 		return anzahl;
 	}
 
+	/**
+	 * erhöht di Anzal des LogisticEquipment um 1
+	 */
 	public void anzahlSteigern() {
 		this.anzahl = this.anzahl + 1;
+	}
+
+	/**
+	 * mindert di Anzal des LogisticEquipment um 1
+	 */
+	public void anzahlMindern() {
+		this.anzahl = this.anzahl - 1;
 	}
 
 	@Override
