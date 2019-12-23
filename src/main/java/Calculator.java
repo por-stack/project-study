@@ -794,7 +794,8 @@ public class Calculator {
 					LogisticEquipment lg = tempLogEquipEmptyZone.get(j);
 					int anzahl = lg.getAnzahl();
 					int dimension = lg.getDimension();
-					boolean remaining = logEquipRemaining(lg.getName(), tempLogEquipZoneToAllocate, tempLogEquipEmptyZone);
+					boolean remaining = logEquipRemaining(lg.getName(), tempLogEquipZoneToAllocate,
+							tempLogEquipEmptyZone);
 					// in order for a logistic equipment to be added to the newEmptyZone, it has to
 					// be
 					if (dimension == i && anzahl > 0 && remaining) {
@@ -855,7 +856,7 @@ public class Calculator {
 			differenceRaster += differenceTrainStation;
 		}
 
-		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", 0, 0, iPos, jPos + 1); // this zone has 0
+		Zone newEmptyZone = new Zone(emptyZone.name + "Empty", 0, 0, iPos, jPos + 1);
 
 		// amount of trainStation is positive
 		if (!noTrainStationInNewZone) {
@@ -910,7 +911,6 @@ public class Calculator {
 		}
 
 		// calculate the amount of rasters and train stations and set zone as empty
-		// manca il logisticEquipment nella newEmptyZone
 		newEmptyZone.calculateAmounts();
 		newEmptyZone.setEmpty(true);
 		// add logistic equipment to the newEmptyZone
@@ -972,9 +972,22 @@ public class Calculator {
 //				
 //			}
 //		}
+		// Copying the zoneToAllocate in order to not modify the original. 
+		Zone toAllocateToReturn = new Zone(toAllocate.name, toAllocate.amountRasterRow1, toAllocate.amountRasterRow2,
+				iPos, jPos);
+		toAllocateToReturn.dimensionTrainStationRow1 = toAllocate.dimensionTrainStationRow1;
+		toAllocateToReturn.dimensionTrainStationRow2 = toAllocate.dimensionTrainStationRow2;
+		toAllocateToReturn.calculateAmounts();
+		toAllocateToReturn.setEmpty(toAllocate.isEmpty());
+		// directly copied, as never changed
+		toAllocateToReturn.setLogisticEquipment(toAllocate.getLogisticEquipment());
+
+//		// set locationInFactory for zoneToAllocate
+//		toAllocate.locationInFactory[0] = iPos;
+//		toAllocate.locationInFactory[1] = jPos;
 
 		// allocazione della ZoneToBeAllocated
-		tempStructure[iPos][jPos] = toAllocate;
+		tempStructure[iPos][jPos] = toAllocateToReturn;
 		tempStructure[iPos][jPos + 1] = newEmptyZone;
 
 		// copying the initial factoryStructure into the new tempStructure, that will be
@@ -1012,9 +1025,13 @@ public class Calculator {
 						// HERE
 						Zone singleZoneToCopy = factoryStructure[row][column - 1];
 						if (singleZoneToCopy != null) {
+							// the zones on the right of the just allocated zoneToAllocate, more precisely
+							// the zones on the right of the newEmptyZone, must consider the fact that one
+							// additional zone has entered the structure when handling their
+							// locationInFactory. Therefore the +1.
 							Zone singleZoneToReturn = new Zone(singleZoneToCopy.name, singleZoneToCopy.amountRasterRow1,
 									singleZoneToCopy.amountRasterRow2, singleZoneToCopy.locationInFactory[0],
-									singleZoneToCopy.locationInFactory[1]);
+									singleZoneToCopy.locationInFactory[1] + 1);
 							singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 							singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
 							singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
