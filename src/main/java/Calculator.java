@@ -584,12 +584,12 @@ public class Calculator {
 		} else if (allocationOptions.size() == 1) {
 			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
 		} else {
-			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+			Object[] allocationOptionsArray = allocationOptions.toArray();
 			int counter = 0;
-			double minCost = allocationOptionsArray[counter].costs;
+			double minCost = ((Information) allocationOptionsArray[counter]).costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
-				if (minCost > allocationOptionsArray[counter].costs) {
-					minCost = allocationOptionsArray[counter].costs;
+				if (minCost > ((Information) allocationOptionsArray[counter]).costs) {
+					minCost = ((Information) allocationOptionsArray[counter]).costs;
 					counter = j;
 				}
 			}
@@ -693,12 +693,12 @@ public class Calculator {
 		} else if (allocationOptions.size() == 1) {
 			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
 		} else {
-			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+			Object[] allocationOptionsArray = allocationOptions.toArray();
 			int counter = 0;
-			double minCost = allocationOptionsArray[counter].costs;
+			double minCost = ((Information) allocationOptionsArray[counter]).costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
-				if (minCost > allocationOptionsArray[counter].costs) {
-					minCost = allocationOptionsArray[counter].costs;
+				if (minCost > ((Information) allocationOptionsArray[counter]).costs) {
+					minCost = ((Information) allocationOptionsArray[counter]).costs;
 					counter = j;
 				}
 			}
@@ -972,7 +972,7 @@ public class Calculator {
 //				
 //			}
 //		}
-		// Copying the zoneToAllocate in order to not modify the original. 
+		// Copying the zoneToAllocate in order to not modify the original.
 		Zone toAllocateToReturn = new Zone(toAllocate.name, toAllocate.amountRasterRow1, toAllocate.amountRasterRow2,
 				iPos, jPos);
 		toAllocateToReturn.dimensionTrainStationRow1 = toAllocate.dimensionTrainStationRow1;
@@ -1053,8 +1053,7 @@ public class Calculator {
 																				// the tempStructure is 1 unit larger.
 					if (singleZoneToCopy != null) {
 						Zone singleZoneToReturn = new Zone(singleZoneToCopy.name, singleZoneToCopy.amountRasterRow1,
-								singleZoneToCopy.amountRasterRow2, singleZoneToCopy.locationInFactory[0],
-								singleZoneToCopy.locationInFactory[1]);
+								singleZoneToCopy.amountRasterRow2, singleZoneToCopy.locationInFactory[0], column);
 						singleZoneToReturn.dimensionTrainStationRow1 = singleZoneToCopy.dimensionTrainStationRow1;
 						singleZoneToReturn.dimensionTrainStationRow2 = singleZoneToCopy.dimensionTrainStationRow2;
 						singleZoneToReturn.setLogisticEquipment(singleZoneToCopy.getLogisticEquipment());
@@ -1081,7 +1080,7 @@ public class Calculator {
 	}
 
 	/*
-	 * allocatePerfectFit()
+	 * allocate()
 	 */
 	public Information allocatePerfectFit(Factory factoryAsParameter, EmptyZone emptyZone, Zone toAllocate)
 			throws Exception {
@@ -1091,8 +1090,8 @@ public class Calculator {
 		int i = emptyZone.locationInFactory[0];
 		int j = emptyZone.locationInFactory[1];
 
-		Zone singleZoneToReturn = new Zone(toAllocate.name, toAllocate.amountRasterRow1, toAllocate.amountRasterRow2,
-				toAllocate.locationInFactory[0], toAllocate.locationInFactory[1]);
+		Zone singleZoneToReturn = new Zone(toAllocate.name, toAllocate.amountRasterRow1, toAllocate.amountRasterRow2, i,
+				j);
 		singleZoneToReturn.dimensionTrainStationRow1 = toAllocate.dimensionTrainStationRow1;
 		singleZoneToReturn.dimensionTrainStationRow2 = toAllocate.dimensionTrainStationRow2;
 		singleZoneToReturn.setLogisticEquipment(toAllocate.getLogisticEquipment());
@@ -1132,6 +1131,7 @@ public class Calculator {
 			column = neighbour.locationInFactory[1];
 			modifiedStructure.getFactoryStructure()[row][column] = null;
 		}
+
 		// put the empty zone on null as well
 		int locationInFactoryRowEmptyZone = freeZoneAlone.locationInFactory[0];
 		int locationInFactoryColumnEmptyZone = freeZoneAlone.locationInFactory[1];
@@ -1165,11 +1165,17 @@ public class Calculator {
 		if (columnRight <= columnEmpty) {
 			min1RightNeihgbourExists = false;
 		}
-		// allocation singleZoneToReturn
+		// allocation singleZoneToReturn. Setting of locationInFactory of the
+		// zoneToAllocate.
 		if (min1RightNeihgbourExists) {
+			singleZoneToReturn.locationInFactory[0] = rowRight;
+			singleZoneToReturn.locationInFactory[1] = columnRight;
 			modifiedStructure.getFactoryStructure()[rowRight][columnRight] = singleZoneToReturn;
 		} else {
+			singleZoneToReturn.locationInFactory[0] = rowEmpty;
+			singleZoneToReturn.locationInFactory[1] = columnEmpty;
 			modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty] = singleZoneToReturn;
+
 		}
 		// the location in the factory of the last neighbour facing the left
 		int indexLeft = neighboursToTakeIntoConsideration.size() - 1;
@@ -1181,11 +1187,20 @@ public class Calculator {
 			min1LeftNeihgbourExists = false;
 		}
 
+		// check at which position of the row to start moving the zones on the right. If
+		// some neighbors where moved from the left of the empty zones, one starts
+		// moving zones departing from the first zone on the left of the neigbors. If
+		// no neighbor was moved from the left, one starts directly from the first zone
+		// on the left of the empty zone.
 		if (min1LeftNeihgbourExists) {
 			for (int i = 0; i < modifiedStructure.getFactoryStructure()[0].length; i++) {
 				if (columnLeft - 1 - i >= 0) {
 					Zone zoneToBeMoved = modifiedStructure.getFactoryStructure()[rowLeft][columnLeft - 1 - i];
 					modifiedStructure.getFactoryStructure()[rowLeft][columnLeft - 1 - i] = null;
+					if (zoneToBeMoved != null) {
+						zoneToBeMoved.locationInFactory[1] = columnLeft - 1 - i
+								+ neighboursToTakeIntoConsideration.size();
+					}
 					modifiedStructure.getFactoryStructure()[rowLeft][columnLeft - 1 - i
 							+ neighboursToTakeIntoConsideration.size()] = zoneToBeMoved;
 				}
@@ -1195,6 +1210,10 @@ public class Calculator {
 				if (columnEmpty - 1 - i >= 0) {
 					Zone zoneToBeMoved = modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty - 1 - i];
 					modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty - 1 - i] = null;
+					if (zoneToBeMoved != null) {
+						zoneToBeMoved.locationInFactory[1] = columnEmpty - 1 - i
+								+ neighboursToTakeIntoConsideration.size();
+					}
 					modifiedStructure.getFactoryStructure()[rowEmpty][columnEmpty - 1 - i
 							+ neighboursToTakeIntoConsideration.size()] = zoneToBeMoved;
 				}
@@ -1262,12 +1281,12 @@ public class Calculator {
 			}
 			return new Information(true, toReturn, costs);
 		} else {
-			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+			Object[] allocationOptionsArray = allocationOptions.toArray();
 			int counter = 0;
-			double minCost = allocationOptionsArray[counter].costs;
+			double minCost = ((Information)allocationOptionsArray[counter]).costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
-				if (minCost > allocationOptionsArray[counter].costs) {
-					minCost = allocationOptionsArray[counter].costs;
+				if (minCost > ((Information)allocationOptionsArray[counter]).costs) {
+					minCost = ((Information)allocationOptionsArray[counter]).costs;
 					counter = j;
 				}
 			}
@@ -1417,12 +1436,12 @@ public class Calculator {
 			}
 			return new Information(true, toReturn, 0);
 		} else {
-			Information[] allocationOptionsArray = (Information[]) allocationOptions.toArray();
+			Object[] allocationOptionsArray = allocationOptions.toArray();
 			int counter = 0;
-			double minCost = allocationOptionsArray[counter].costs;
+			double minCost = ((Information) allocationOptionsArray[counter]).costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
-				if (minCost > allocationOptionsArray[counter].costs) {
-					minCost = allocationOptionsArray[counter].costs;
+				if (minCost > ((Information) allocationOptionsArray[counter]).costs) {
+					minCost = ((Information) allocationOptionsArray[counter]).costs;
 					counter = j;
 				}
 			}
