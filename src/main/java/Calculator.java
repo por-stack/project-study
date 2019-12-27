@@ -59,6 +59,10 @@ public class Calculator {
 				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
 			}
 
+			if (zonesToBeAllocated.isEmpty()) {
+				return initial;
+			}
+
 			// choose the cheapest for this iteration
 			int i = 0, j = 0;
 			Information informationOfBestZone = null;
@@ -264,7 +268,7 @@ public class Calculator {
 		// ...
 
 		System.out.println("no solution found");
-		return new Information(false, factory, 0);
+		return new Information(true, factory, 0);
 	}
 
 	/*
@@ -797,7 +801,7 @@ public class Calculator {
 					boolean remaining = logEquipRemaining(lg.getName(), tempLogEquipZoneToAllocate,
 							tempLogEquipEmptyZone);
 					// in order for a logistic equipment to be added to the newEmptyZone, it has to
-					// be
+					// be "remaining".
 					if (dimension == i && anzahl > 0 && remaining) {
 						logEquipNewEmptyZone.get(j).anzahlSteigern();
 						tempLogEquipEmptyZone.get(j).anzahlMindern();
@@ -1283,10 +1287,10 @@ public class Calculator {
 		} else {
 			Object[] allocationOptionsArray = allocationOptions.toArray();
 			int counter = 0;
-			double minCost = ((Information)allocationOptionsArray[counter]).costs;
+			double minCost = ((Information) allocationOptionsArray[counter]).costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
-				if (minCost > ((Information)allocationOptionsArray[counter]).costs) {
-					minCost = ((Information)allocationOptionsArray[counter]).costs;
+				if (minCost > ((Information) allocationOptionsArray[counter]).costs) {
+					minCost = ((Information) allocationOptionsArray[counter]).costs;
 					counter = j;
 				}
 			}
@@ -1630,13 +1634,20 @@ public class Calculator {
 		System.out.println("\n\n\n\n\n\n\n\n");
 
 		Calculator calculator = new Calculator();
-		calculator.performAlgorithm();
+		@SuppressWarnings("unused")
+		Factory newFactory = calculator.performAlgorithm();
 
 		// calculating execution time
+		// use this breakPoint to debug and see the result: newFactory
 		final long end = System.currentTimeMillis();
-		System.out.println("n\n\n\n\"Total execution time: " + (end - start));
+		System.out.println("\n\n\nTotal execution time: " + (end - start) / 1000 + " s");
 
-//		newFactoryStructure = calculator.performAlgorithm();
+		// demoFactory does not work for a factoryStructure with a higher width
+//		demoFactory(newFactory);
+//		System.out.println("\n\n\n\n\n\n\n\n");
+//		demoZonesToAllocate(newFactory);
+//		System.out.println("\n\n\n\n\n\n\n\n");
+
 //		Factory newFactory = initial;
 //		newFactory.setFactoryStructure(newFactoryStructure);
 		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
