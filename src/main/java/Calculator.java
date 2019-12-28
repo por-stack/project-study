@@ -30,7 +30,7 @@ public class Calculator {
 
 	public Factory performAlgorithm() throws Exception {
 
-		System.out.println("ciao padrone");
+		System.out.println("\nciao padrone");
 
 		ArrayList<Zone> zonesToBeAllocated = initial.getZonesToAllocate();
 
@@ -58,7 +58,6 @@ public class Calculator {
 				System.out.println("zonesToBeAllocated nr: " + i);
 				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
 				testOfDimensionsOfEmptyZonesVsZonesToAllocate(zonesToBeAllocated.get(i).information);
-
 			}
 
 			if (zonesToBeAllocated.isEmpty()) {
@@ -90,6 +89,7 @@ public class Calculator {
 			// apply the modifications to real factoryStructure. take zone out of
 			// zonesToBeAllocated
 			initial = zonesToBeAllocated.get(j).information.modifiedStructure;
+			demoFactoryShort(initial);
 		}
 
 		return initial;
@@ -1619,7 +1619,7 @@ public class Calculator {
 			lengthToAllocate += information.modifiedStructure.getZonesToAllocate().get(j).totalNumberRaster;
 		}
 
-		System.out.println("	Dimensions emptyZones and ZoneToAllocate is equal in returned factory: "
+		System.out.println("	Dimension emptyZones and ZoneToAllocate is equal in returned factory: "
 				+ (boolean) (lengthEmpty == lengthToAllocate));
 	}
 
@@ -1635,6 +1635,38 @@ public class Calculator {
 					System.out.println(Arrays.deepToString(factoryStructure[i][6 - j].raster));
 				}
 			}
+		}
+	}
+
+	public static void demoFactoryShort(Factory initial) {
+		System.out.println("\nfactoryStructure:");
+		Zone[][] factoryStructure = initial.getFactoryStructure();
+		for (int i = 0; i < factoryStructure.length; i++) {
+			if (i != 0)
+				System.out.print("\n");
+			for (int j = 0; j < factoryStructure[0].length; j++) {
+				if (factoryStructure[i][j] == null) {
+					System.out.print("null ");
+				} else {
+					String string = "";
+					if (factoryStructure[i][j].isEmpty())
+						string = "t";
+					else
+						string = "f";
+					System.out.print(factoryStructure[i][j].name + "(" + factoryStructure[i][j].totalNumberRaster + ", "
+							+ string + ") ");
+				}
+			}
+		}
+		System.out.println("\n\nzones to allocate:");
+		for (int i = 0; i < initial.getZonesToAllocate().size(); i++) {
+			String string = "";
+			if (initial.getZonesToAllocate().get(i).isEmpty())
+				string = "t";
+			else
+				string = "f";
+			System.out.print(initial.getZonesToAllocate().get(i).name + "("
+					+ initial.getZonesToAllocate().get(i).totalNumberRaster + ", " + string + ")\n");
 		}
 	}
 
@@ -1655,9 +1687,10 @@ public class Calculator {
 
 		initial = new Factory();
 		demoFactory(initial);
-		System.out.println("\n\n\n\n\n\n\n\n");
+		System.out.println("\n\n\n\n");
 		demoZonesToAllocate(initial);
-		System.out.println("\n\n\n\n\n\n\n\n");
+		System.out.println("\n\n\n\n");
+		demoFactoryShort(initial);
 
 		Calculator calculator = new Calculator();
 		@SuppressWarnings("unused")
