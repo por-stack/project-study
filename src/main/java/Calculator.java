@@ -57,6 +57,8 @@ public class Calculator {
 			for (int i = 0; i < zonesToBeAllocated.size(); i++) {
 				System.out.println("zonesToBeAllocated nr: " + i);
 				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
+				testOfDimensionsOfEmptyZonesVsZonesToAllocate(zonesToBeAllocated.get(i).information);
+
 			}
 
 			if (zonesToBeAllocated.isEmpty()) {
@@ -1597,6 +1599,30 @@ public class Calculator {
 		return toReturn;
 	}
 
+	/**
+	 * Checks for each potential allocation of a zoneToAllocate, if in the returned
+	 * modifiedStructure the dimension of EmptyZones really equals to the dimension
+	 * of the ZonesToAllocate. If it is not the case, some bug is contained in the
+	 * algorithm beacuse some space is lost or, vice-versa, some inexistent space is
+	 * generated.
+	 * 
+	 * @param information
+	 */
+	public void testOfDimensionsOfEmptyZonesVsZonesToAllocate(Information information) {
+		int lengthEmpty = 0;
+		int lengthToAllocate = 0;
+		for (int j = 0; j < information.modifiedStructure.getEmptyZones().size(); j++) {
+			lengthEmpty += information.modifiedStructure.getEmptyZones().get(j).totalNumberRaster;
+		}
+
+		for (int j = 0; j < information.modifiedStructure.getZonesToAllocate().size(); j++) {
+			lengthToAllocate += information.modifiedStructure.getZonesToAllocate().get(j).totalNumberRaster;
+		}
+
+		System.out.println("	Dimensions emptyZones and ZoneToAllocate is equal in returned factory: "
+				+ (boolean) (lengthEmpty == lengthToAllocate));
+	}
+
 	public static void demoFactory(Factory initial) {
 		Zone[][] factoryStructure = initial.getFactoryStructure();
 		for (int i = 0; i < factoryStructure.length; i++) {
@@ -1640,7 +1666,7 @@ public class Calculator {
 		// calculating execution time
 		// use this breakPoint to debug and see the result: newFactory
 		final long end = System.currentTimeMillis();
-		System.out.println("\n\n\nTotal execution time: " + (end - start) / 1000 + " s");
+		System.out.println("\n\n\nTotal execution time: " + ((double) (end - start) / 1000) + " s");
 
 		// demoFactory does not work for a factoryStructure with a higher width
 //		demoFactory(newFactory);
