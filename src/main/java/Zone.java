@@ -176,7 +176,7 @@ public class Zone {
 
 	@Override
 	public String toString() {
-		return name + ":    raster1: " + amountRasterRow1 + ", raster2: " + amountRasterRow2 + ", dimTrainStat1: "
+		return name + ":    locationInFactory(r,c): (" + locationInFactory[0] + ", " + locationInFactory[1] + ":    raster1: " + amountRasterRow1 + ", raster2: " + amountRasterRow2 + ", dimTrainStat1: "
 				+ dimensionTrainStationRow1 + ", dimTrainStat2: " + dimensionTrainStationRow2 + ", tot: "
 				+ totalNumberRaster + " isEmpty: " + isEmpty +  "\n" + "LogEquip: " + logisticEquipment;
 	}
