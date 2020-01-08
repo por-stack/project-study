@@ -31,9 +31,6 @@ public class Calculator {
 	}
 
 	public Factory performAlgorithm() throws Exception {
-
-		System.out.println("\nciao padrone");
-
 		ArrayList<Zone> zonesToBeAllocated = initial.getZonesToAllocate();
 
 		// in case the list of zonesToBeAllocated is empty
@@ -98,6 +95,9 @@ public class Calculator {
 	}
 
 	public Information calculate(Zone zone, Factory factoryAsParameter) throws Exception {
+		if (zone.isEmpty() ) {
+			return new Information(true, factoryAsParameter, 0);
+		}
 		System.out.println("**Entered in level-hierarchy-menu**");
 		Information information; // information (boolean applicable, Zone[][] modifiedStructure, double cost)
 		Factory factory = copyFactory(factoryAsParameter);
