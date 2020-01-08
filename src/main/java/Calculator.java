@@ -1781,9 +1781,9 @@ public class Calculator {
 		// use this breakPoint to debug and see the result: newFactory
 		final long end = System.currentTimeMillis();
 		System.out.println("END");
-		System.out.println("-------------------------------------------------");
+		System.out.println("------------------------------------------------");
 		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
-		System.out.println("-------------------------------------------------");
+		System.out.println("------------------------------------------------");
 
 
 		// demoFactory does not work for a factoryStructure with a higher width
