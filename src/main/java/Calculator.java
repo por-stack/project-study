@@ -18,9 +18,6 @@ public class Calculator {
 	private static Factory initial;
 	private static Zone[][] newFactoryStructure;
 	ArrayList<Integer> combinations = new ArrayList<Integer>();
-	private Zone ZoneToRemember1;
-	private ArrayList<Zone> ZoneToRemember2;
-	int matteo = 0; 
 
 	/*
 	 * The initial factory is created with the input data. The factory is analyzed
@@ -104,7 +101,6 @@ public class Calculator {
 	}
 
 	public Information calculate(Zone zone, Factory factoryAsParameter) throws Exception {
-		System.out.println(++matteo);
 		if (zone.isEmpty()) {
 			return new Information(true, factoryAsParameter, 0);
 		}
@@ -201,7 +197,7 @@ public class Calculator {
 		}
 
 		// SECOND HIERARCHY BASED ON FINDING A BIGGER ZONE. "WITH REST".
-		System.out.println("**" + zone.name + " enters in second hierarchy");
+		System.out.println("**" + zone.name + " enteres in second hierarchy");
 
 		// level 1: fitWithRestWithList()
 //		information = fitWithRestWithList(); 
@@ -654,8 +650,7 @@ public class Calculator {
 		System.out.println(zone.name + " enters fitWithRest");
 		Factory factory = copyFactory(factoryAsParameter);
 		Information toReturn = checkForLargerZone(zone, factory);
-		if (toReturn.applicable)
-			System.out.println(zone.name + " found a solution in fitWithRest");
+		System.out.println(zone.name + " found a solution in fitWithRest");
 		return toReturn;
 	}
 
@@ -663,9 +658,6 @@ public class Calculator {
 			throws Exception {
 		System.out.println(zone.name + " enters fitMovingNeighbourWithRest: " + numberNeighbours);
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
-		// ForZoneToRemember
-		ArrayList<Zone> tupelOfToAllocateAndEmptyZone = new ArrayList<Zone>();
-
 		Factory factory = copyFactory(factoryAsParameter);
 
 		// for the ZoneToAllocate given as parameter iterate over the emptyZones.
@@ -706,112 +698,69 @@ public class Calculator {
 				int right = i;
 				int left = numberNeighbour - right;
 
+				while (right > 0) {
+//					int toDebug = factory.getFactoryStructure()[0].length; 
+					if (locationInFactoryColumn + right < factory.getFactoryStructure()[0].length) {
+						Zone neighbourOnTheRight = factory
+								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn + right];
+						if (neighbourOnTheRight != null)
+							neighboursToTakeIntoConsideration
+									.add(factory.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn
+											+ right]);
+					}
+					right--;
+				}
+
+				// extra list for left neighbours. the final thought here is that i want the
+				// left outer neighbour to be last in the list:
+				// neighboursToTakeIntoConsideration. so this list for the left part will be
+				// attached to the normal list, but in inverted sequence
+				// the reason for this decision relies in the allocatePerfectFitWithNeighbour
+				// method.
+				ArrayList<Zone> neighboursToTakeIntoConsiderationOnLeftSide = new ArrayList<Zone>();
 				while (left > 0) {
 					if (locationInFactoryColumn - left >= 0) {
 						Zone neighbourOnTheLeft = factory
 								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn - left];
 						if (neighbourOnTheLeft != null)
-							neighboursToTakeIntoConsideration.add(neighbourOnTheLeft);
+							neighboursToTakeIntoConsiderationOnLeftSide.add(neighbourOnTheLeft);
 					}
 					left--;
 				}
-				while (right > 0) {
-					if (locationInFactoryColumn + right < factory.getFactoryStructure()[0].length) {
-						Zone neighbourOnTheRight = factory
-								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn + right];
-						if (neighbourOnTheRight != null)
-							neighboursToTakeIntoConsideration.add(neighbourOnTheRight);
-					}
-					right--;
+
+				// attach the list of the left neighbour the the right neighbours but in
+				// opposite sequence
+				for (int k = neighboursToTakeIntoConsiderationOnLeftSide.size() - 1; k >= 0; k--) {
+					neighboursToTakeIntoConsideration.add(neighboursToTakeIntoConsiderationOnLeftSide.get(k));
 				}
 
+				// calculate the total size of the freeZoneAlone and the neighbours taken into
+				// consideration in this cycle
 				int totalNumberRasterIncludingNeighbours = freeZoneAlone.totalNumberRaster;
 				for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
 					totalNumberRasterIncludingNeighbours += neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
 				}
-				/*
-				 * if toAllocate == ZoneToRemember2 (here we saved the neighbour, that had to be
-				 * moved in the iteration before) && if neighbour == ZoneToRemeber1 (here we
-				 * saved the zoneToBeAllocated, that has been allocated in the iteration before)
-				 * then this allocation is forbidden
-				 */
-				if (ZoneToRemember1 != null && ZoneToRemember2 != null) {
-//					//if zoneToRemember2.contains(zone)
-//					boolean contains = false; 
-//					for (int k = 0; k < ZoneToRemember2.size(); k++) {
-//						if (ZoneToRemember2.get(k).name.equals(zone.name)) {
-//							contains = true; 
-//						}
-//					}
-					boolean contains = false; 
-					if (!contains) {
-						//if neighboursToTakeIntoConsideration.contain(ZoneToRemember2)
-						boolean contains1 = false; 
-						for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
-							if (neighboursToTakeIntoConsideration.get(k).name.equals(ZoneToRemember1.name)) {
-								contains1 = true; 
-							}
-						}
-						if (!contains1) {
-							if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
-								int output = i + 1;
-								System.out.println(zone.name + " in level fitMovingNeighbourWithRest "
-										+ numberNeighbours + " is looking at option nr." + counter + " (freeZone nr. "
-										+ j + ", combination nr." + output + ")");
-								int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration,
-										toAllocate);
-								Factory toReturn = copyFactory(factory);
-								toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set
-																														// the
-																														// emptyZone
-																														// on
-																														// null;
-								System.out.print(zone.name + " --> ");
-								ZoneToRemember1 = toAllocate; 
-								ZoneToRemember2 = neighboursToTakeIntoConsideration;
-								Information information = allocateInLargerZoneWithNeighbours(toReturn,
-										(EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
-								information.costs += cost;
+				if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
 
-								tupelOfToAllocateAndEmptyZone.add(zone);
-								for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
-									tupelOfToAllocateAndEmptyZone.add(neighboursToTakeIntoConsideration.get(k));
-								}
-								tupelOfToAllocateAndEmptyZone.add(null);
-								allocationOptions.add(information);
-								break outer;
-							}
-						}
+					if (toAllocate.locationInFactory[1] == freeZoneAlone.locationInFactory[1]) {
+						continue outer;
 					}
-				} else {
-					if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
-						int output = i + 1;
-						System.out.println(zone.name + " in level fitMovingNeighbourWithRest " + numberNeighbours
-								+ " is looking at option nr." + counter + " (freeZone nr. " + j + ", combination nr."
-								+ output + ")");
-						int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration,
-								toAllocate);
-						Factory toReturn = copyFactory(factory);
-						toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set
-																												// the
-																												// emptyZone
-																												// on
-																												// null;
-						System.out.print(zone.name + " --> ");
-						ZoneToRemember1 = toAllocate; 
-						ZoneToRemember2 = neighboursToTakeIntoConsideration;
-						Information information = allocateInLargerZoneWithNeighbours(toReturn,
-								(EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
-						information.costs += cost;
-
-						tupelOfToAllocateAndEmptyZone.add(zone);
-						for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
-							tupelOfToAllocateAndEmptyZone.add(neighboursToTakeIntoConsideration.get(k));
-						}
-						tupelOfToAllocateAndEmptyZone.add(null);
-						allocationOptions.add(information);
-						break outer;
-					}
+					
+					int output = i + 1;
+					System.out.println(
+							zone.name + "in level fitMovingNeighbour " + numberNeighbours + " is looking at option nr."
+									+ counter + " (freeZone nr. " + j + ", combination nr." + output);
+					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
+					Factory toReturn = copyFactory(factory);
+					toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set the
+																											// emptyZone
+																											// on null;
+					System.out.print(zone.name + " --> ");
+					Information information = allocateInLargerZoneWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
+							neighboursToTakeIntoConsideration, toAllocate);
+					information.costs += cost;
+					allocationOptions.add(information);
+					break outer;
 				}
 			}
 		}
@@ -824,12 +773,6 @@ public class Calculator {
 		} else if (allocationOptions.size() == 1) {
 			System.out.println(zone.name + " in level fitMovingNeighbourWithRest " + numberNeighbours
 					+ " chooses its option nr.1");
-			ZoneToRemember1 = zone;
-			int pointer = 0;
-			while (tupelOfToAllocateAndEmptyZone.get(pointer) != null) {
-				ZoneToRemember2.add(tupelOfToAllocateAndEmptyZone.get(pointer));
-				pointer++;
-			}
 			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
 		} else {
 			Object[] allocationOptionsArray = allocationOptions.toArray();
@@ -844,20 +787,6 @@ public class Calculator {
 			int output = counter + 1;
 			System.out.println(zone.name + "in level fitMovingNeighbourWithRest " + numberNeighbours
 					+ "chooses his option nr." + output);
-			ZoneToRemember1 = zone;
-			int pointer = 0;
-			while (counter > 0) {
-				while (tupelOfToAllocateAndEmptyZone.get(pointer) != null) {
-					pointer++;
-				}
-				counter--;
-				pointer++;
-			}
-			pointer++;
-			while (tupelOfToAllocateAndEmptyZone.get(pointer) != null) {
-				ZoneToRemember2.add(tupelOfToAllocateAndEmptyZone.get(pointer));
-				pointer++;
-			}
 			return new Information(true, allocationOptions.get(counter).modifiedStructure,
 					allocationOptions.get(counter).costs);
 		}
@@ -1329,6 +1258,8 @@ public class Calculator {
 
 		combinations.clear();
 
+//		System.out.println("\n\n" + array.length + "\n\n");
+		
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -1521,6 +1452,7 @@ public class Calculator {
 		}
 
 		combinations.clear();
+		
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
