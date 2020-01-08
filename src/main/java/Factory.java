@@ -454,8 +454,21 @@ public class Factory {
 		return zonesToAllocate;
 	}
 
+	/**
+	 * returns the given list in reverse order
+	 * @param list
+	 * @return
+	 */
+	public ArrayList<Zone> reverseList(ArrayList<Zone> list) {
+		ArrayList<Zone> newList = new ArrayList<Zone>();
+		for (int i = list.size() - 1; i >= 0; i--) {
+			newList.add(list.get(i));
+		}
+		return newList;
+	}
+
 	public ArrayList<Zone> createZonesToAllocateAscending(Zone[][] factoryStructure) {
-	return null;
+		return reverseList(createZonesToAllocate(factoryStructure));
 	}
 
 	public String[][] getMatrix() {

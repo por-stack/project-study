@@ -7,8 +7,6 @@ import java.util.Iterator;
 
 
 public class Import {
-	
-	// MODIFICAREEEEEEEEEEEEEEEEEEEEEE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	public static final String path = "C:\\Users\\Utente\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; // non funziona
 
