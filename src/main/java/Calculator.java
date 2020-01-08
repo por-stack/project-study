@@ -1767,10 +1767,10 @@ public class Calculator {
 		final long start = System.currentTimeMillis();
 
 		initial = new Factory();
-		demoFactory(initial);
-		System.out.println("\n\n\n\n");
-		demoZonesToAllocate(initial);
-		System.out.println("\n\n\n\n");
+//		demoFactory(initial);
+//		System.out.println("\n\n\n\n");
+//		demoZonesToAllocate(initial);
+//		System.out.println("\n\n\n\n");
 		demoFactoryShort(initial);
 
 		Calculator calculator = new Calculator();
@@ -1780,7 +1780,11 @@ public class Calculator {
 		// calculating execution time
 		// use this breakPoint to debug and see the result: newFactory
 		final long end = System.currentTimeMillis();
-		System.out.println("\n\n\nTotal execution time: " + ((double) (end - start) / 1000) + " s");
+		System.out.println("END");
+		System.out.println("-------------------------------------------------");
+		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
+		System.out.println("-------------------------------------------------");
+
 
 		// demoFactory does not work for a factoryStructure with a higher width
 //		demoFactory(newFactory);
