@@ -27,76 +27,83 @@ public class Calculator {
 		// qui ho levato la initialisieurung di factoy structure, perche viene gia fatta
 		// nella main.
 		// inoltre la methode createfactorystructure non esite piú!
-
 	}
 
 	public Factory performAlgorithm() throws Exception {
-		ArrayList<Zone> zonesToBeAllocated = initial.getZonesToAllocate();
+		try {
+			ArrayList<Zone> zonesToBeAllocated = initial.getZonesToAllocate();
 
-		// in case the list of zonesToBeAllocated is empty
-		if (zonesToBeAllocated.isEmpty()) {
-			return initial;
-		}
-
-		/*
-		 * What should happen in this method: Thinking of our algorithm, we have an
-		 * initial list with all the zonesToBeAllocated. We want than individually each
-		 * of these zones get into the algorithm (calculate)) once. When each of them
-		 * has hone thorugh once, we check the information of each of these zones,
-		 * comparing the cost and choose the cheapest one. Only now the structure in
-		 * factory.getFactoryStructure is really modified. This implies that when
-		 * entering in calculate the structure needs to be copied.
-		 */
-
-		while (!zonesToBeAllocated.isEmpty()) {
-			zonesToBeAllocated = initial.getZonesToAllocate(); // reupdate
-			System.out.println("------------------------------");
-			System.out.println("zonesToBeAllocated.size: " + zonesToBeAllocated.size());
-
-			for (int i = 0; i < zonesToBeAllocated.size(); i++) {
-				int toPrint = i + 1;
-				System.out.println(" ");
-				System.out.println("zonesToBeAllocated nr." + toPrint + ": " + zonesToBeAllocated.get(i).name);
-				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
-				testOfDimensionsOfEmptyZonesVsZonesToAllocate(zonesToBeAllocated.get(i).information);
-			}
-
+			// in case the list of zonesToBeAllocated is empty
 			if (zonesToBeAllocated.isEmpty()) {
 				return initial;
 			}
 
-			// choose the cheapest for this iteration
-			int i = 0, j = 0;
-			Information informationOfBestZone = null;
-			boolean found = false;
-			while (!found) {
-				if (zonesToBeAllocated.get(i).information.applicable) {
-					found = true;
-					informationOfBestZone = zonesToBeAllocated.get(i).information;
-				} else {
-					i++;
-					j = i;
+			/*
+			 * What should happen in this method: Thinking of our algorithm, we have an
+			 * initial list with all the zonesToBeAllocated. We want than individually each
+			 * of these zones get into the algorithm (calculate)) once. When each of them
+			 * has hone thorugh once, we check the information of each of these zones,
+			 * comparing the cost and choose the cheapest one. Only now the structure in
+			 * factory.getFactoryStructure is really modified. This implies that when
+			 * entering in calculate the structure needs to be copied.
+			 */
+
+			while (!zonesToBeAllocated.isEmpty()) {
+				zonesToBeAllocated = initial.getZonesToAllocate(); // reupdate
+				System.out.println("------------------------------");
+				System.out.println("zonesToBeAllocated.size: " + zonesToBeAllocated.size());
+
+				for (int i = 0; i < zonesToBeAllocated.size(); i++) {
+					int toPrint = i + 1;
+					System.out.println(" ");
+					System.out.println("zonesToBeAllocated nr." + toPrint + ": " + zonesToBeAllocated.get(i).name);
+					zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
+					testOfDimensionsOfEmptyZonesVsZonesToAllocate(zonesToBeAllocated.get(i).information);
 				}
-			}
-			for (i++; i < zonesToBeAllocated.size(); i++) {
-				if (zonesToBeAllocated.get(i).information.applicable) {
-					if (zonesToBeAllocated.get(i).information.costs < informationOfBestZone.costs) {
+
+				if (zonesToBeAllocated.isEmpty()) {
+					return initial;
+				}
+
+				// choose the cheapest for this iteration
+				int i = 0, j = 0;
+				Information informationOfBestZone = null;
+				boolean found = false;
+				while (!found) {
+					if (zonesToBeAllocated.get(i).information.applicable) {
+						found = true;
 						informationOfBestZone = zonesToBeAllocated.get(i).information;
+					} else {
+						i++;
 						j = i;
 					}
 				}
+				for (i++; i < zonesToBeAllocated.size(); i++) {
+					if (zonesToBeAllocated.get(i).information.applicable) {
+						if (zonesToBeAllocated.get(i).information.costs < informationOfBestZone.costs) {
+							informationOfBestZone = zonesToBeAllocated.get(i).information;
+							j = i;
+						}
+					}
+				}
+
+				// apply the modifications to real factoryStructure. take zone out of
+				// zonesToBeAllocated
+				System.out.println(" ");
+				System.out.println("--> " + zonesToBeAllocated.get(j).name + " allocated definitively");
+				initial = zonesToBeAllocated.get(j).information.modifiedStructure;
+				System.out.println("");
+				System.out.println("------------------------------------------------------------");
+				demoFactoryShort(initial);
 			}
 
-			// apply the modifications to real factoryStructure. take zone out of
-			// zonesToBeAllocated
-			System.out.println(" ");
-			System.out.println("--> " + zonesToBeAllocated.get(j).name + " allocated definitively");
-			initial = zonesToBeAllocated.get(j).information.modifiedStructure;
+		} catch (StackOverflowError e) {
 			System.out.println("");
-			System.out.println("------------------------------------------------------------");
+			System.out.println("");
+			System.out.println("**Algorithm enters third hierarchy**");
 			demoFactoryShort(initial);
+			
 		}
-
 		return initial;
 	}
 
@@ -745,7 +752,7 @@ public class Calculator {
 					if (toAllocate.locationInFactory[1] == freeZoneAlone.locationInFactory[1]) {
 						continue outer;
 					}
-					
+
 					int output = i + 1;
 					System.out.println(
 							zone.name + "in level fitMovingNeighbour " + numberNeighbours + " is looking at option nr."
@@ -1259,7 +1266,7 @@ public class Calculator {
 		combinations.clear();
 
 //		System.out.println("\n\n" + array.length + "\n\n");
-		
+
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -1452,7 +1459,7 @@ public class Calculator {
 		}
 
 		combinations.clear();
-		
+
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -1809,6 +1816,7 @@ public class Calculator {
 		// calculating execution time
 		// use this breakPoint to debug and see the result: newFactory
 		final long end = System.currentTimeMillis();
+		System.out.println("");
 		System.out.println("END");
 		System.out.println("------------------------------------------------");
 		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
