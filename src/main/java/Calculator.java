@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 //cancella
 
+import javax.security.auth.callback.ChoiceCallback;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.SystemOutLogger;
 import org.apache.xmlbeans.impl.jam.internal.elements.ArrayClassImpl;
@@ -99,11 +101,6 @@ public class Calculator {
 		System.out.println("**Entered in level-hierarchy-menu**");
 		Information information; // information (boolean applicable, Zone[][] modifiedStructure, double cost)
 		Factory factory = copyFactory(factoryAsParameter);
-
-		// if an emptyZone enters the algorithm
-		if (zone.isEmpty()) {
-			return new Information(true, factory, 0);
-		}
 		// FIRST HIERARCHY BASED ON PERFECT FIT
 
 		// level 0: Edge-case: checkForLargerZone
@@ -283,10 +280,12 @@ public class Calculator {
 	 * checkForLargerZone()
 	 */
 	public Information checkForLargerZone(Zone zone, Factory factoryAsParameter) throws Exception {
+		System.out.println(zone.name + " enters checkForLargerZone");
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 		Factory factory = copyFactory(factoryAsParameter);
 
 		Zone toAllocate = zone;
+		int counter = 1; 
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			Zone freeZoneTemp = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneTemp.name, freeZoneTemp.amountRasterRow1,
@@ -297,6 +296,8 @@ public class Calculator {
 			freeZone.setLogisticEquipment(freeZoneTemp.getLogisticEquipment());
 			freeZone.calculateAmounts();
 			if (toAllocate.totalNumberRaster < freeZone.totalNumberRaster) {
+				System.out.println(zone.name + " in level checkForLargerZone is looking at freeZone " 
+						+ freeZone.name + ". (option nr. " + counter + ")"); counter++; 
 				int cost = calculateCost(freeZone, toAllocate);
 				Information information = allocateInLargerZone(factory, freeZone, toAllocate);
 				information.costs += cost;
@@ -310,6 +311,7 @@ public class Calculator {
 			// qui ce da vedere se e quando usare la seconda hirarchy
 			return new Information(false, null, 0);
 		} else if (allocationOptions.size() == 1) {
+			System.out.println(zone.name + " in level checkForLargerZone chooses its option nr.1");
 			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
 		} else {
 			// create an array out of the list
@@ -317,7 +319,7 @@ public class Calculator {
 			for (int i = 0; i < allocationOptionsArray.length; i++) {
 				allocationOptionsArray[i] = allocationOptions.get(i);
 			}
-			int counter = 0;
+			counter = 0;
 			double minCost = allocationOptionsArray[counter].costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
 				if (minCost > allocationOptionsArray[counter].costs) {
@@ -325,6 +327,8 @@ public class Calculator {
 					counter = j;
 				}
 			}
+			int output = counter + 1;
+			System.out.println(zone.name + " in level checkForLargerZone chooses its option nr." + output);
 			return new Information(true, allocationOptions.get(counter).modifiedStructure,
 					allocationOptions.get(counter).costs);
 		}
@@ -423,6 +427,7 @@ public class Calculator {
 //	}
 
 	public Information fitPerfectly(Zone zone, Factory factoryAsParameter) throws Exception {
+		System.out.println(zone.name + " enters fitPerfectly");
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 		Factory factory = copyFactory(factoryAsParameter);
 
@@ -431,6 +436,7 @@ public class Calculator {
 		// save information (applicable, modifiedstructure, cost) for every feasible
 		// solution
 		Zone toAllocate = zone;
+		int counter = 1; 
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			// copy the empty zone j into the variable freeZone
 			Zone freeZoneTemp = factory.getEmptyZones().get(j);
@@ -444,6 +450,8 @@ public class Calculator {
 
 			// check if the zone to allocate fits perfectly
 			if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
+				System.out.println(zone.name + " in level fitPerfectly is looking at freeZone "
+						+ freeZone.name + ". (option nr. " + counter + ")"); counter++; 
 				int cost = calculateCost(freeZone, toAllocate);
 				Information information = allocatePerfectFit(factory, freeZone, toAllocate);
 				information.costs += cost;
@@ -457,13 +465,14 @@ public class Calculator {
 			// qui ce da vedere se e quando usare la seconda hirarchy
 			return new Information(false, null, 0);
 		} else if (allocationOptions.size() == 1) {
+			System.out.println(zone.name + " in level fitPerfectly chooses its option nr.1");
 			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
 		} else {
 			Information[] allocationOptionsArray = new Information[allocationOptions.size()];
 			for (int i = 0; i < allocationOptionsArray.length; i++) {
 				allocationOptionsArray[i] = allocationOptions.get(i);
 			}
-			int counter = 0;
+			counter = 0;
 			double minCost = allocationOptionsArray[counter].costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
 				if (minCost > allocationOptionsArray[counter].costs) {
@@ -471,6 +480,8 @@ public class Calculator {
 					counter = j;
 				}
 			}
+			int output = counter + 1;
+			System.out.println(zone.name + " in level fitPerfectly chooses its option nr." + output);
 			return new Information(true, allocationOptions.get(counter).modifiedStructure,
 					allocationOptions.get(counter).costs);
 		}
@@ -478,6 +489,7 @@ public class Calculator {
 
 	public Information fitMovingNeighbour(Zone zone, Factory factoryAsParameter, int numberNeighbours)
 			throws Exception {
+		System.out.println(zone.name + " enters fitMovingNeighbour: " + numberNeighbours);
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 		Factory factory = copyFactory(factoryAsParameter);
 
@@ -496,9 +508,8 @@ public class Calculator {
 		toAllocate.setEmpty(zone.isEmpty());
 
 		// list with all the combinations of neighbours for each empty Zones
-
+		int counter = 1; //just needed for the system.out.println
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
-
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
 			// copy the empty zone into the variable freeZone
 			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
@@ -525,6 +536,7 @@ public class Calculator {
 			// checked. Here the recursion will be used.
 
 			for (int i = numberNeighbour; i >= 0; i--) {
+				int sysoutI = numberNeighbour - i +1; 
 				neighboursToTakeIntoConsideration = new ArrayList<Zone>();
 				int right = i;
 				int left = numberNeighbour - right;
@@ -575,6 +587,9 @@ public class Calculator {
 				// We allocate the zoneToAllocate only if it fits perfectly in the generated
 				// space
 				if (toAllocate.totalNumberRaster == totalNumberRasterIncludingNeighbours) {
+					int output = i + 1;
+					System.out.println(zone.name + "in level fitMovingNeighbour " + numberNeighbours
+							+ "is looking at option nr." + counter + " at position " + j + "."  +  output);
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
 					Factory toReturn = copyFactory(factoryAsParameter);
 					toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set the
@@ -594,10 +609,12 @@ public class Calculator {
 			// qui ce da vedere se e quando usare la seconda hirarchy
 			return new Information(false, null, 0);
 		} else if (allocationOptions.size() == 1) {
+			System.out.println(
+					zone.name + " in level fitMovingNeighbour " + numberNeighbours + " chooses its option nr.1");
 			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
 		} else {
 			Object[] allocationOptionsArray = allocationOptions.toArray();
-			int counter = 0;
+			counter = 0;
 			double minCost = ((Information) allocationOptionsArray[counter]).costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
 				if (minCost > ((Information) allocationOptionsArray[counter]).costs) {
@@ -605,6 +622,9 @@ public class Calculator {
 					counter = j;
 				}
 			}
+			int output = counter + 1;
+			System.out.println(
+					zone.name + "in level fitMovingNeighbour " + numberNeighbours + "chooses his option nr." + output);
 			return new Information(true, allocationOptions.get(counter).modifiedStructure,
 					allocationOptions.get(counter).costs);
 
@@ -612,12 +632,16 @@ public class Calculator {
 	}
 
 	private Information fitWithRest(Zone zone, Factory factoryAsParameter) throws Exception {
+		System.out.println(zone.name + " enters fitWithRest");
 		Factory factory = copyFactory(factoryAsParameter);
-		return checkForLargerZone(zone, factory);
+		Information toReturn = checkForLargerZone(zone, factory);
+		System.out.println(zone.name + "found a solution in fitWithRest");
+		return toReturn; 
 	}
 
 	private Information fitMovingNeighbourWithRest(Zone zone, Factory factoryAsParameter, int numberNeighbours)
 			throws Exception {
+		System.out.println(zone.name + " enters fitMovingNeighbourWithRest: " + numberNeighbours);
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 		Factory factory = copyFactory(factoryAsParameter);
 
@@ -630,8 +654,8 @@ public class Calculator {
 		Zone toAllocate = zone;
 
 		// list with all the combinations of neighbours for each empty Zones
-
-		outer: for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+		int counter = 1; //just needed for the system.out.println
+		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
@@ -683,6 +707,9 @@ public class Calculator {
 					totalNumberRasterIncludingNeighbours += neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
 				}
 				if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
+					int output = i + 1;
+					System.out.println(zone.name + "in level fitMovingNeighbour " + numberNeighbours
+							+ "is looking at option nr." + counter + " at position " + j + "."  +  output);
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
 					Factory toReturn = copyFactory(factory);
 					toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set the
@@ -691,10 +718,7 @@ public class Calculator {
 					Information information = allocateInLargerZoneWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
 					information.costs += cost;
-					if (information.applicable) {
-						allocationOptions.add(information);
-						break outer;
-					}
+					allocationOptions.add(information);
 				}
 			}
 		}
@@ -705,10 +729,12 @@ public class Calculator {
 			// qui ce da vedere se e quando usare la seconda hirarchy
 			return new Information(false, null, 0);
 		} else if (allocationOptions.size() == 1) {
+			System.out.println(zone.name + " in level fitMovingNeighbourWithRest " + numberNeighbours
+					+ " chooses its option nr.1");
 			return new Information(true, allocationOptions.get(0).modifiedStructure, allocationOptions.get(0).costs);
 		} else {
 			Object[] allocationOptionsArray = allocationOptions.toArray();
-			int counter = 0;
+			counter = 0;
 			double minCost = ((Information) allocationOptionsArray[counter]).costs;
 			for (int j = counter; j < allocationOptions.size(); j++) {
 				if (minCost > ((Information) allocationOptionsArray[counter]).costs) {
@@ -716,6 +742,9 @@ public class Calculator {
 					counter = j;
 				}
 			}
+			int output = counter + 1;
+			System.out.println(zone.name + "in level fitMovingNeighbourWithRest " + numberNeighbours
+					+ "chooses his option nr." + output);
 			return new Information(true, allocationOptions.get(counter).modifiedStructure,
 					allocationOptions.get(counter).costs);
 		}
@@ -1256,7 +1285,6 @@ public class Calculator {
 
 	private Information allocateInLargerZoneWithNeighbours(Factory factoryAsParameter, EmptyZone freeZoneAlone,
 			ArrayList<Zone> neighboursToTakeIntoConsideration, Zone toAllocate) throws Exception {
-		System.out.println("pass " + toAllocate.name);
 		Factory factory = copyFactory(factoryAsParameter);
 
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
