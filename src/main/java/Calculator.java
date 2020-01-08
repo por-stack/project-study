@@ -89,6 +89,8 @@ public class Calculator {
 
 			// apply the modifications to real factoryStructure. take zone out of
 			// zonesToBeAllocated
+			System.out.println(" ");
+			System.out.println("--> " + zonesToBeAllocated.get(j).name + " allocated definitively");
 			initial = zonesToBeAllocated.get(j).information.modifiedStructure;
 			System.out.println("");
 			System.out.println("------------------------------------------------------------");
@@ -102,7 +104,7 @@ public class Calculator {
 		if (zone.isEmpty()) {
 			return new Information(true, factoryAsParameter, 0);
 		}
-		System.out.println("**" + zone.name + " enteres in first hierarchy");
+		System.out.println("**" + zone.name + " enters in first hierarchy");
 		Information information; // information (boolean applicable, Zone[][] modifiedStructure, double cost)
 		Factory factory = copyFactory(factoryAsParameter);
 		// FIRST HIERARCHY BASED ON PERFECT FIT
