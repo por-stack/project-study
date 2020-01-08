@@ -655,7 +655,7 @@ public class Calculator {
 
 		// list with all the combinations of neighbours for each empty Zones
 		int counter = 1; //just needed for the system.out.println
-		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+		outer: for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
@@ -719,6 +719,7 @@ public class Calculator {
 							neighboursToTakeIntoConsideration, toAllocate);
 					information.costs += cost;
 					allocationOptions.add(information);
+					break outer; 
 				}
 			}
 		}
