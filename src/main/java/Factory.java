@@ -9,11 +9,11 @@ public class Factory {
 
 	private Import mport;
 	private String[][] matrix;
-	
+
 	private int[][] counter; // for canel0Entries
 	private boolean isTrainStat = false;
 	private int maxNumberColumn = 0; // for createFactoryStrucure
-	
+
 	private Zone[][] factoryStructure; // for createFactoryStructure
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
@@ -26,9 +26,9 @@ public class Factory {
 		this.matrix = mport.getMatrix();
 		this.initializeFactory();
 	}
-	
-	public Factory(boolean toCopy) { 
-		
+
+	public Factory(boolean toCopy) {
+
 	}
 
 	public void initializeFactory() throws Exception {
@@ -390,7 +390,7 @@ public class Factory {
 						emptyZone.setDimensionTrainStationRow2(zone.dimensionTrainStationRow2);
 						emptyZone.setEmpty(true);
 						emptyZone.setLogisticEquipment(zone.getLogisticEquipment());
-						emptyZone.calculateAmounts();  // random 
+						emptyZone.calculateAmounts(); // random
 						emptyZones.add(emptyZone);
 					}
 				}
@@ -452,6 +452,10 @@ public class Factory {
 		}
 		this.factoryStructure = matr;
 		return zonesToAllocate;
+	}
+
+	public ArrayList<Zone> createZonesToAllocateAscending(Zone[][] factoryStructure) {
+	return null;
 	}
 
 	public String[][] getMatrix() {
@@ -535,7 +539,7 @@ public class Factory {
 	public void setTrainStat(boolean isTrainStat) {
 		this.isTrainStat = isTrainStat;
 	}
-	
+
 	public boolean getTrainStat() {
 		return this.isTrainStat;
 	}

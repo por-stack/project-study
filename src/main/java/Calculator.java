@@ -99,6 +99,11 @@ public class Calculator {
 		System.out.println("**Entered in level-hierarchy-menu**");
 		Information information; // information (boolean applicable, Zone[][] modifiedStructure, double cost)
 		Factory factory = copyFactory(factoryAsParameter);
+
+		// if an emptyZone enters the algorithm
+		if (zone.isEmpty()) {
+			return new Information(true, factory, 0);
+		}
 		// FIRST HIERARCHY BASED ON PERFECT FIT
 
 		// level 0: Edge-case: checkForLargerZone
@@ -626,7 +631,7 @@ public class Calculator {
 
 		// list with all the combinations of neighbours for each empty Zones
 
-		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
+		outer: for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneAlone.name, freeZoneAlone.amountRasterRow1,
@@ -686,7 +691,10 @@ public class Calculator {
 					Information information = allocateInLargerZoneWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
 					information.costs += cost;
-					allocationOptions.add(information);
+					if (information.applicable) {
+						allocationOptions.add(information);
+						break outer;
+					}
 				}
 			}
 		}
@@ -1248,6 +1256,7 @@ public class Calculator {
 
 	private Information allocateInLargerZoneWithNeighbours(Factory factoryAsParameter, EmptyZone freeZoneAlone,
 			ArrayList<Zone> neighboursToTakeIntoConsideration, Zone toAllocate) throws Exception {
+		System.out.println("pass " + toAllocate.name);
 		Factory factory = copyFactory(factoryAsParameter);
 
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
