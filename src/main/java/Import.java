@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Import {
 
-	public static final String path = "C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; // non funziona
+	public static final String path = "C:\\Users\\Utente\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; // non funziona
 
 	private String matrix [][];
 	private Workbook wb;
