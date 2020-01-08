@@ -38,7 +38,7 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-		zonesToAllocate = createZonesToAllocateAscending(this.factoryStructure);
+		zonesToAllocate = createZonesToAllocateAscendent(this.factoryStructure);
 		readEmptyImput();
 		emptyZones = createEmptyZones(this.factoryStructure);
 
@@ -467,7 +467,7 @@ public class Factory {
 		return newList;
 	}
 
-	public ArrayList<Zone> createZonesToAllocateAscending(Zone[][] factoryStructure) {
+	public ArrayList<Zone> createZonesToAllocateAscendent(Zone[][] factoryStructure) {
 		return reverseList(createZonesToAllocate(factoryStructure));
 	}
 
