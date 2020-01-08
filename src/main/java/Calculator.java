@@ -635,7 +635,7 @@ public class Calculator {
 		System.out.println(zone.name + " enters fitWithRest");
 		Factory factory = copyFactory(factoryAsParameter);
 		Information toReturn = checkForLargerZone(zone, factory);
-		System.out.println(zone.name + "found a solution in fitWithRest");
+		System.out.println(zone.name + " found a solution in fitWithRest");
 		return toReturn; 
 	}
 
