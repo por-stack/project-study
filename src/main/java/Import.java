@@ -3,12 +3,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-
 
 public class Import {
-	
-	// MODIFICAREEEEEEEEEEEEEEEEEEEEEE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	public static final String path = "C:\\Users\\aless\\eclipse-workspace\\Porsche\\src\\main\\java\\Java.xlsx"; // non funziona
 
@@ -32,7 +28,7 @@ public class Import {
 	/*
 	 *  Workbook, Sheet, Dataformatter
 	 */
-	public void init() throws IOException, InvalidFormatException{
+	public void init() throws IOException, InvalidFormatException {
 		wb = WorkbookFactory.create(new File(path));
 		sh = wb.getSheetAt(0);
 		dtfrm = new DataFormatter();

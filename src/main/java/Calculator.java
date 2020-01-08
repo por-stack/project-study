@@ -54,7 +54,9 @@ public class Calculator {
 			System.out.println("zonesToBeAllocated.size: " + zonesToBeAllocated.size());
 
 			for (int i = 0; i < zonesToBeAllocated.size(); i++) {
-				System.out.println("zonesToBeAllocated nr: " + i);
+				int toPrint = i + 1;
+				System.out.println(" ");
+				System.out.println("zonesToBeAllocated nr." + toPrint + ": " + zonesToBeAllocated.get(i).name);
 				zonesToBeAllocated.get(i).information = calculate(zonesToBeAllocated.get(i), initial);
 				testOfDimensionsOfEmptyZonesVsZonesToAllocate(zonesToBeAllocated.get(i).information);
 			}
@@ -88,6 +90,8 @@ public class Calculator {
 			// apply the modifications to real factoryStructure. take zone out of
 			// zonesToBeAllocated
 			initial = zonesToBeAllocated.get(j).information.modifiedStructure;
+			System.out.println("");
+			System.out.println("------------------------------------------------------------");
 			demoFactoryShort(initial);
 		}
 
@@ -95,10 +99,10 @@ public class Calculator {
 	}
 
 	public Information calculate(Zone zone, Factory factoryAsParameter) throws Exception {
-		if (zone.isEmpty() ) {
+		if (zone.isEmpty()) {
 			return new Information(true, factoryAsParameter, 0);
 		}
-		System.out.println("**Entered in level-hierarchy-menu**");
+		System.out.println("**" + zone.name + " enteres in first hierarchy");
 		Information information; // information (boolean applicable, Zone[][] modifiedStructure, double cost)
 		Factory factory = copyFactory(factoryAsParameter);
 		// FIRST HIERARCHY BASED ON PERFECT FIT
@@ -107,7 +111,7 @@ public class Calculator {
 		if (zone.equals(initial.getZonesToAllocate().get(0))) {
 			information = checkForLargerZone(zone, factory);
 			if (information.applicable) {
-				System.out.println("solution for " + zone.name + " found in level 0");
+				System.out.println("solution for " + zone.name + " found in level checkForLargerZone");
 				information.costs = -1.0;
 				return information;
 			}
@@ -120,7 +124,7 @@ public class Calculator {
 		// level 2: fitPerfectly
 		information = fitPerfectly(zone, factory);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 2");
+			System.out.println("solution for " + zone.name + " found in level fitPerfectly ");
 			return information;
 		}
 
@@ -131,7 +135,7 @@ public class Calculator {
 		// level 4: fitMoving1Neighbour
 		information = fitMovingNeighbour(zone, factory, 1);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 4");
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbour: 1");
 			return information;
 		}
 
@@ -142,7 +146,7 @@ public class Calculator {
 		// level 6: fitMoving2Neighbour
 		information = fitMovingNeighbour(zone, factory, 2);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 6");
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbour: 2");
 			return information;
 		}
 
@@ -153,7 +157,7 @@ public class Calculator {
 		// level 8: fitMoving3Neighbours
 		information = fitMovingNeighbour(zone, factory, 3);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 8");
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbour: 3");
 			return information;
 		}
 
@@ -164,7 +168,7 @@ public class Calculator {
 		// level 10: fitMoving4Neighbour
 		information = fitMovingNeighbour(zone, factory, 4);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 10");
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbour: 4");
 			return information;
 		}
 
@@ -175,7 +179,7 @@ public class Calculator {
 		// level 12: fitMoving5Neighbours
 		information = fitMovingNeighbour(zone, factory, 5);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 12");
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbour: 5");
 			return information;
 		}
 
@@ -186,11 +190,12 @@ public class Calculator {
 		// level 14: fitMoving6Neighbours
 		information = fitMovingNeighbour(zone, factory, 6);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 14");
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbour: 6");
 			return information;
 		}
 
 		// SECOND HIERARCHY BASED ON FINDING A BIGGER ZONE. "WITH REST".
+		System.out.println("**" + zone.name + " enteres in second hierarchy");
 
 		// level 1: fitWithRestWithList()
 //		information = fitWithRestWithList(); 
@@ -200,7 +205,7 @@ public class Calculator {
 		// level 2: fitWithRest()
 		information = fitWithRest(zone, factory);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 2 (second hierarchy) ");
+			System.out.println("solution for " + zone.name + " found in fitWithRest");
 			return information;
 		}
 
@@ -212,7 +217,7 @@ public class Calculator {
 		// level 3: fitMoving1NeighbourWithRest()
 		information = fitMovingNeighbourWithRest(zone, factory, 1);
 		if (information.applicable) {
-			System.out.println("solution for " + zone.name + " found in level 3 (second hierarchy) ");
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbourWithRest: 1 ");
 			return information;
 		}
 
@@ -222,9 +227,11 @@ public class Calculator {
 //		return information;
 
 		// level 5: fitMoving2eighbourWithRest()
-//		information = fitMoving2eighbourWithRest(); 
-//		if (information.applicable)
-//		return information;
+		information = fitMovingNeighbourWithRest(zone, factory, 2);
+		if (information.applicable) {
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbourWithRest: 2 ");
+			return information;
+		}
 
 		// level 6: fitMoving3NeighbourWithRestWithList()
 //		information = fitMoving3NeighbourWithRestWithList();
@@ -232,9 +239,11 @@ public class Calculator {
 //		return information;
 
 		// level 7: fitMoving3NeighbourWithRest()
-//		information = fitMoving3NeighbourWithRest(); 
-//		if (information.applicable)
-//		return information;
+		information = fitMovingNeighbourWithRest(zone, factory, 3);
+		if (information.applicable) {
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbourWithRest: 3 ");
+			return information;
+		}
 
 		// level 8: fitMoving4NeighbourWithRestWithList()
 //		information = fitMoving4NeighbourWithRestWithList();
@@ -242,9 +251,11 @@ public class Calculator {
 //		return information;
 
 		// level 9: fitMoving4NeighbourWithRest()
-//		information = fitMoving4NeighbourWithRest(); 
-//		if (information.applicable)
-//		return information;
+		information = fitMovingNeighbourWithRest(zone, factory, 4);
+		if (information.applicable) {
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbourWithRest: 4 ");
+			return information;
+		}
 
 		// level 10: fitMoving5NeighbourWithRestWithList()
 //		information = fitMoving5NeighbourWithRestWithList();
@@ -252,9 +263,11 @@ public class Calculator {
 //		return information;
 
 		// level 11: fitMoving5NeighbourWithRest
-//		information = fitMoving5NeighbourWithRest(); 
-//		if (information.applicable)
-//		return information;
+		information = fitMovingNeighbourWithRest(zone, factory, 5);
+		if (information.applicable) {
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbourWithRest: 5 ");
+			return information;
+		}
 
 		// level 12: fitMoving6NeighbourWithRestWithList()
 //		information = fitMoving6NeighbourWithRestWithList();
@@ -262,15 +275,11 @@ public class Calculator {
 //		return information;
 
 		// level 13: fitMoving6NeighbourWithRest()
-//		information = fitMoving6NeighbourWithRest(); 
-//		if (information.applicable)
-//		return information;
-
-		// THIRD HIRARHY BASED ON FINDING ANY FEASIBLE SOLUTION; SPLLITTING ZONES IN
-		// HALF IF NEEDED
-
-		// level 1:
-		// ...
+		information = fitMovingNeighbourWithRest(zone, factory, 6);
+		if (information.applicable) {
+			System.out.println("solution for " + zone.name + " found in level fitMovingNeighbourWithRest: 6");
+			return information;
+		}
 
 		System.out.println("no solution found");
 		return new Information(true, factory, 0);
@@ -285,7 +294,7 @@ public class Calculator {
 		Factory factory = copyFactory(factoryAsParameter);
 
 		Zone toAllocate = zone;
-		int counter = 1; 
+		int counter = 1;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			Zone freeZoneTemp = factory.getEmptyZones().get(j);
 			EmptyZone freeZone = new EmptyZone(freeZoneTemp.name, freeZoneTemp.amountRasterRow1,
@@ -296,8 +305,9 @@ public class Calculator {
 			freeZone.setLogisticEquipment(freeZoneTemp.getLogisticEquipment());
 			freeZone.calculateAmounts();
 			if (toAllocate.totalNumberRaster < freeZone.totalNumberRaster) {
-				System.out.println(zone.name + " in level checkForLargerZone is looking at freeZone " 
-						+ freeZone.name + ". (option nr. " + counter + ")"); counter++; 
+				System.out.println(zone.name + " in level checkForLargerZone is looking at freeZone " + freeZone.name
+						+ ". (option nr. " + counter + ")");
+				counter++;
 				int cost = calculateCost(freeZone, toAllocate);
 				Information information = allocateInLargerZone(factory, freeZone, toAllocate);
 				information.costs += cost;
@@ -436,7 +446,7 @@ public class Calculator {
 		// save information (applicable, modifiedstructure, cost) for every feasible
 		// solution
 		Zone toAllocate = zone;
-		int counter = 1; 
+		int counter = 1;
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			// copy the empty zone j into the variable freeZone
 			Zone freeZoneTemp = factory.getEmptyZones().get(j);
@@ -450,8 +460,9 @@ public class Calculator {
 
 			// check if the zone to allocate fits perfectly
 			if (toAllocate.totalNumberRaster == freeZone.totalNumberRaster) {
-				System.out.println(zone.name + " in level fitPerfectly is looking at freeZone "
-						+ freeZone.name + ". (option nr. " + counter + ")"); counter++; 
+				System.out.println(zone.name + " in level fitPerfectly is looking at freeZone " + freeZone.name
+						+ ". (option nr. " + counter + ")");
+				counter++;
 				int cost = calculateCost(freeZone, toAllocate);
 				Information information = allocatePerfectFit(factory, freeZone, toAllocate);
 				information.costs += cost;
@@ -508,7 +519,7 @@ public class Calculator {
 		toAllocate.setEmpty(zone.isEmpty());
 
 		// list with all the combinations of neighbours for each empty Zones
-		int counter = 1; //just needed for the system.out.println
+		int counter = 1; // just needed for the system.out.println
 		for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
 			// copy the empty zone into the variable freeZone
@@ -536,7 +547,7 @@ public class Calculator {
 			// checked. Here the recursion will be used.
 
 			for (int i = numberNeighbour; i >= 0; i--) {
-				int sysoutI = numberNeighbour - i +1; 
+				int sysoutI = numberNeighbour - i + 1;
 				neighboursToTakeIntoConsideration = new ArrayList<Zone>();
 				int right = i;
 				int left = numberNeighbour - right;
@@ -588,13 +599,15 @@ public class Calculator {
 				// space
 				if (toAllocate.totalNumberRaster == totalNumberRasterIncludingNeighbours) {
 					int output = i + 1;
-					System.out.println(zone.name + "in level fitMovingNeighbour " + numberNeighbours
-							+ "is looking at option nr." + counter + " at position " + j + "."  +  output);
+					System.out.println(
+							zone.name + "in level fitMovingNeighbour " + numberNeighbours + " is looking at option nr."
+									+ counter + " (freeZone nr. " + j + ", combination nr. " + output + ")");
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
 					Factory toReturn = copyFactory(factoryAsParameter);
 					toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set the
 					// emptyZone
 					// on null;
+					System.out.print(zone.name + " --> ");
 					Information information = allocatePerfectFitWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
 					information.costs += cost;
@@ -636,7 +649,7 @@ public class Calculator {
 		Factory factory = copyFactory(factoryAsParameter);
 		Information toReturn = checkForLargerZone(zone, factory);
 		System.out.println(zone.name + " found a solution in fitWithRest");
-		return toReturn; 
+		return toReturn;
 	}
 
 	private Information fitMovingNeighbourWithRest(Zone zone, Factory factoryAsParameter, int numberNeighbours)
@@ -654,7 +667,7 @@ public class Calculator {
 		Zone toAllocate = zone;
 
 		// list with all the combinations of neighbours for each empty Zones
-		int counter = 1; //just needed for the system.out.println
+		int counter = 1; // just needed for the system.out.println
 		outer: for (int j = 0; j < factory.getEmptyZones().size(); j++) {
 
 			Zone freeZoneAlone = factory.getEmptyZones().get(j);
@@ -708,18 +721,20 @@ public class Calculator {
 				}
 				if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
 					int output = i + 1;
-					System.out.println(zone.name + "in level fitMovingNeighbour " + numberNeighbours
-							+ "is looking at option nr." + counter + " at position " + j + "."  +  output);
+					System.out.println(
+							zone.name + "in level fitMovingNeighbour " + numberNeighbours + " is looking at option nr."
+									+ counter + " (freeZone nr. " + j + ", combination nr." + output);
 					int cost = calculateCost((EmptyZone) freeZoneAlone, neighboursToTakeIntoConsideration, toAllocate);
 					Factory toReturn = copyFactory(factory);
 					toReturn.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn] = null; // set the
 																											// emptyZone
 																											// on null;
+					System.out.print(zone.name + " --> ");
 					Information information = allocateInLargerZoneWithNeighbours(toReturn, (EmptyZone) freeZoneAlone,
 							neighboursToTakeIntoConsideration, toAllocate);
 					information.costs += cost;
 					allocationOptions.add(information);
-					break outer; 
+					break outer;
 				}
 			}
 		}
@@ -1234,6 +1249,7 @@ public class Calculator {
 			for (int j2 = 0; j2 < length; j2++) {
 				int inAddition = j * length;
 				int turn = (int) combinations.get(j2 + inAddition) - 1;
+				System.out.println(neighboursToTakeIntoConsideration.get(turn).name);
 				Information information = calculate(neighboursToTakeIntoConsideration.get(turn), modifiedStructurePot);
 				if (information.applicable == false) {
 					alleTrue = false;
@@ -1426,6 +1442,7 @@ public class Calculator {
 			for (int j2 = 0; j2 < length; j2++) {
 				int inAddition = j * length;
 				int turn = (int) combinations.get(j2 + inAddition) - 1;
+				System.out.println(neighboursToTakeIntoConsideration.get(turn).name);
 				Information information = calculate(neighboursToTakeIntoConsideration.get(turn), modifiedStructurePot);
 				if (information.applicable == false) {
 					alleTrue = false;
@@ -1683,8 +1700,8 @@ public class Calculator {
 			lengthToAllocate += information.modifiedStructure.getZonesToAllocate().get(j).totalNumberRaster;
 		}
 
-		System.out.println("	Dimension emptyZones and ZoneToAllocate is equal in returned factory: "
-				+ (boolean) (lengthEmpty == lengthToAllocate));
+		System.out.println("CHECK(Dimension emptyZones and ZoneToAllocate is equal in returned factory: "
+				+ (boolean) (lengthEmpty == lengthToAllocate) + ")");
 	}
 
 	public static void demoFactory(Factory initial) {
@@ -1703,7 +1720,7 @@ public class Calculator {
 	}
 
 	public static void demoFactoryShort(Factory initial) {
-		System.out.println("\nfactoryStructure:");
+		System.out.println("factoryStructure:");
 		Zone[][] factoryStructure = initial.getFactoryStructure();
 		for (int i = 0; i < factoryStructure.length; i++) {
 			if (i != 0)
