@@ -698,30 +698,54 @@ public class Calculator {
 				int right = i;
 				int left = numberNeighbour - right;
 
+				while (right > 0) {
+//					int toDebug = factory.getFactoryStructure()[0].length; 
+					if (locationInFactoryColumn + right < factory.getFactoryStructure()[0].length) {
+						Zone neighbourOnTheRight = factory
+								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn + right];
+						if (neighbourOnTheRight != null)
+							neighboursToTakeIntoConsideration
+									.add(factory.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn
+											+ right]);
+					}
+					right--;
+				}
+
+				// extra list for left neighbours. the final thought here is that i want the
+				// left outer neighbour to be last in the list:
+				// neighboursToTakeIntoConsideration. so this list for the left part will be
+				// attached to the normal list, but in inverted sequence
+				// the reason for this decision relies in the allocatePerfectFitWithNeighbour
+				// method.
+				ArrayList<Zone> neighboursToTakeIntoConsiderationOnLeftSide = new ArrayList<Zone>();
 				while (left > 0) {
 					if (locationInFactoryColumn - left >= 0) {
 						Zone neighbourOnTheLeft = factory
 								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn - left];
 						if (neighbourOnTheLeft != null)
-							neighboursToTakeIntoConsideration.add(neighbourOnTheLeft);
+							neighboursToTakeIntoConsiderationOnLeftSide.add(neighbourOnTheLeft);
 					}
 					left--;
 				}
-				while (right > 0) {
-					if (locationInFactoryColumn + right < factory.getFactoryStructure()[0].length) {
-						Zone neighbourOnTheRight = factory
-								.getFactoryStructure()[locationInFactoryRow][locationInFactoryColumn + right];
-						if (neighbourOnTheRight != null)
-							neighboursToTakeIntoConsideration.add(neighbourOnTheRight);
-					}
-					right--;
+
+				// attach the list of the left neighbour the the right neighbours but in
+				// opposite sequence
+				for (int k = neighboursToTakeIntoConsiderationOnLeftSide.size() - 1; k >= 0; k--) {
+					neighboursToTakeIntoConsideration.add(neighboursToTakeIntoConsiderationOnLeftSide.get(k));
 				}
 
+				// calculate the total size of the freeZoneAlone and the neighbours taken into
+				// consideration in this cycle
 				int totalNumberRasterIncludingNeighbours = freeZoneAlone.totalNumberRaster;
 				for (int k = 0; k < neighboursToTakeIntoConsideration.size(); k++) {
 					totalNumberRasterIncludingNeighbours += neighboursToTakeIntoConsideration.get(k).totalNumberRaster;
 				}
 				if (toAllocate.totalNumberRaster < totalNumberRasterIncludingNeighbours) {
+
+					if (toAllocate.locationInFactory[1] == freeZoneAlone.locationInFactory[1]) {
+						continue outer;
+					}
+					
 					int output = i + 1;
 					System.out.println(
 							zone.name + "in level fitMovingNeighbour " + numberNeighbours + " is looking at option nr."
@@ -1234,6 +1258,8 @@ public class Calculator {
 
 		combinations.clear();
 
+//		System.out.println("\n\n" + array.length + "\n\n");
+		
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -1426,6 +1452,7 @@ public class Calculator {
 		}
 
 		combinations.clear();
+		
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -1786,7 +1813,6 @@ public class Calculator {
 		System.out.println("------------------------------------------------");
 		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
 		System.out.println("------------------------------------------------");
-
 
 		// demoFactory does not work for a factoryStructure with a higher width
 //		demoFactory(newFactory);

@@ -38,7 +38,7 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-		zonesToAllocate = createZonesToAllocateAscending(this.factoryStructure);
+		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
 		readEmptyImput();
 		emptyZones = createEmptyZones(this.factoryStructure);
 
@@ -456,6 +456,7 @@ public class Factory {
 
 	/**
 	 * returns the given list in reverse order
+	 * 
 	 * @param list
 	 * @return
 	 */
@@ -465,6 +466,14 @@ public class Factory {
 			newList.add(list.get(i));
 		}
 		return newList;
+	}
+
+	public ArrayList<Zone> changeLastTwoZonesInList(ArrayList<Zone> list) {
+
+		Zone temp = list.get(list.size() - 1);
+		list.set(list.size() - 1, list.get(list.size() - 2));
+		list.set(list.size() - 2, temp);
+		return list;
 	}
 
 	public ArrayList<Zone> createZonesToAllocateAscending(Zone[][] factoryStructure) {
