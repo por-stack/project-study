@@ -38,7 +38,7 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
+		zonesToAllocate = createZonesToAllocateAscending(this.factoryStructure);
 		readEmptyImput();
 		emptyZones = createEmptyZones(this.factoryStructure);
 
