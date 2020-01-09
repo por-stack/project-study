@@ -1,9 +1,4 @@
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.util.SystemOutLogger;
 
 public class Factory {
 
@@ -38,7 +33,7 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
-		zonesToAllocate = createZonesToAllocateAscending(this.factoryStructure);
+		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
 		readEmptyImput();
 		emptyZones = createEmptyZones(this.factoryStructure);
 
