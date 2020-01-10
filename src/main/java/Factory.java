@@ -12,15 +12,10 @@ public class Factory {
 	private Zone[][] factoryStructure; // for createFactoryStructure
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
-
-//	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
-//			{ 0, 0, 0, 0, 0, 0, 0 } };
-
-	// new dataset
-	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0 } };
+	
+	int[][] empty = { { 0, 0, 0, 0, 1, 0, 0 }, { 0, 1, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 },
+			{ 0, 0, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
 
 	public Factory() throws Exception {
 		this.mport = new Import();
@@ -40,8 +35,8 @@ public class Factory {
 		// put raster into zones
 		rasterIntoZones();
 
-		// RIMETTERE ATTENZIONE!!
-		zonesToAllocate = createZonesToAllocateAscending(this.factoryStructure);
+		//////////////////////
+		zonesToAllocate = createZonesToAllocate(this.factoryStructure, 4);
 		readEmptyImput();
 		emptyZones = createEmptyZones(this.factoryStructure);
 
@@ -460,11 +455,11 @@ public class Factory {
 	/*
 	 * to implement
 	 */
-	// FOR NEW DATASET; HERE WE USE LINE 3 AS ZONETOALLOCATE
-	public ArrayList<Zone> createZonesToAllocate(Zone[][] factoryStructure) {
+	// FOR NEW DATASET; HERE WE USE LINE "rowToUse" AS ZONETOALLOCATE
+	public ArrayList<Zone> createZonesToAllocate(Zone[][] factoryStructure, int row) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
 
-		int rowToUse = 3;
+		int rowToUse = row;
 		Zone[] array = factoryStructure[rowToUse];
 
 		ArrayList<Zone> temp = new ArrayList<Zone>();
@@ -491,7 +486,7 @@ public class Factory {
 		Zone[][] matr = new Zone[factoryStructure.length - 1][factoryStructure[0].length];
 
 		for (int i = 0, k = 0; i < factoryStructure.length; i++, k++) {
-			if (i == 3) {
+			if (i == rowToUse) {
 				k--;
 				continue;
 			}
@@ -542,8 +537,8 @@ public class Factory {
 		return list;
 	}
 
-	public ArrayList<Zone> createZonesToAllocateAscending(Zone[][] factoryStructure) {
-		return reverseList(createZonesToAllocate(factoryStructure));
+	public ArrayList<Zone> createZonesToAllocateAscending(Zone[][] factoryStructure, int row) {
+		return reverseList(createZonesToAllocate(factoryStructure, row));
 	}
 
 	public String[][] getMatrix() {

@@ -277,7 +277,7 @@ public class Calculator {
 
 					// allocazione della ZoneToBeAllocated
 					factoryStructure[iPos][jPos] = emptyZoneToReturn;
-					
+
 					// PENALTY FOR SPLITTING A ZONE
 					cost += 50;
 
@@ -1859,7 +1859,7 @@ public class Calculator {
 	 * 
 	 * @param initial
 	 */
-	public static void totalNumberLogisticEquipment(Factory initial) {
+	public static String totalNumberLogisticEquipment(Factory initial) {
 		int totalNumber = 0;
 		for (int i = 0; i < initial.getFactoryStructure().length; i++) {
 			for (int j = 0; j < initial.getFactoryStructure()[0].length; j++) {
@@ -1873,7 +1873,8 @@ public class Calculator {
 
 			}
 		}
-		System.out.println("Upper bound: " + totalNumber + " logistic equipment movements");
+		String string = "Upper bound: " + totalNumber + " logistic equipment movements";
+		return string;
 	}
 
 	/**
@@ -1899,8 +1900,8 @@ public class Calculator {
 		final long start = System.currentTimeMillis();
 
 		initial = new Factory();
-		totalNumberLogisticEquipment(initial);
-//		demoFactory(initial);
+		String upperBound = totalNumberLogisticEquipment(initial);
+		demoFactory(initial);
 //		System.out.println("\n\n\n\n");
 //		demoZonesToAllocate(initial);
 //		System.out.println("\n\n\n\n");
@@ -1919,7 +1920,7 @@ public class Calculator {
 		System.out.println("------------------------------------------------");
 		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
 		System.out.println("Total costs: " + cost + " logistic equipment movements");
-		totalNumberLogisticEquipment(initial);
+		System.out.println(upperBound);
 		System.out.println("------------------------------------------------");
 
 	}
