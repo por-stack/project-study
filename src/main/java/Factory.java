@@ -13,7 +13,13 @@ public class Factory {
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
+//	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 } };
+
+	// new dataset
 	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0 } };
 
 	public Factory() throws Exception {
@@ -410,14 +416,56 @@ public class Factory {
 		}
 	}
 
+//	/*
+//	 * to implement
+//	 */
+//	public ArrayList<Zone> createZonesToAllocate(Zone[][] factoryStructure) {
+//		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
+//
+//		int lastRow = factoryStructure.length;
+//		Zone[] array = factoryStructure[lastRow - 1];
+//
+//		ArrayList<Zone> temp = new ArrayList<Zone>();
+//		for (int i = 0; i < array.length; i++) {
+//			if (array[i] != null) {
+//				temp.add(array[i]);
+//			}
+//		}
+//
+//		int numberCycles = temp.size();
+//		for (int y = 0; y < numberCycles; y++) {
+//			int size = temp.get(0).totalNumberRaster;
+//			int location = 0;
+//			for (int i = 1; i < temp.size(); i++) {
+//				if (temp.get(i).totalNumberRaster > size) {
+//					size = temp.get(i).totalNumberRaster;
+//					location = i;
+//				}
+//			}
+//			zonesToAllocate.add(temp.get(location));
+//			temp.remove(location);
+//		}
+//
+//		Zone[][] matr = new Zone[factoryStructure.length - 1][factoryStructure[0].length];
+//
+//		for (int i = 0; i < factoryStructure.length - 1; i++) {
+//			for (int j = 0; j < factoryStructure[0].length; j++) {
+//				matr[i][j] = factoryStructure[i][j];
+//			}
+//		}
+//		this.factoryStructure = matr;
+//		return zonesToAllocate;
+//	}
+
 	/*
 	 * to implement
 	 */
+	// FOR NEW DATASET; HERE WE USE LINE 3 AS ZONETOALLOCATE
 	public ArrayList<Zone> createZonesToAllocate(Zone[][] factoryStructure) {
 		ArrayList<Zone> zonesToAllocate = new ArrayList<Zone>();
 
-		int lastRow = factoryStructure.length;
-		Zone[] array = factoryStructure[lastRow - 1];
+		int rowToUse = 3;
+		Zone[] array = factoryStructure[rowToUse];
 
 		ArrayList<Zone> temp = new ArrayList<Zone>();
 		for (int i = 0; i < array.length; i++) {
@@ -440,11 +488,15 @@ public class Factory {
 			temp.remove(location);
 		}
 
-		Zone[][] matr = new Zone[factoryStructure.length][factoryStructure[0].length];
+		Zone[][] matr = new Zone[factoryStructure.length - 1][factoryStructure[0].length];
 
-		for (int i = 0; i < factoryStructure.length - 1; i++) {
+		for (int i = 0, k = 0; i < factoryStructure.length; i++, k++) {
+			if (i == 3) {
+				k--;
+				continue;
+			}
 			for (int j = 0; j < factoryStructure[0].length; j++) {
-				matr[i][j] = factoryStructure[i][j];
+				matr[k][j] = factoryStructure[i][j];
 			}
 		}
 		this.factoryStructure = matr;
@@ -460,7 +512,7 @@ public class Factory {
 				if (structure[i][j] != null) {
 					for (int z = 0; z < structure[i][j].getLogisticEquipment().size(); z++) {
 						if (structure[i][j].getLogisticEquipment().get(z).anzahl > 0)
-							movements ++;
+							movements++;
 					}
 				}
 			}

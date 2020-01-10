@@ -1799,7 +1799,7 @@ public class Calculator {
 		}
 		System.out.println("\n\nzones to allocate:");
 		if (initial.getZonesToAllocate().size() == 0) {
-			System.out.println("There are no further zoneToAllocate! ByeBye");
+			System.out.println("There are no further zoneToAllocate");
 		} else {
 			for (int i = 0; i < initial.getZonesToAllocate().size(); i++) {
 				String string = "";
@@ -1814,7 +1814,46 @@ public class Calculator {
 	}
 
 	/**
-	 * calculates the upper bound of costs 
+	 * 
+	 * @param initial
+	 */
+	public static void demoFactoryShortNoNull(Factory initial) {
+		System.out.println("\n\n\nFinal factoryStructure:");
+		Zone[][] factoryStructure = initial.getFactoryStructure();
+		for (int i = 0; i < factoryStructure.length; i++) {
+			if (i != 0)
+				System.out.print("\n");
+			for (int j = 0; j < factoryStructure[0].length; j++) {
+				if (factoryStructure[i][j] == null) {
+				} else {
+					String string = "";
+					if (factoryStructure[i][j].isEmpty())
+						string = "t";
+					else
+						string = "f";
+					System.out.print(factoryStructure[i][j].name + "(" + factoryStructure[i][j].totalNumberRaster + ", "
+							+ string + ") ");
+				}
+			}
+		}
+		System.out.println("\n\nzones to allocate:");
+		if (initial.getZonesToAllocate().size() == 0) {
+			System.out.println("There are no further zoneToAllocate!");
+		} else {
+			for (int i = 0; i < initial.getZonesToAllocate().size(); i++) {
+				String string = "";
+				if (initial.getZonesToAllocate().get(i).isEmpty())
+					string = "t";
+				else
+					string = "f";
+				System.out.print(initial.getZonesToAllocate().get(i).name + "("
+						+ initial.getZonesToAllocate().get(i).totalNumberRaster + ", " + string + ")\n");
+			}
+		}
+	}
+
+	/**
+	 * calculates the upper bound of costs
 	 * 
 	 * @param initial
 	 */
@@ -1832,7 +1871,7 @@ public class Calculator {
 
 			}
 		}
-		System.out.println("Upper bound: " + totalNumber);
+		System.out.println("Upper bound: " + totalNumber + " logistic equipment movements");
 	}
 
 	/**
@@ -1847,6 +1886,9 @@ public class Calculator {
 
 	public static void main(String[] args) throws Exception {
 		// Initialize objects and start algorithm
+
+//		initial = new Factory();
+//		demoFactory(initial);
 
 //		Import old = new Import(); 
 //		old.demo();
@@ -1865,6 +1907,7 @@ public class Calculator {
 		Calculator calculator = new Calculator();
 		@SuppressWarnings("unused")
 		Factory newFactory = calculator.performAlgorithm();
+		demoFactoryShortNoNull(newFactory);
 
 		// calculating execution time
 		// use this breakPoint to debug and see the result: newFactory
@@ -1873,19 +1916,9 @@ public class Calculator {
 		System.out.println("END");
 		System.out.println("------------------------------------------------");
 		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
-		System.out.println("Total costs: " + cost + " logistics equipment movements");
+		System.out.println("Total costs: " + cost + " logistic equipment movements");
 		totalNumberLogisticEquipment(initial);
 		System.out.println("------------------------------------------------");
-
-		// demoFactory does not work for a factoryStructure with a higher width
-//		demoFactory(newFactory);
-//		System.out.println("\n\n\n\n\n\n\n\n");
-//		demoZonesToAllocate(newFactory);
-//		System.out.println("\n\n\n\n\n\n\n\n");
-
-//		Factory newFactory = initial;
-//		newFactory.setFactoryStructure(newFactoryStructure);
-		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 
 	}
 }
