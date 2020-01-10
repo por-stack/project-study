@@ -745,7 +745,7 @@ public class Calculator {
 					if (toAllocate.locationInFactory[1] == freeZoneAlone.locationInFactory[1]) {
 						continue outer;
 					}
-					
+
 					int output = i + 1;
 					System.out.println(
 							zone.name + "in level fitMovingNeighbour " + numberNeighbours + " is looking at option nr."
@@ -1259,7 +1259,7 @@ public class Calculator {
 		combinations.clear();
 
 //		System.out.println("\n\n" + array.length + "\n\n");
-		
+
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -1452,7 +1452,7 @@ public class Calculator {
 		}
 
 		combinations.clear();
-		
+
 		combinations(array, length, length);
 
 		int numberPermutations = combinations.size() / length;
@@ -1789,6 +1789,9 @@ public class Calculator {
 	public static void main(String[] args) throws Exception {
 		// Initialize objects and start algorithm
 
+//		initial = new Factory();
+//		demoFactory(initial);
+
 //		Import old = new Import(); 
 //		old.demo();
 
@@ -1796,6 +1799,7 @@ public class Calculator {
 		final long start = System.currentTimeMillis();
 
 		initial = new Factory();
+		initial.totalNumberLogisticEquipment(initial);
 //		demoFactory(initial);
 //		System.out.println("\n\n\n\n");
 //		demoZonesToAllocate(initial);
@@ -1814,6 +1818,7 @@ public class Calculator {
 		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
 		System.out.println("------------------------------------------------");
 
+		
 		// demoFactory does not work for a factoryStructure with a higher width
 //		demoFactory(newFactory);
 //		System.out.println("\n\n\n\n\n\n\n\n");

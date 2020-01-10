@@ -38,6 +38,8 @@ public class Factory {
 		createFactoryStructure();
 		// put raster into zones
 		rasterIntoZones();
+
+		// RIMETTERE ATTENZIONE!!
 		zonesToAllocate = createZonesToAllocate(this.factoryStructure);
 		readEmptyImput();
 		emptyZones = createEmptyZones(this.factoryStructure);
@@ -443,7 +445,7 @@ public class Factory {
 			temp.remove(location);
 		}
 
-		Zone[][] matr = new Zone[3][7];
+		Zone[][] matr = new Zone[factoryStructure.length][factoryStructure[0].length];
 
 		for (int i = 0; i < factoryStructure.length - 1; i++) {
 			for (int j = 0; j < factoryStructure[0].length; j++) {
@@ -452,6 +454,23 @@ public class Factory {
 		}
 		this.factoryStructure = matr;
 		return zonesToAllocate;
+	}
+
+	public void totalNumberLogisticEquipment(Factory initial) {
+		Zone[][] structure = initial.getFactoryStructure();
+		int movements = 0;
+
+		for (int i = 0; i < structure.length; i++) {
+			for (int j = 0; j < structure[0].length; j++) {
+				if (structure[i][j] != null) {
+					for (int z = 0; z < structure[i][j].getLogisticEquipment().size(); z++) {
+						if (structure[i][j].getLogisticEquipment().get(z).anzahl > 0)
+							movements ++;
+					}
+				}
+			}
+		}
+		System.out.println(movements);
 	}
 
 	/**
