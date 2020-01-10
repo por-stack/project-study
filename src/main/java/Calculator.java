@@ -4,7 +4,6 @@ import java.util.Arrays;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 public class Calculator {
-
 	/**
 	 * global variables
 	 */
@@ -278,6 +277,9 @@ public class Calculator {
 
 					// allocazione della ZoneToBeAllocated
 					factoryStructure[iPos][jPos] = emptyZoneToReturn;
+					
+					// PENALTY FOR SPLITTING A ZONE
+					cost += 50;
 
 					initial.setFactoryStructure(factoryStructure);
 					initial.setEmptyZones(initial.createEmptyZones(initial.getFactoryStructure()));
