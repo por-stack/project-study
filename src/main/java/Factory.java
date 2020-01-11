@@ -12,10 +12,14 @@ public class Factory {
 	private Zone[][] factoryStructure; // for createFactoryStructure
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
-	
-	int[][] empty = { { 0, 0, 0, 0, 1, 0, 0 }, { 0, 1, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 },
-			{ 0, 0, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+
+	int[][] empty = {{ 0, 1, 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 } };
+
+//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
 
 	public Factory() throws Exception {
 		this.mport = new Import();
@@ -36,7 +40,7 @@ public class Factory {
 		rasterIntoZones();
 
 		//////////////////////
-		zonesToAllocate = createZonesToAllocate(this.factoryStructure, 4);
+		zonesToAllocate = createZonesToAllocate(this.factoryStructure, 0);
 		readEmptyImput();
 		emptyZones = createEmptyZones(this.factoryStructure);
 
