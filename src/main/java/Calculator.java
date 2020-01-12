@@ -4,7 +4,6 @@ import java.util.Arrays;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 public class Calculator {
-
 	/**
 	 * global variables
 	 */
@@ -114,6 +113,7 @@ public class Calculator {
 
 			for (int i = 0; i < listToAllocate.size(); i++) {
 				for (int j = 0; j < listEmptyZones.size(); j++) {
+					boolean stratumCorneum = false;
 					Zone toAllocate = listToAllocate.get(i);
 
 					EmptyZone emptyZone = listEmptyZones.get(j);
@@ -126,6 +126,9 @@ public class Calculator {
 
 					// if the size is the same, allocate
 					// todo
+					if (toAllocate.totalNumberRaster < emptyZone.totalNumberRaster) {
+						stratumCorneum = true;
+					}
 
 					// calculate total dimension of train station for emptyZone and zoneToAllocate
 					int dimensionTrainStationEmptyZone = emptyZone.getDimensionTrainStationRow1()
@@ -276,23 +279,45 @@ public class Calculator {
 					// directly copied, as never changed
 					emptyZoneToReturn.setLogisticEquipment(emptyZone.getLogisticEquipment());
 
-					// allocazione della ZoneToBeAllocated
-					factoryStructure[iPos][jPos] = emptyZoneToReturn;
+					if (stratumCorneum) {
+						String name1 = emptyZoneToReturn.name;
+						EmptyZone vir = new EmptyZone(name1, emptyZoneToReturn.amountRasterRow1,
+								emptyZoneToReturn.amountRasterRow2, iPos, jPos);
+						vir.dimensionTrainStationRow1 = emptyZoneToReturn.dimensionTrainStationRow1;
+						vir.dimensionTrainStationRow2 = emptyZoneToReturn.dimensionTrainStationRow2;
+						vir.calculateAmounts();
+						vir.setEmpty(toAllocate.isEmpty());
+						// directly copied, as never changed
+						vir.setLogisticEquipment(emptyZoneToReturn.getLogisticEquipment());
 
-					initial.setFactoryStructure(factoryStructure);
-					initial.setEmptyZones(initial.createEmptyZones(initial.getFactoryStructure()));
+						Information information = allocateInLargerZone(factory, vir, newToAllocate);
+						factoryStructure = information.modifiedStructure.getFactoryStructure();
+						initial.setFactoryStructure(factoryStructure);
+						initial.setEmptyZones(initial.createEmptyZones((initial.getFactoryStructure())));
 
-					for (int i1 = 0; i1 < factory.getZonesToAllocate().size(); i1++) {
-						if (factory.getZonesToAllocate().get(i1).name.equals(toAllocate.name)) {
-							factory.getZonesToAllocate().set(i1, newToAllocate);
+					} else {
+
+						// allocazione della ZoneToBeAllocated
+						factoryStructure[iPos][jPos] = emptyZoneToReturn;
+
+						initial.setFactoryStructure(factoryStructure);
+						initial.setEmptyZones(initial.createEmptyZones(initial.getFactoryStructure()));
+
+						for (int i1 = 0; i1 < factory.getZonesToAllocate().size(); i1++) {
+							if (factory.getZonesToAllocate().get(i1).name.equals(toAllocate.name)) {
+								factory.getZonesToAllocate().set(i1, newToAllocate);
+							}
 						}
 					}
+
 				}
 			}
 			initial.getZonesToAllocate().remove(0);
+			cost += 150;
 		}
 
 		// BAUSTELLE
+		// PENALTY FOR SPLITTING A ZONE
 		System.out.println("");
 		System.out.println();
 		demoFactoryShort(initial);
@@ -1356,6 +1381,7 @@ public class Calculator {
 					toReturn.getZonesToAllocate().remove(i);
 				}
 			}
+			//
 			return new Information(true, toReturn, costs);
 		} else {
 			Object[] allocationOptionsArray = allocationOptions.toArray();
@@ -1374,6 +1400,7 @@ public class Calculator {
 					toReturn.getZonesToAllocate().remove(i);
 				}
 			}
+			//
 			return new Information(true, toReturn, allocationOptions.get(counter).costs);
 		}
 	}
@@ -1391,6 +1418,9 @@ public class Calculator {
 	private Information allocateInLargerZoneWithNeighbours(Factory factoryAsParameter, EmptyZone freeZoneAlone,
 			ArrayList<Zone> neighboursToTakeIntoConsideration, Zone toAllocate) throws Exception {
 		Factory factory = copyFactory(factoryAsParameter);
+
+		int locationRow = neighboursToTakeIntoConsideration.get(0).locationInFactory[0];
+		int locationColumn = neighboursToTakeIntoConsideration.get(0).locationInFactory[1];
 
 		ArrayList<Information> allocationOptions = new ArrayList<Information>();
 		Zone[][] factoryStructure = factory.getFactoryStructure();
@@ -1492,10 +1522,20 @@ public class Calculator {
 		} else if (allocationOptions.size() == 1) {
 			Factory toReturn = allocationOptions.get(0).modifiedStructure;
 			double costs = allocationOptions.get(0).costs;
-			toReturn.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure()));
-			for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
-				if (factory.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
-					factory.getZonesToAllocate().remove(i);
+			toReturn.setEmptyZones(toReturn.createEmptyZones(toReturn.getFactoryStructure()));
+			for (int i = 0; i < toReturn.getZonesToAllocate().size(); i++) {
+				if (toReturn.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
+					toReturn.getZonesToAllocate().remove(i);
+				}
+			}
+
+			//
+			if (toReturn.getFactoryStructure()[locationRow][locationColumn] == null) {
+				for (int i = locationColumn; i >= 0; i--) {
+					if (locationColumn - 1 >= 0) {
+						toReturn.getFactoryStructure()[locationRow][locationColumn] = toReturn
+								.getFactoryStructure()[locationRow][locationColumn - 1];
+					}
 				}
 			}
 			return new Information(true, toReturn, costs);
@@ -1510,10 +1550,19 @@ public class Calculator {
 				}
 			}
 			Factory toReturn = allocationOptions.get(counter).modifiedStructure;
-			toReturn.setEmptyZones(factory.createEmptyZones(factory.getFactoryStructure()));
-			for (int i = 0; i < factory.getZonesToAllocate().size(); i++) {
-				if (factory.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
-					factory.getZonesToAllocate().remove(i);
+			toReturn.setEmptyZones(toReturn.createEmptyZones(toReturn.getFactoryStructure()));
+			for (int i = 0; i < toReturn.getZonesToAllocate().size(); i++) {
+				if (toReturn.getZonesToAllocate().get(i).name.equals(toAllocate.name)) {
+					toReturn.getZonesToAllocate().remove(i);
+				}
+			}
+			//
+			if (toReturn.getFactoryStructure()[locationRow][locationColumn] == null) {
+				for (int i = locationColumn; i >= 0; i--) {
+					if (locationColumn - 1 >= 0) {
+						toReturn.getFactoryStructure()[locationRow][locationColumn] = toReturn
+								.getFactoryStructure()[locationRow][locationColumn - 1];
+					}
 				}
 			}
 			return new Information(true, toReturn, allocationOptions.get(counter).costs);
@@ -1799,7 +1848,7 @@ public class Calculator {
 		}
 		System.out.println("\n\nzones to allocate:");
 		if (initial.getZonesToAllocate().size() == 0) {
-			System.out.println("There are no further zoneToAllocate! ByeBye");
+			System.out.println("There are no further zoneToAllocate");
 		} else {
 			for (int i = 0; i < initial.getZonesToAllocate().size(); i++) {
 				String string = "";
@@ -1814,11 +1863,50 @@ public class Calculator {
 	}
 
 	/**
-	 * calculates the upper bound of costs 
 	 * 
 	 * @param initial
 	 */
-	public static void totalNumberLogisticEquipment(Factory initial) {
+	public static void demoFactoryShortNoNull(Factory initial) {
+		System.out.println("\n\n\nFinal factoryStructure:");
+		Zone[][] factoryStructure = initial.getFactoryStructure();
+		for (int i = 0; i < factoryStructure.length; i++) {
+			if (i != 0)
+				System.out.print("\n");
+			for (int j = 0; j < factoryStructure[0].length; j++) {
+				if (factoryStructure[i][j] == null) {
+				} else {
+					String string = "";
+					if (factoryStructure[i][j].isEmpty())
+						string = "t";
+					else
+						string = "f";
+					System.out.print(factoryStructure[i][j].name + "(" + factoryStructure[i][j].totalNumberRaster + ", "
+							+ string + ") ");
+				}
+			}
+		}
+		System.out.println("\n\nzones to allocate:");
+		if (initial.getZonesToAllocate().size() == 0) {
+			System.out.println("There are no further zoneToAllocate!");
+		} else {
+			for (int i = 0; i < initial.getZonesToAllocate().size(); i++) {
+				String string = "";
+				if (initial.getZonesToAllocate().get(i).isEmpty())
+					string = "t";
+				else
+					string = "f";
+				System.out.print(initial.getZonesToAllocate().get(i).name + "("
+						+ initial.getZonesToAllocate().get(i).totalNumberRaster + ", " + string + ")\n");
+			}
+		}
+	}
+
+	/**
+	 * calculates the upper bound of costs
+	 * 
+	 * @param initial
+	 */
+	public static String totalNumberLogisticEquipment(Factory initial) {
 		int totalNumber = 0;
 		for (int i = 0; i < initial.getFactoryStructure().length; i++) {
 			for (int j = 0; j < initial.getFactoryStructure()[0].length; j++) {
@@ -1832,7 +1920,8 @@ public class Calculator {
 
 			}
 		}
-		System.out.println("Upper bound of costs: " + totalNumber);
+		String string = "Upper bound: " + totalNumber + " logistic equipment movements";
+		return string;
 	}
 
 	/**
@@ -1848,6 +1937,9 @@ public class Calculator {
 	public static void main(String[] args) throws Exception {
 		// Initialize objects and start algorithm
 
+//		initial = new Factory();
+//		demoFactory(initial);
+
 //		Import old = new Import(); 
 //		old.demo();
 
@@ -1855,8 +1947,8 @@ public class Calculator {
 		final long start = System.currentTimeMillis();
 
 		initial = new Factory();
-		totalNumberLogisticEquipment(initial);
-//		demoFactory(initial);
+		String upperBound = totalNumberLogisticEquipment(initial);
+		demoFactory(initial);
 //		System.out.println("\n\n\n\n");
 //		demoZonesToAllocate(initial);
 //		System.out.println("\n\n\n\n");
@@ -1865,6 +1957,7 @@ public class Calculator {
 		Calculator calculator = new Calculator();
 		@SuppressWarnings("unused")
 		Factory newFactory = calculator.performAlgorithm();
+		demoFactoryShortNoNull(newFactory);
 
 		// calculating execution time
 		// use this breakPoint to debug and see the result: newFactory
@@ -1873,19 +1966,9 @@ public class Calculator {
 		System.out.println("END");
 		System.out.println("------------------------------------------------");
 		System.out.println("Total execution time: " + ((double) (end - start) / 1000) + " s");
-		System.out.println("Total costs: " + cost + " logistics equipment movements");
-		totalNumberLogisticEquipment(initial);
+		System.out.println("Total costs: " + cost + " logistic equipment movements");
+		System.out.println(upperBound);
 		System.out.println("------------------------------------------------");
-
-		// demoFactory does not work for a factoryStructure with a higher width
-//		demoFactory(newFactory);
-//		System.out.println("\n\n\n\n\n\n\n\n");
-//		demoZonesToAllocate(newFactory);
-//		System.out.println("\n\n\n\n\n\n\n\n");
-
-//		Factory newFactory = initial;
-//		newFactory.setFactoryStructure(newFactoryStructure);
-		// calculateCostBenefits(initial.getFactoryStructure, newFactoryStructure);
 
 	}
 }
