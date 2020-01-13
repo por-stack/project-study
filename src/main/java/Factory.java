@@ -13,7 +13,7 @@ public class Factory {
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
-//	README: Adjust input in lines 43 and in line  
+//	README: Adjust input in lines 43 and in line 49 
 //
 //	
 //
@@ -48,14 +48,80 @@ public class Factory {
 	}
 
 	/**
-	 * Result Examples: - please uncomment the unneeded examples. Use "//" to uncomment
-	 * lines -
-	 * 
+	 * Result Examples: please uncomment with "//" the unneeded example (hint: use
+	 * strg+7 (on windows)). Uncomment the matrix int[][] empty representing the
+	 * empty zones in the factory, where 1 stands for an empty zone. Please, in
+	 * addition, follow the instructions regarding line 43, where the starting zones
+	 * to be allocated can be set. For reasons of facility, all zones of an entire
+	 * row of the initial factory are used as zones to be allocated each time. Which
+	 * row to choose can be set in line 43.
 	 */
 
+	// example 1
 	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 3);
+
+	// example 2
+	// example 2 has the same input as example 1, but the zonesToAllocate are
+	// ordered ascendingly.
+	// This example leads to an infinite loop
+//	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }};
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocateAscending(this.factoryStructure, 3);
+
+	// example 3
+//	int[][] empty = { { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 5);
+
+	// example 4
+//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 1, 0 }, { 0, 0, 0, 1, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 8);
+
+	// example 5
+//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 9);
+
+	// example 6
+//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 1, 0 }, { 0, 0, 0, 1, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 3);
+
+	// example 7
+//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 3);
+
+	// example 8
+//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 1, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 3);
+
+	// example 9
+//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 1, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 1, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 1, 0}, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+	// replace line 43 with: zonesToAllocate =
+	// createZonesToAllocate(this.factoryStructure, 11);
 
 	/*
 	 * from the matrix that contains the same information as the excel: take each
