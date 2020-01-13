@@ -13,13 +13,13 @@ public class Factory {
 	private ArrayList<EmptyZone> emptyZones;
 	private ArrayList<Zone> zonesToAllocate;
 
-	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }};
-
-//	int[][] empty = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
-//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
-//			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
+//	README: Adjust input in lines 43 and in line  
+//
+//	
+//
+//
+//
+//	
 
 	public Factory() throws Exception {
 		this.mport = new Import();
@@ -46,6 +46,16 @@ public class Factory {
 
 		System.out.println("");
 	}
+
+	/**
+	 * Result Examples: - please uncomment the unneeded examples. Use "//" to uncomment
+	 * lines -
+	 * 
+	 */
+
+	int[][] empty = { { 0, 0, 0, 0, 0, 1, 1 }, { 0, 0, 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 } };
 
 	/*
 	 * from the matrix that contains the same information as the excel: take each
